@@ -88,7 +88,7 @@ export function TemplateGallery() {
       <div className="mx-auto mb-10 flex w-full max-w-6xl items-end justify-between gap-8 px-6">
         <div className="flex flex-col gap-5">
           <Eyebrow>Templates</Eyebrow>
-          <h2 className="max-w-2xl text-[clamp(2.2rem,4.4vw,4rem)] leading-[1] font-semibold tracking-[-0.035em]">
+          <h2 className="max-w-2xl text-[clamp(2.2rem,4.4vw,4rem)] leading-none font-semibold tracking-[-0.035em]">
             <SplitWords text="Pick a mood. *Make it yours.*" />
           </h2>
         </div>
@@ -103,7 +103,7 @@ export function TemplateGallery() {
           return (
             <Link key={id} href={`/app?template=${id}`} className="gallery-card group block shrink-0">
               <Tilt className="rounded-[22px]" max={8}>
-                <div className="overflow-hidden rounded-[22px] shadow-[0_50px_90px_-40px_rgb(0_0_0/.5),0_0_0_1px_var(--line)] transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]">
+                <div className="overflow-hidden rounded-[22px] shadow-[0_50px_90px_-40px_rgb(0_0_0/.5),0_0_0_1px_var(--line)] transition-transform duration-700 ease-out-expo group-hover:scale-[1.02]">
                   <ScaledSlide width={300} slide={p.slides[0]} doc={p} index={0} total={p.slides.length} />
                 </div>
               </Tilt>

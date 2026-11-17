@@ -474,7 +474,7 @@ function SlideInspector() {
           <div className="grid grid-cols-3 gap-1.5">
             {Object.entries(MESHES).map(([id, m]) => (
               <button key={id} onClick={() => setSlide((s) => void ((s.background as typeof bg).preset = id))} className="flex flex-col items-center gap-1">
-                <span className={cn("block aspect-[4/5] w-full rounded-lg ring-offset-2 ring-offset-panel", bg.preset === id ? "ring-2 ring-accent" : "ring-1 ring-line")} style={backgroundCSS({ kind: "mesh", preset: id }, theme)} />
+                <span className={cn("block aspect-4/5 w-full rounded-lg ring-offset-2 ring-offset-panel", bg.preset === id ? "ring-2 ring-accent" : "ring-1 ring-line")} style={backgroundCSS({ kind: "mesh", preset: id }, theme)} />
                 <span className="text-[10.5px] text-muted">{m.name}</span>
               </button>
             ))}

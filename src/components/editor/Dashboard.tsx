@@ -161,7 +161,7 @@ export function Dashboard() {
                   transition={{ delay: i * 0.04, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                   className="group shrink-0 text-left"
                 >
-                  <div className="relative overflow-hidden rounded-2xl shadow-[0_24px_50px_-28px_rgb(0_0_0/.5),0_0_0_1px_var(--line)] transition-all duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5 group-hover:shadow-[0_34px_60px_-28px_rgb(0_0_0/.55),0_0_0_2px_var(--accent)]">
+                  <div className="relative overflow-hidden rounded-2xl shadow-[0_24px_50px_-28px_rgb(0_0_0/.5),0_0_0_1px_var(--line)] transition-all duration-500 ease-out-expo group-hover:-translate-y-1.5 group-hover:shadow-[0_34px_60px_-28px_rgb(0_0_0/.55),0_0_0_2px_var(--accent)]">
                     <ScaledSlide width={180} slide={p.slides[0]} doc={p} index={0} total={p.slides.length} />
                     <div className="absolute inset-0 grid place-items-center bg-black/0 transition-colors duration-300 group-hover:bg-black/25">
                       <span className="flex translate-y-2 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-black opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
@@ -190,7 +190,7 @@ export function Dashboard() {
           {projects === null ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-6">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="skeleton aspect-[4/5] rounded-2xl" />
+                <div key={i} className="skeleton aspect-4/5 rounded-2xl" />
               ))}
             </div>
           ) : filtered.length === 0 ? (

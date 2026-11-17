@@ -256,7 +256,7 @@ function ShapeGlyph({ kind, radius }: { kind: ShapeKind; radius?: number }) {
   const c = "var(--ink-2)";
   if (kind === "rect") return <span className="block h-8 w-8" style={{ background: c, borderRadius: radius ? 9 : 2 }} />;
   if (kind === "ellipse") return <span className="block h-8 w-8 rounded-full" style={{ background: c }} />;
-  if (kind === "line") return <span className="block h-[3px] w-9 rounded" style={{ background: c }} />;
+  if (kind === "line") return <span className="block h-0.75 w-9 rounded" style={{ background: c }} />;
   return (
     <svg viewBox="0 0 100 100" className="h-8 w-8" fill={kind === "arrow" ? "none" : c} stroke={kind === "arrow" ? c : "none"} strokeWidth={10} strokeLinecap="round" strokeLinejoin="round">
       {kind === "triangle" && <polygon points="50,6 96,94 4,94" />}

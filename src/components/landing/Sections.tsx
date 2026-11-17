@@ -7,14 +7,14 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Check, GraduationCap, Megaphone, Palette, Plus, Rocket, Sparkles, X } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
-import { Github } from "@/components/ui/GithubIcon";
+import { Gitlab } from "@/components/ui/GitlabIcon";
 import { MagneticLink } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/components/ui/cn";
 import { HeroShader } from "./HeroShader";
 import { CountUp, Eyebrow, Reveal, SectionHead, SplitWords } from "./primitives";
 import { demo } from "./demo";
-import { GITHUB_URL } from "./Hero";
+import { ISSUES_URL, LICENSE_URL, REPO_URL } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,7 +40,7 @@ export function Manifesto() {
       <Reveal>
         <Eyebrow className="mb-10">Why Slyd</Eyebrow>
       </Reveal>
-      <p ref={ref} className="text-[clamp(1.8rem,3.6vw,3.2rem)] leading-[1.15] font-medium tracking-[-0.025em] text-balance">
+      <p ref={ref} className="text-[clamp(1.8rem,3.6vw,3.2rem)] leading-[1.15] font-medium tracking-tight text-balance">
         {text.split(" ").map((w, i) => (
           <span key={i} className={cn("mf-word", ["free", "just", "opens."].includes(w) && "font-serif font-normal italic text-accent")}>
             {w}{" "}
@@ -89,7 +89,7 @@ export function HowItWorks() {
         </div>
         <div className="relative hidden lg:block">
           <div className="sticky top-[18vh]">
-            <div className="relative mx-auto w-[340px] rounded-[48px] bg-ink p-3 shadow-lg">
+            <div className="relative mx-auto w-85 rounded-[48px] bg-ink p-3 shadow-lg">
               <div className="overflow-hidden rounded-[38px] bg-black">
                 <div className="flex items-center gap-2 px-4 py-3 text-white">
                   <div className="h-7 w-7 rounded-full bg-accent" />
@@ -135,7 +135,7 @@ export function Stats() {
       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[28px] bg-line shadow-sm lg:grid-cols-4">
         {items.map((it, i) => (
           <Reveal key={it.l} delay={i * 0.06} className="bg-panel p-8">
-            <div className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-semibold tracking-[-0.05em]">
+            <div className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-semibold tracking-tighter">
               <CountUp to={it.v} suffix={it.s} />
             </div>
             <div className="mt-4 text-[15px] font-medium">{it.l}</div>
@@ -167,7 +167,7 @@ export function UseCases() {
             <motion.div
               whileHover={{ y: -6 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="group flex h-full flex-col gap-10 rounded-[24px] bg-panel p-6 shadow-sm"
+              className="group flex h-full flex-col gap-10 rounded-3xl bg-panel p-6 shadow-sm"
             >
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-panel-2 text-ink-2 transition-all duration-500 group-hover:rotate-[-8deg] group-hover:bg-accent group-hover:text-accent-ink">
                 <u.icon size={19} />
@@ -193,7 +193,7 @@ export function Pricing() {
     <section className="mx-auto max-w-5xl px-6 py-28">
       <SectionHead eyebrow="Pricing" title="Start simple. *Stay* free." sub="No tiers, no trials, no feature walls. Slyd is MIT licensed, and that won't change." />
       <div className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
-        <Reveal className="relative overflow-hidden rounded-[32px] bg-ink p-9 text-bg shadow-lg">
+        <Reveal className="relative overflow-hidden rounded-4xl bg-ink p-9 text-bg shadow-lg">
           <div aria-hidden className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-accent opacity-40 blur-3xl" />
           <div className="relative">
             <div className="flex items-center justify-between">
@@ -221,13 +221,13 @@ export function Pricing() {
             </div>
           </div>
         </Reveal>
-        <Reveal delay={0.1} className="rounded-[32px] bg-panel p-9 shadow-sm">
+        <Reveal delay={0.1} className="rounded-4xl bg-panel p-9 shadow-sm">
           <span className="font-mono text-[11px] tracking-[.16em] text-muted uppercase">The usual alternative</span>
           <div className="mt-8 flex items-end gap-3">
-            <span className="relative text-[64px] leading-none font-semibold tracking-[-0.05em] text-muted">
+            <span className="relative text-[64px] leading-none font-semibold tracking-tighter text-muted">
               $24
               <motion.span
-                className="absolute top-1/2 left-0 h-[3px] w-full origin-left bg-accent"
+                className="absolute top-1/2 left-0 h-0.75 w-full origin-left bg-accent"
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
@@ -255,7 +255,7 @@ export function Pricing() {
 /* ----------------------------------------------------------------- faq -- */
 
 const FAQ = [
-  ["Is Slyd really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitHub star is how you can say thanks."],
+  ["Is Slyd really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitLab star is how you can say thanks."],
   ["Where are my projects stored?", "In your browser's IndexedDB, on your machine. Nothing is uploaded. You can export any project as a .slyd.json file to back it up or move it."],
   ["Can I use the stock photos commercially?", "Unsplash and Pexels photos are free for commercial use under their licenses. Openverse results are limited to licenses that allow commercial use and modification. Slyd saves the credit with every photo, so attribution is one glance away."],
   ["Do I need an API key for photos?", "No. Openverse and Picsum work without one. To search Unsplash or Pexels too, paste your own free key in Settings. It stays in your browser."],
@@ -272,14 +272,14 @@ export function Faq() {
         <Reveal>
           <Eyebrow>FAQ</Eyebrow>
         </Reveal>
-        <h2 className="mt-5 text-[clamp(2.2rem,4vw,3.6rem)] leading-[1] font-semibold tracking-[-0.035em]">
+        <h2 className="mt-5 text-[clamp(2.2rem,4vw,3.6rem)] leading-none font-semibold tracking-[-0.035em]">
           <SplitWords text="Questions, *answered.*" />
         </h2>
         <Reveal delay={0.1}>
           <p className="mt-5 max-w-sm text-[15px] text-muted">
             Something else? Open an issue on{" "}
-            <a href={GITHUB_URL} className="text-ink underline decoration-line-2 underline-offset-4 hover:decoration-accent">
-              GitHub
+            <a href={ISSUES_URL} className="text-ink underline decoration-line-2 underline-offset-4 hover:decoration-accent">
+              GitLab
             </a>
             .
           </p>
@@ -325,8 +325,8 @@ export function FinalCta() {
           <MagneticLink href="/app" cursor="Create">
             Start creating <ArrowRight size={17} />
           </MagneticLink>
-          <MagneticLink href={GITHUB_URL} external variant="soft" cursor="Star">
-            <Github size={17} /> Star on GitHub
+          <MagneticLink href={REPO_URL} external variant="soft" cursor="Star">
+            <Gitlab size={17} /> Star on GitLab
           </MagneticLink>
         </Reveal>
       </div>
@@ -337,7 +337,7 @@ export function FinalCta() {
 export function Footer() {
   const cols = [
     { h: "Product", l: [["Editor", "/app"], ["Templates", "#templates"], ["Features", "#features"], ["FAQ", "#faq"]] },
-    { h: "Open source", l: [["GitHub", GITHUB_URL], ["Report a bug", GITHUB_URL], ["Contribute", GITHUB_URL], ["MIT License", GITHUB_URL]] },
+    { h: "Open source", l: [["GitLab", REPO_URL], ["Report a bug", ISSUES_URL], ["Contribute", REPO_URL], ["MIT License", LICENSE_URL]] },
     { h: "Photos by", l: [["Unsplash", "https://unsplash.com"], ["Pexels", "https://pexels.com"], ["Openverse", "https://openverse.org"], ["Picsum", "https://picsum.photos"]] },
   ];
   return (

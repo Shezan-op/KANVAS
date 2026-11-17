@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
 import { ArrowRight, Star } from "lucide-react";
-import { Github } from "@/components/ui/GithubIcon";
+import { Gitlab } from "@/components/ui/GitlabIcon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { MagneticLink, buttonClass } from "@/components/ui/Button";
@@ -14,8 +14,7 @@ import { HeroShader } from "./HeroShader";
 import { SplitWords } from "./primitives";
 import { demo } from "./demo";
 
-export { GITHUB_URL } from "@/lib/site";
-import { GITHUB_URL } from "@/lib/site";
+import { REPO_URL } from "@/lib/site";
 
 export function Nav() {
   const { scrollY } = useScroll();
@@ -54,8 +53,8 @@ export function Nav() {
         </div>
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className={buttonClass("ghost", "sm", "hidden sm:inline-flex")}>
-            <Github size={15} /> GitHub
+          <a href={REPO_URL} target="_blank" rel="noreferrer" className={buttonClass("ghost", "sm", "hidden sm:inline-flex")}>
+            <Gitlab size={15} /> GitLab
           </a>
           <Link href="/app" className={buttonClass("ink", "sm", "group")}>
             Open editor <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
@@ -144,7 +143,7 @@ export function Hero() {
       <HeroShader className="absolute inset-0 -z-10 h-[115%]" />
       <motion.div style={{ y, opacity: fade }} className="mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
         <motion.a
-          href={GITHUB_URL}
+          href={REPO_URL}
           target="_blank"
           rel="noreferrer"
           initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}

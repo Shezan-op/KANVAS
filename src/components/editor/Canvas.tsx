@@ -514,7 +514,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
         if (editingId === el.id && el.type === "image")
           return (
             <div className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium whitespace-nowrap text-bg shadow-lg" style={{ top: -40 }}>
-              Drag to reposition · <kbd className="kbd !bg-transparent !text-bg !shadow-none">Esc</kbd> when done
+              Drag to reposition · <kbd className="kbd bg-transparent! text-bg! shadow-none!">Esc</kbd> when done
             </div>
           );
         return <QuickBar key={el.id} el={el} k={k} height={elHeight(el)} theme={project.theme} />;

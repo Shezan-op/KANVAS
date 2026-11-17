@@ -48,7 +48,7 @@ export function SplitWords({ text, className, delay = 0, immediate = false }: { 
         const words = (m ? m[1] : tok).split(" ");
         return words.map((w, wi) => (
           <Fragment key={`${k}-${wi}`}>
-            <span className="inline-block overflow-hidden pb-[0.12em] align-bottom -mb-[0.12em]">
+            <span className="inline-block overflow-hidden pb-[0.12em] align-bottom mb-[-0.12em]">
               <motion.span
                 className="inline-block will-change-transform"
                 variants={wordV}
@@ -83,7 +83,7 @@ export function Tilt({ children, className, max = 10, glare = true }: { children
   return (
     <motion.div
       ref={ref}
-      className={cn("relative [transform-style:preserve-3d]", className)}
+      className={cn("relative transform-3d", className)}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
       onPointerMove={(e) => {
         const r = ref.current!.getBoundingClientRect();
@@ -141,7 +141,7 @@ export function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow: s
       <Reveal>
         <Eyebrow>{eyebrow}</Eyebrow>
       </Reveal>
-      <h2 className="max-w-3xl text-[clamp(2.2rem,4.4vw,4rem)] leading-[1] font-semibold tracking-[-0.035em] text-balance">
+      <h2 className="max-w-3xl text-[clamp(2.2rem,4.4vw,4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
         <SplitWords text={title} />
       </h2>
       {sub && (

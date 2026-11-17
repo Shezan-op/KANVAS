@@ -20,9 +20,9 @@ export function Logo({ href = "/", className, size = "lg" }: { href?: string; cl
   const s = SIZES[size];
   return (
     <Link href={href} className={cn("group inline-flex items-center gap-2", className)} aria-label="Slyd home">
-      <LogoMark className={cn(s.mark, "transition-transform duration-500 ease-[var(--ease-spring)] group-hover:-rotate-6 group-hover:scale-110")} />
+      <LogoMark className={cn(s.mark, "transition-transform duration-500 ease-spring group-hover:-rotate-6 group-hover:scale-110")} />
       {/* Optical alignment: the italic serif sits low, so nudge it up and pad the descender */}
-      <span className={cn(s.word, "-translate-y-[0.06em] pr-[0.06em] font-serif leading-none tracking-[-0.01em] italic")}>slyd</span>
+      <span className={cn(s.word, "translate-y-[-0.06em] pr-[0.06em] font-serif leading-none tracking-[-0.01em] italic")}>slyd</span>
     </Link>
   );
 }
