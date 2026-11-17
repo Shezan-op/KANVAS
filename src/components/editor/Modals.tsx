@@ -6,7 +6,8 @@ import { createPortal } from "react-dom";
 import { Bookmark, Check, ChevronLeft, ChevronRight, Download, FileImage, FileJson, FileText, FolderArchive, Heart, Image as ImageIcon, KeyRound, Loader2, MessageCircle, Repeat2, Send, ThumbsUp, X } from "lucide-react";
 import { SlideRenderer, ScaledSlide } from "@/components/slide/SlideRenderer";
 import { SLIDE_W, slideHeight } from "@/lib/model/constants";
-import { buildFontEmbedCSS, download, packagePdf, packageZip, renderSlide, slug, type ExportFormat } from "@/lib/export";
+import type { ExportFormat } from "@/lib/export";
+import { download, slug } from "@/lib/download";
 import { exportProjectFile } from "@/lib/storage";
 import { PROVIDERS, getKeys, setKey, type ProviderId } from "@/lib/stock";
 import { cn } from "@/components/ui/cn";
@@ -70,7 +71,7 @@ function ExportModal({ onClose }: { onClose: () => void }) {
   const project = useEditor((s) => s.project)!;
   const activeId = useEditor((s) => s.activeSlideId);
   const [fmt, setFmt] = useState<(typeof FORMATS)[number]["id"]>("zip-png");
-  const [scale, setScale] = useState<"1" | "2" | "3">("2");
+  const [scale, setScale] = useState<"1" | "2" | "3">("1");
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
@@ -83,6 +84,8 @@ function ExportModal({ onClose }: { onClose: () => void }) {
     setDone(false);
     setProgress(0);
     try {
+      // html-to-image, JSZip and jsPDF load only when someone actually exports.
+      const { buildFontEmbedCSS, renderSlide, packagePdf, packageZip } = await import("@/lib/export");
       await document.fonts.ready;
       const fontEmbedCSS = await buildFontEmbedCSS(project);
       const nodes = Array.from(host.current!.querySelectorAll<HTMLElement>("[data-export]"));
@@ -161,8 +164,8 @@ function ExportModal({ onClose }: { onClose: () => void }) {
                 value={scale}
                 onChange={setScale}
                 options={[
-                  { value: "1", label: "1× Standard" },
-                  { value: "2", label: "2× Crisp" },
+                  { value: "1", label: "1× · 1080px" },
+                  { value: "2", label: "2× Retina" },
                   { value: "3", label: "3× Print" },
                 ]}
               />

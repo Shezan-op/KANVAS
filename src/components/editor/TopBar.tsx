@@ -35,7 +35,7 @@ export function TopBar() {
     <header className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-panel px-3">
       <Link href="/app" className="group flex items-center gap-1.5 rounded-lg py-1.5 pr-2 pl-1.5 text-ink-2 hover:bg-line hover:text-ink" title="All carousels">
         <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-        <LogoMark className="h-6 w-6" />
+        <LogoMark className="h-8 w-8" />
       </Link>
       <div className="mx-1 h-5 w-px bg-line" />
       <input

@@ -131,9 +131,13 @@ function ElementInspector({ els }: { els: SlideElement[] }) {
               <NumberField label="X" value={el.x} onChange={(v) => upd({ x: v }, "pos")} />
               <NumberField label="Y" value={el.y} onChange={(v) => upd({ y: v }, "pos")} />
               <NumberField label="W" value={el.w} min={4} onChange={(v) => upd({ w: v }, "size")} />
-              {el.type !== "text" ? <NumberField label="H" value={el.h} min={4} onChange={(v) => upd({ h: v }, "size")} /> : <div />}
+              {el.type !== "text" ? (
+                <NumberField label="H" value={el.h} min={4} onChange={(v) => upd({ h: v }, "size")} />
+              ) : (
+                <NumberField label="↻" suffix="°" value={el.rotation} min={-180} max={180} onChange={(v) => upd({ rotation: v }, "rot")} />
+              )}
             </div>
-            <NumberField label="↻" suffix="°" value={el.rotation} min={-180} max={180} onChange={(v) => upd({ rotation: v }, "rot")} />
+            {el.type !== "text" && <NumberField label="↻" suffix="°" value={el.rotation} min={-180} max={180} onChange={(v) => upd({ rotation: v }, "rot")} />}
           </>
         )}
         <Row label="Opacity">
@@ -276,6 +280,17 @@ function ImageProps({ el, theme }: { el: ImageElement; theme: Theme }) {
             { value: "contain", label: "Fit" },
           ]}
         />
+        {el.fit === "cover" && (
+          <>
+            <Row label="Focus X">
+              <Slider value={el.focus?.x ?? 50} min={0} max={100} suffix="%" onChange={(v) => upd({ focus: { x: v, y: el.focus?.y ?? 50 } }, `fx:${el.id}`)} />
+            </Row>
+            <Row label="Focus Y">
+              <Slider value={el.focus?.y ?? 50} min={0} max={100} suffix="%" onChange={(v) => upd({ focus: { x: el.focus?.x ?? 50, y: v } }, `fy:${el.id}`)} />
+            </Row>
+            <p className="-mt-1 text-[11.5px] text-muted">Tip: double-click the photo on the canvas and drag to reposition it.</p>
+          </>
+        )}
         <Row label="Corners">
           <Slider value={el.radius} min={0} max={Math.round(Math.min(el.w, el.h) / 2)} onChange={(v) => upd({ radius: v }, `rad:${el.id}`)} />
         </Row>
@@ -482,6 +497,12 @@ function SlideInspector() {
             </Row>
             <Row label="Blur">
               <Slider value={bg.blur} min={0} max={40} onChange={(v) => setSlide((s) => void ((s.background as typeof bg).blur = v), "bg-blur")} />
+            </Row>
+            <Row label="Focus X">
+              <Slider value={bg.focus?.x ?? 50} min={0} max={100} suffix="%" onChange={(v) => setSlide((s) => void ((s.background as typeof bg).focus = { x: v, y: bg.focus?.y ?? 50 }), "bg-fx")} />
+            </Row>
+            <Row label="Focus Y">
+              <Slider value={bg.focus?.y ?? 50} min={0} max={100} suffix="%" onChange={(v) => setSlide((s) => void ((s.background as typeof bg).focus = { x: bg.focus?.x ?? 50, y: v }), "bg-fy")} />
             </Row>
             {bg.credit && <CreditCard credit={bg.credit} />}
           </>

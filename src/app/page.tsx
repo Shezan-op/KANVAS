@@ -1,5 +1,4 @@
 import { SmoothScroll } from "@/components/landing/SmoothScroll";
-import { SmartCursor } from "@/components/ui/SmartCursor";
 import { Hero, Nav } from "@/components/landing/Hero";
 import { PlatformMarquee, TemplateGallery } from "@/components/landing/Gallery";
 import { Bento } from "@/components/landing/Bento";
@@ -9,7 +8,6 @@ export default function Landing() {
   return (
     <>
       <SmoothScroll />
-      <SmartCursor />
       <Nav />
       <main className="overflow-x-clip">
         <Hero />

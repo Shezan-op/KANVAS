@@ -76,7 +76,6 @@ export function MagneticLink({
       <Comp
         href={href}
         {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-        data-cursor={cursor}
         className={buttonClass(variant, size, cn("group overflow-hidden", className))}
       >
         {children}

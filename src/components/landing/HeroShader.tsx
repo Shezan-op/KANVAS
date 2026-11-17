@@ -1,11 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
 
-const vert = /* glsl */ `
+/**
+ * Hero background: a single full-screen fragment shader on raw WebGL.
+ * (Three.js cost ~130 KB gzipped for one quad; this is ~2 KB.)
+ *  - starts only when scrolled into view, pauses when off-screen or the tab is hidden
+ *  - renders at half resolution: the image is soft, so nobody can tell, and the GPU does 4× less work
+ *  - re-reads theme colours when light/dark switches
+ */
+
+const vert = `
+attribute vec2 aPos;
 varying vec2 vUv;
-void main() { vUv = uv; gl_Position = vec4(position, 1.0); }
+void main() { vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }
 `;
 
 /** Domain-warped fbm "silk": slow, warm, reacts softly to the pointer. */
@@ -43,7 +51,8 @@ void main(){
   float f = fbm(p + 2.5*r);
 
   // Silk ridges
-  float ridge = smoothstep(0.35, 0.95, f) * (0.55 + 0.45*sin(f*12.0 + t*6.0));
+  // Broad, low-frequency bands: thin high-frequency ridges showed up as hairline "dotted" contours.
+  float ridge = smoothstep(0.35, 0.95, f) * (0.72 + 0.28*sin(f*5.0 + t*3.0));
   vec3 warm = mix(uAccent, vec3(1.0,0.78,0.42), 0.35);
   vec3 col = mix(uBg, warm, ridge * (uDark > 0.5 ? 0.7 : 0.6));
   col = mix(col, uAccent, smoothstep(0.55, 0.95, f) * 0.5);
@@ -60,10 +69,13 @@ void main(){
 }
 `;
 
-function cssColor(name: string) {
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  return new THREE.Color(v || "#000");
+function cssColor(name: string): [number, number, number] {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim().replace("#", "");
+  const n = parseInt(v.length === 3 ? v.split("").map((c) => c + c).join("") : v || "000000", 16);
+  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
 }
+
+const RES = 0.5;
 
 export function HeroShader({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -71,84 +83,119 @@ export function HeroShader({ className }: { className?: string }) {
   useEffect(() => {
     const host = ref.current;
     if (!host) return;
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance" });
-    } catch {
-      return; // No WebGL: the CSS background behind still looks fine.
-    }
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    host.appendChild(renderer.domElement);
-    renderer.domElement.style.cssText = "width:100%;height:100%;display:block";
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const uniforms = {
-      uTime: { value: 0 },
-      uRes: { value: new THREE.Vector2(1, 1) },
-      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-      uBg: { value: cssColor("--bg") },
-      uAccent: { value: cssColor("--accent") },
-      uInk: { value: cssColor("--ink") },
-      uDark: { value: document.documentElement.dataset.theme === "dark" ? 1 : 0 },
-    };
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: frag, uniforms }));
-    scene.add(mesh);
-
-    const resize = () => {
-      const { width, height } = host.getBoundingClientRect();
-      renderer.setSize(width, height, false);
-      uniforms.uRes.value.set(width, height);
-    };
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(host);
-
-    const target = new THREE.Vector2(0.5, 0.5);
-    const onMove = (e: PointerEvent) => {
-      const r = host.getBoundingClientRect();
-      target.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-
-    const mo = new MutationObserver(() => {
-      uniforms.uBg.value = cssColor("--bg");
-      uniforms.uAccent.value = cssColor("--accent");
-      uniforms.uInk.value = cssColor("--ink");
-      uniforms.uDark.value = document.documentElement.dataset.theme === "dark" ? 1 : 0;
-      if (reduced) renderer.render(scene, camera);
-    });
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
-    let visible = true;
-    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
-    io.observe(host);
-
-    let raf = 0;
-    const t0 = performance.now();
-    const loop = () => {
-      raf = requestAnimationFrame(loop);
-      if (!visible || document.hidden) return;
-      uniforms.uTime.value = 20 + (performance.now() - t0) / 1000;
-      uniforms.uMouse.value.lerp(target, 0.03);
-      renderer.render(scene, camera);
-    };
-    if (reduced) renderer.render(scene, camera);
-    else loop();
-
+    let cleanup = () => {};
+    // Defer all GPU work until the section is actually on screen.
+    const gate = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      gate.disconnect();
+      cleanup = start(host);
+    }, { rootMargin: "200px" });
+    gate.observe(host);
     return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      io.disconnect();
-      mo.disconnect();
-      window.removeEventListener("pointermove", onMove);
-      mesh.geometry.dispose();
-      (mesh.material as THREE.Material).dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
+      gate.disconnect();
+      cleanup();
     };
   }, []);
 
   return <div ref={ref} aria-hidden className={className} />;
+}
+
+function start(host: HTMLElement) {
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = "width:100%;height:100%;display:block;opacity:0;transition:opacity 1.2s ease";
+  const gl = canvas.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power", preserveDrawingBuffer: false });
+  if (!gl) return () => {}; // No WebGL: the page background still looks right.
+  host.appendChild(canvas);
+
+  const compile = (type: number, src: string) => {
+    const sh = gl.createShader(type)!;
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    return sh;
+  };
+  const prog = gl.createProgram()!;
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    canvas.remove();
+    return () => {};
+  }
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, "aPos");
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const u = (n: string) => gl.getUniformLocation(prog, n);
+  const uTime = u("uTime"), uRes = u("uRes"), uMouse = u("uMouse"), uBg = u("uBg"), uAccent = u("uAccent"), uInk = u("uInk"), uDark = u("uDark");
+  const setTheme = () => {
+    gl.uniform3fv(uBg, cssColor("--bg"));
+    gl.uniform3fv(uAccent, cssColor("--accent"));
+    gl.uniform3fv(uInk, cssColor("--ink"));
+    gl.uniform1f(uDark, document.documentElement.dataset.theme === "dark" ? 1 : 0);
+  };
+  setTheme();
+
+  const resize = () => {
+    const { width, height } = host.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio, 2) * RES;
+    canvas.width = Math.max(1, Math.round(width * dpr));
+    canvas.height = Math.max(1, Math.round(height * dpr));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+  };
+  resize();
+  const ro = new ResizeObserver(resize);
+  ro.observe(host);
+
+  const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
+  const onMove = (e: PointerEvent) => {
+    const r = host.getBoundingClientRect();
+    mouse.tx = (e.clientX - r.left) / r.width;
+    mouse.ty = 1 - (e.clientY - r.top) / r.height;
+  };
+  window.addEventListener("pointermove", onMove, { passive: true });
+
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const draw = (time: number) => {
+    mouse.x += (mouse.tx - mouse.x) * 0.03;
+    mouse.y += (mouse.ty - mouse.y) * 0.03;
+    gl.uniform1f(uTime, 20 + time / 1000);
+    gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  };
+
+  const mo = new MutationObserver(() => {
+    setTheme();
+    if (reduced) draw(0);
+  });
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  let visible = true;
+  const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
+  io.observe(host);
+
+  let raf = 0;
+  const loop = (t: number) => {
+    raf = requestAnimationFrame(loop);
+    if (visible && !document.hidden) draw(t);
+  };
+  if (reduced) draw(0);
+  else raf = requestAnimationFrame(loop);
+  requestAnimationFrame(() => (canvas.style.opacity = "1"));
+
+  return () => {
+    cancelAnimationFrame(raf);
+    ro.disconnect();
+    io.disconnect();
+    mo.disconnect();
+    window.removeEventListener("pointermove", onMove);
+    gl.deleteBuffer(buf);
+    gl.deleteProgram(prog);
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    canvas.remove();
+  };
 }

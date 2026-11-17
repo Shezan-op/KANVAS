@@ -101,7 +101,7 @@ export function TemplateGallery() {
           const p = demo(id);
           const t = TEMPLATES.find((x) => x.id === id)!;
           return (
-            <Link key={id} href={`/app?template=${id}`} className="gallery-card group block shrink-0" data-cursor="Use">
+            <Link key={id} href={`/app?template=${id}`} className="gallery-card group block shrink-0">
               <Tilt className="rounded-[22px]" max={8}>
                 <div className="overflow-hidden rounded-[22px] shadow-[0_50px_90px_-40px_rgb(0_0_0/.5),0_0_0_1px_var(--line)] transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]">
                   <ScaledSlide width={300} slide={p.slides[0]} doc={p} index={0} total={p.slides.length} />

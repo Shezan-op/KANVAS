@@ -34,26 +34,30 @@ const wordV: Variants = {
 export function SplitWords({ text, className, delay = 0, immediate = false }: { text: string; className?: string; delay?: number; immediate?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const tokens = text.split(/(\*[^*]+\*|\s+|\n)/).filter(Boolean);
+  // A highlight carries its trailing punctuation ("*teaching*,") so the comma can never wrap alone.
+  const tokens = text.split(/(\*[^*]+\*[^\s*]*|\s+|\n)/).filter(Boolean);
   let i = Math.round(delay / 0.055);
   return (
     <span ref={ref} className={className}>
       {tokens.map((tok, k) => {
         if (tok === "\n") return <br key={k} />;
         if (/^\s+$/.test(tok)) return " ";
-        const hl = tok.startsWith("*") && tok.endsWith("*");
-        const words = (hl ? tok.slice(1, -1) : tok).split(" ");
+        const m = tok.match(/^\*([^*]+)\*(\S*)$/);
+        const hl = !!m;
+        const tail = m?.[2] ?? "";
+        const words = (m ? m[1] : tok).split(" ");
         return words.map((w, wi) => (
           <Fragment key={`${k}-${wi}`}>
             <span className="inline-block overflow-hidden pb-[0.12em] align-bottom -mb-[0.12em]">
               <motion.span
-                className={cn("inline-block will-change-transform", hl && "font-serif italic text-accent font-normal pr-[0.04em]")}
+                className="inline-block will-change-transform"
                 variants={wordV}
                 custom={i++}
                 initial="hidden"
                 animate={immediate || inView ? "show" : "hidden"}
               >
-                {w}
+                <span className={cn(hl && "font-serif italic text-accent font-normal pr-[0.04em]")}>{w}</span>
+                {wi === words.length - 1 && tail}
               </motion.span>
             </span>
             {wi < words.length - 1 ? " " : null}

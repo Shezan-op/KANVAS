@@ -74,6 +74,8 @@ export interface ImageElement extends BaseElement {
   type: "image";
   src: string;
   fit: "cover" | "contain";
+  /** Focal point in % for object-position (drag to reposition inside the frame). */
+  focus?: { x: number; y: number };
   radius: number;
   filter: ImageFilter;
   border?: { width: number; color: ColorRef } | null;
@@ -120,6 +122,7 @@ export type Background =
       overlay: ColorRef;
       overlayOpacity: number;
       blur: number;
+      focus?: { x: number; y: number };
       credit?: StockCredit | null;
     };
 

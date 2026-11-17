@@ -4,7 +4,7 @@ import { memo, useEffect, useState, type CSSProperties, type ReactNode } from "r
 import { ArrowRight } from "lucide-react";
 import { SLIDE_W, slideHeight } from "@/lib/model/constants";
 import { IMAGE_FILTERS, backgroundCSS, isDark, noiseTile, resolveColor, resolveFont, textureCSS } from "@/lib/model/resolve";
-import { safeSrc } from "@/lib/image";
+import { safeSrc, sizedSrc } from "@/lib/image";
 import type { Project, Slide, SlideElement, Theme } from "@/lib/model/types";
 import { ICONS } from "./icons";
 import { RichText } from "./RichText";
@@ -23,6 +23,11 @@ export interface SlideRendererProps {
   className?: string;
   style?: CSSProperties;
   id?: string;
+  /**
+   * CSS width the slide is shown at. Previews pass it so images are fetched at
+   * display size and lazily. Omit for export (full resolution, eager).
+   */
+  displayWidth?: number;
 }
 
 export function elementBoxStyle(el: SlideElement): CSSProperties {
@@ -66,7 +71,7 @@ export function textStyle(el: Extract<SlideElement, { type: "text" }>, t: Theme)
   };
 }
 
-export function ElementContent({ el, theme }: { el: SlideElement; theme: Theme }) {
+export function ElementContent({ el, theme, k }: { el: SlideElement; theme: Theme; k?: number }) {
   switch (el.type) {
     case "text":
       return (
@@ -89,14 +94,17 @@ export function ElementContent({ el, theme }: { el: SlideElement; theme: Theme }
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={safeSrc(el.src)}
+            src={k ? sizedSrc(el.src, el.w * k * 2) : safeSrc(el.src)}
             crossOrigin="anonymous"
             alt=""
             draggable={false}
+            loading={k ? "lazy" : undefined}
+            decoding={k ? "async" : undefined}
             style={{
               width: "100%",
               height: "100%",
               objectFit: el.fit,
+              objectPosition: el.focus ? `${el.focus.x}% ${el.focus.y}%` : undefined,
               filter: IMAGE_FILTERS[el.filter]?.css ?? "none",
               display: "block",
               userSelect: "none",
@@ -254,8 +262,9 @@ function useNoiseTile(kind: Slide["texture"]["kind"], dark: boolean) {
   return noisy ? tile : null;
 }
 
-function SlideRendererImpl({ slide, doc, index, total, renderElement, overlay, className, style, id }: SlideRendererProps) {
+function SlideRendererImpl({ slide, doc, index, total, renderElement, overlay, className, style, id, displayWidth }: SlideRendererProps) {
   const H = slideHeight(doc.aspect);
+  const k = displayWidth ? displayWidth / SLIDE_W : undefined;
   const t = doc.theme;
   const bg = slide.background;
   const baseColor =
@@ -282,16 +291,19 @@ function SlideRendererImpl({ slide, doc, index, total, renderElement, overlay, c
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={safeSrc(bg.src, 2400)}
+            src={displayWidth ? sizedSrc(bg.src, displayWidth * 2) : safeSrc(bg.src, 2400)}
             crossOrigin="anonymous"
             alt=""
             draggable={false}
+            loading={k ? "lazy" : undefined}
+            decoding={k ? "async" : undefined}
             style={{
               position: "absolute",
               inset: bg.blur ? -bg.blur * 2 : 0,
               width: bg.blur ? `calc(100% + ${bg.blur * 4}px)` : "100%",
               height: bg.blur ? `calc(100% + ${bg.blur * 4}px)` : "100%",
               objectFit: "cover",
+              objectPosition: bg.focus ? `${bg.focus.x}% ${bg.focus.y}%` : undefined,
               filter: bg.blur ? `blur(${bg.blur}px)` : undefined,
             }}
           />
@@ -301,7 +313,7 @@ function SlideRendererImpl({ slide, doc, index, total, renderElement, overlay, c
 
       {slide.elements.map((el) => {
         const boxStyle = elementBoxStyle(el);
-        const content = <ElementContent el={el} theme={t} />;
+        const content = <ElementContent el={el} theme={t} k={k} />;
         if (renderElement) return renderElement(el, content, boxStyle);
         return (
           <div key={el.id} style={boxStyle}>
@@ -319,22 +331,40 @@ function SlideRendererImpl({ slide, doc, index, total, renderElement, overlay, c
   );
 }
 
-export const SlideRenderer = memo(SlideRendererImpl);
+/**
+ * Immer keeps unchanged slides, themes and brand kits referentially equal, so a
+ * shallow check on those (not on the whole project object) lets every
+ * thumbnail and preview skip re-rendering while you drag on another slide.
+ */
+function sameProps(a: SlideRendererProps, b: SlideRendererProps) {
+  return (
+    a.slide === b.slide &&
+    a.doc.theme === b.doc.theme &&
+    a.doc.brand === b.doc.brand &&
+    a.doc.aspect === b.doc.aspect &&
+    a.index === b.index &&
+    a.total === b.total &&
+    a.renderElement === b.renderElement &&
+    a.overlay === b.overlay &&
+    a.className === b.className &&
+    a.style === b.style &&
+    a.displayWidth === b.displayWidth
+  );
+}
+
+export const SlideRenderer = memo(SlideRendererImpl, sameProps);
 
 /** Fits a slide into a box by scaling. Used for thumbnails, previews, the landing page. */
-export function ScaledSlide({
-  width,
-  className,
-  style,
-  ...props
-}: SlideRendererProps & { width: number }) {
+function ScaledSlideImpl({ width, className, style, ...props }: SlideRendererProps & { width: number }) {
   const H = slideHeight(props.doc.aspect);
   const k = width / SLIDE_W;
   return (
     <div className={className} style={{ width, height: H * k, position: "relative", overflow: "hidden", ...style }}>
       <div style={{ transform: `scale(${k})`, transformOrigin: "0 0", width: SLIDE_W, height: H }}>
-        <SlideRenderer {...props} />
+        <SlideRenderer {...props} displayWidth={width} />
       </div>
     </div>
   );
 }
+
+export const ScaledSlide = memo(ScaledSlideImpl, (a, b) => a.width === b.width && sameProps(a, b));

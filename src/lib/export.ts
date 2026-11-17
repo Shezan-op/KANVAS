@@ -77,6 +77,9 @@ async function waitForImages(node: HTMLElement) {
   );
 }
 
+const BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+const IS_WEBKIT = typeof navigator !== "undefined" && /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg/.test(navigator.userAgent);
+
 export async function renderSlide(
   node: HTMLElement,
   p: Project,
@@ -90,39 +93,21 @@ export async function renderSlide(
     pixelRatio: opts.scale,
     fontEmbedCSS: opts.fontEmbedCSS,
     cacheBust: false,
+    // One unreachable photo shouldn't sink the whole export: it renders transparent instead.
+    imagePlaceholder: BLANK,
     style: { transform: "none", left: "0", top: "0", margin: "0" },
   };
-  // First pass warms decoding in Safari/WebKit; cheap enough to always do.
-  if (opts.type === "png") {
-    await toPng(node, { ...common, pixelRatio: 0.1 }).catch(() => {});
-    return toPng(node, common);
-  }
-  await toJpeg(node, { ...common, pixelRatio: 0.1 }).catch(() => {});
+  // WebKit sometimes paints images blank on the first SVG pass; a tiny warm-up fixes it.
+  // Chromium/Gecko don't need it, so skip the extra render there (halves export time).
+  if (IS_WEBKIT) await (opts.type === "png" ? toPng : toJpeg)(node, { ...common, pixelRatio: 0.05 }).catch(() => {});
+  if (opts.type === "png") return toPng(node, common);
   return toJpeg(node, { ...common, quality: opts.quality ?? 0.92, backgroundColor: "#ffffff" });
 }
 
 /* ------------------------------------------------------------- packaging -- */
 
-export function slug(s: string) {
-  return (
-    s
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 60) || "carousel"
-  );
-}
-
-export function download(href: string | Blob, filename: string) {
-  const url = typeof href === "string" ? href : URL.createObjectURL(href);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  if (typeof href !== "string") setTimeout(() => URL.revokeObjectURL(url), 4000);
-}
+export { slug, download } from "./download";
+import { slug } from "./download";
 
 export async function packageZip(images: string[], p: Project, ext: "png" | "jpg") {
   const { default: JSZip } = await import("jszip");

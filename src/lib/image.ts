@@ -41,3 +41,41 @@ export function loadImageSize(src: string): Promise<{ w: number; h: number }> {
     img.src = safeSrc(src);
   });
 }
+
+/* ------------------------------------------------------------ responsive -- */
+
+/** Round up to a 200px bucket so the browser cache gets reused across sizes. */
+const bucket = (w: number) => Math.min(2400, Math.max(200, Math.ceil(w / 200) * 200));
+
+/**
+ * Ask the image host for roughly the pixels we'll actually paint. Thumbnails
+ * and previews were downloading 1600–2400px originals; this alone cuts the
+ * landing page's image weight by ~10×. Without `width`, returns full quality
+ * (used for export).
+ */
+export function sizedSrc(src: string, width?: number): string {
+  if (!width || !src || src.startsWith("data:") || src.startsWith("blob:") || src.startsWith("/")) return safeSrc(src);
+  const w = bucket(width);
+  try {
+    const u = new URL(src);
+    const host = u.hostname;
+    if (host === "picsum.photos" || host === "fastly.picsum.photos") {
+      // /id/{id}/{W}/{H} → keep aspect, shrink
+      const m = u.pathname.match(/^\/id\/(\d+)\/(\d+)\/(\d+)/);
+      if (m && +m[2] > w) return `https://picsum.photos/id/${m[1]}/${w}/${Math.round((+m[3] * w) / +m[2])}`;
+      return src;
+    }
+    if (host === "images.unsplash.com" || host === "images.pexels.com") {
+      u.searchParams.set("w", String(w));
+      if (host === "images.unsplash.com") u.searchParams.set("q", "75");
+      return u.toString();
+    }
+    if (host === "wsrv.nl" || host === "images.weserv.nl") {
+      u.searchParams.set("w", String(w));
+      return u.toString();
+    }
+    return `https://wsrv.nl/?url=${encodeURIComponent(src)}&w=${w}&we&output=jpg&q=82`;
+  } catch {
+    return src;
+  }
+}

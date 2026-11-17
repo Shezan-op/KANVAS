@@ -288,7 +288,7 @@ export function Faq() {
       <div className="flex flex-col">
         {FAQ.map(([q, a], i) => (
           <Reveal key={q} delay={i * 0.04} className="border-b border-line">
-            <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-6 py-6 text-left" data-cursor={open === i ? "Close" : "Open"}>
+            <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-6 py-6 text-left">
               <span className="text-[18px] font-medium tracking-tight">{q}</span>
               <motion.span animate={{ rotate: open === i ? 45 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors", open === i ? "bg-accent text-accent-ink" : "bg-panel shadow-sm")}>
                 <Plus size={15} />
@@ -368,7 +368,7 @@ export function Footer() {
           whileInView={{ y: "0%" }}
           viewport={{ once: true }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif text-[clamp(6rem,24vw,22rem)] leading-[0.8] tracking-[-0.04em] text-ink italic select-none"
+          className="pr-[0.1em] pb-[0.24em] font-serif text-[clamp(6rem,24vw,22rem)] leading-[0.85] tracking-[-0.04em] text-ink italic select-none"
         >
           slyd<span className="text-accent">.</span>
         </motion.div>

@@ -322,6 +322,7 @@ export const useEditor = create<EditorState>((set, get) => ({
     });
     const next = get().project!.slides[Math.max(0, idx - 1)];
     if (sid === activeSlideId) set({ activeSlideId: next.id, selectedIds: [] });
+    onSlideDeleted?.();
   },
 
   moveSlide: (from, to) => {
@@ -350,6 +351,10 @@ export const useEditor = create<EditorState>((set, get) => ({
     });
   },
 }));
+
+/** Hook for UI feedback (an "Undo" toast) without the store importing UI code. */
+let onSlideDeleted: (() => void) | undefined;
+export const setOnSlideDeleted = (fn: () => void) => (onSlideDeleted = fn);
 
 /** Text height is content-driven; read it from the DOM when we need it. */
 export function measureHeight(id: string): number | null {

@@ -9,6 +9,7 @@ import type { Project, Slide, SlideElement, TextElement } from "@/lib/model/type
 import { useActiveSlide, useEditor } from "@/store/editor";
 import { cn } from "@/components/ui/cn";
 import { DND_MIME, filesToPayloads, insertImage, replaceImage, type ImagePayload } from "./insert";
+import { ContextMenu, QuickBar, Tips, type CtxState } from "./CanvasChrome";
 
 type Guide = { axis: "x" | "y"; pos: number };
 type Handle = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
@@ -38,7 +39,7 @@ export function Canvas() {
     return () => ro.disconnect();
   }, []);
 
-  const fit = Math.max(0.1, Math.min((box.w - 120) / SLIDE_W, (box.h - 96) / H));
+  const fit = Math.max(0.1, Math.min((box.w - 120) / SLIDE_W, (box.h - 116) / H));
   const k = zoom === "fit" ? fit : zoom;
 
   // Ctrl/⌘ + wheel zoom (trackpad pinch arrives as ctrl+wheel too)
@@ -62,7 +63,7 @@ export function Canvas() {
 
   return (
     <div ref={host} className="canvas-bg scroll-thin relative h-full w-full overflow-auto">
-      <div className="flex min-h-full min-w-full items-center justify-center" style={{ padding: "48px 60px", width: zoom === "fit" ? undefined : SLIDE_W * k + 240 }}>
+      <div className="flex min-h-full min-w-full items-center justify-center" style={{ padding: "40px 60px 76px", width: zoom === "fit" ? undefined : SLIDE_W * k + 240 }}>
         <div className="relative flex items-center">
           {/* Neighbour peeks give the "carousel" feel and are clickable */}
           {prev && <Peek slide={prev} project={project} k={k} side="left" index={idx - 1} onClick={() => gotoSlide(-1)} />}
@@ -70,23 +71,30 @@ export function Canvas() {
           {next && <Peek slide={next} project={project} k={k} side="right" index={idx + 1} onClick={() => gotoSlide(1)} />}
         </div>
       </div>
+      <Tips />
     </div>
   );
 }
 
 function Peek({ slide, project, k, side, index, onClick }: { slide: Slide; project: Project; k: number; side: "left" | "right"; index: number; onClick: () => void }) {
   const H = slideHeight(project.aspect);
-  const w = 64;
+  const w = 72;
   return (
     <button
       onClick={onClick}
-      className={cn("group absolute top-1/2 z-0 -translate-y-1/2 overflow-hidden rounded-md opacity-40 transition-all duration-300 hover:opacity-80", side === "left" ? "right-full mr-5" : "left-full ml-5")}
-      style={{ width: w, height: H * k * 0.9 }}
+      className={cn("group absolute top-1/2 z-0 -translate-y-1/2 overflow-hidden rounded-md opacity-70 transition-all duration-300 hover:opacity-100", side === "left" ? "right-full mr-5" : "left-full ml-5")}
+      style={{
+        width: w,
+        height: H * k * 0.9,
+        // Fade away from the active slide so neighbours read as "more this way", not clutter.
+        maskImage: `linear-gradient(to ${side === "left" ? "left" : "right"}, black 20%, transparent)`,
+        WebkitMaskImage: `linear-gradient(to ${side === "left" ? "left" : "right"}, black 20%, transparent)`,
+      }}
       title={side === "left" ? "Previous slide (←)" : "Next slide (→)"}
     >
       <div className={cn("absolute top-0 h-full", side === "left" ? "right-0" : "left-0")} style={{ width: SLIDE_W * k * 0.9 }}>
         <div style={{ transform: `scale(${k * 0.9})`, transformOrigin: side === "left" ? "100% 0" : "0 0", width: SLIDE_W, height: H, position: "absolute", [side === "left" ? "right" : "left"]: 0 }}>
-          <SlideRenderer slide={slide} doc={project} index={index} total={project.slides.length} />
+          <SlideRenderer slide={slide} doc={project} index={index} total={project.slides.length} displayWidth={SLIDE_W * k * 0.9} />
         </div>
       </div>
       <span className="absolute inset-0 grid place-items-center bg-black/0 text-white transition-colors group-hover:bg-black/20">
@@ -109,6 +117,9 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
   const [marquee, setMarquee] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [dropHint, setDropHint] = useState(false);
   const [hoverId, setHoverId] = useState<string | null>(null);
+  // True while dragging/resizing/rotating: hides the quick bar so it never lags behind the pointer.
+  const [busy, setBusy] = useState(false);
+  const [ctx, setCtx] = useState<CtxState | null>(null);
 
   const toSlide = useCallback(
     (cx: number, cy: number) => {
@@ -123,7 +134,10 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
     if (e.button !== 0) return;
     e.stopPropagation();
     const st = useEditor.getState();
-    if (st.editingId === el.id) return;
+    if (st.editingId === el.id) {
+      if (el.type === "image") startPan(e, el);
+      return;
+    }
     let ids = st.selectedIds;
     if (e.shiftKey || e.metaKey || e.ctrlKey) {
       select([el.id], "toggle");
@@ -157,6 +171,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
       let dx = p.x - start.x;
       let dy = p.y - start.y;
       if (!moved && Math.hypot(dx, dy) * k < 3) return;
+      if (!moved) setBusy(true);
       moved = true;
       if (ev.shiftKey) {
         if (Math.abs(dx) > Math.abs(dy)) dy = 0;
@@ -198,6 +213,35 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
     };
     const onUp = () => {
       setGuides([]);
+      setBusy(false);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  };
+
+  /* ------------------------------------------------------------- pan -- */
+  /** Reposition a photo inside its frame (object-position), like cropping without losing pixels. */
+  const startPan = (e: React.PointerEvent, el: Extract<SlideElement, { type: "image" }>) => {
+    e.preventDefault();
+    const start = toSlide(e.clientX, e.clientY);
+    const f0 = el.focus ?? { x: 50, y: 50 };
+    let first = true;
+    const onMove = (ev: PointerEvent) => {
+      const p = toSlide(ev.clientX, ev.clientY);
+      const clamp = (v: number) => Math.round(Math.min(100, Math.max(0, v)) * 10) / 10;
+      const focus = { x: clamp(f0.x - ((p.x - start.x) / el.w) * 120), y: clamp(f0.y - ((p.y - start.y) / el.h) * 120) };
+      mutate(
+        (d) => {
+          const t = d.slides.find((s) => s.id === slide.id)!.elements.find((x) => x.id === el.id);
+          if (t && t.type === "image") t.focus = focus;
+        },
+        { history: first ? undefined : false },
+      );
+      first = false;
+    };
+    const onUp = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
     };
@@ -211,6 +255,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
     e.preventDefault();
     const start = toSlide(e.clientX, e.clientY);
     const o = { x: el.x, y: el.y, w: el.w, h: elHeight(el), size: el.type === "text" ? el.size : 0 };
+    setBusy(true);
     const ratio = o.w / o.h;
     let first = true;
     const onMove = (ev: PointerEvent) => {
@@ -258,6 +303,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
       first = false;
     };
     const onUp = () => {
+      setBusy(false);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
     };
@@ -271,6 +317,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
     e.stopPropagation();
     e.preventDefault();
     const c = { x: el.x + el.w / 2, y: el.y + elHeight(el) / 2 };
+    setBusy(true);
     let first = true;
     const onMove = (ev: PointerEvent) => {
       const p = toSlide(ev.clientX, ev.clientY);
@@ -289,6 +336,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
       first = false;
     };
     const onUp = () => {
+      setBusy(false);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
     };
@@ -360,7 +408,7 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
         style={{
           ...style,
           pointerEvents: el.locked && !selected ? "none" : undefined,
-          cursor: el.locked ? "default" : editing ? "text" : "move",
+          cursor: el.locked ? "default" : editing ? (el.type === "image" ? "grab" : "text") : "move",
           zIndex: editing ? 5 : undefined,
         }}
         onPointerDown={(e) => startMove(e, el)}
@@ -369,7 +417,13 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
         onDoubleClick={(e) => {
           e.stopPropagation();
           if (el.type === "text" && !el.locked) setEditing(el.id);
-          if (el.type === "image") useEditor.getState().setLeftTab("photos");
+          if (el.type === "image" && !el.locked && el.fit === "cover") setEditing(el.id);
+        }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!useEditor.getState().selectedIds.includes(el.id)) select([el.id]);
+          setCtx({ x: e.clientX, y: e.clientY, at: toSlide(e.clientX, e.clientY), el });
         }}
       >
         {editing && el.type === "text" ? (
@@ -396,6 +450,9 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
           />
         )}
         {single && !editing && !el.locked && <Handles el={el} k={k} onResize={startResize} onRotate={startRotate} />}
+        {editing && el.type === "image" && (
+          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ outline: `${2 / k}px dashed var(--accent)`, outlineOffset: -1 / k }} />
+        )}
       </div>
     );
   };
@@ -433,6 +490,11 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
       className="relative z-10 shrink-0 shadow-[0_40px_80px_-30px_rgb(0_0_0/.35),0_0_0_1px_rgb(0_0_0/.06)]"
       style={{ width: SLIDE_W * k, height: H * k }}
       onPointerDown={startMarquee}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        select([]);
+        setCtx({ x: e.clientX, y: e.clientY, at: toSlide(e.clientX, e.clientY) });
+      }}
       onDragOver={(e) => {
         if (e.dataTransfer.types.includes(DND_MIME) || e.dataTransfer.types.includes("Files")) {
           e.preventDefault();
@@ -445,6 +507,19 @@ function Stage({ project, slide, k, index }: { project: Project; slide: Slide; k
       <div style={{ transform: `scale(${k})`, transformOrigin: "0 0", width: SLIDE_W, height: H }}>
         <SlideRenderer slide={slide} doc={project} index={index} total={project.slides.length} renderElement={renderElement} overlay={overlay} />
       </div>
+      {(() => {
+        if (busy || marquee || selectedIds.length !== 1) return null;
+        const el = slide.elements.find((x) => x.id === selectedIds[0]);
+        if (!el || el.locked || (editingId === el.id && el.type === "text")) return null;
+        if (editingId === el.id && el.type === "image")
+          return (
+            <div className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium whitespace-nowrap text-bg shadow-lg" style={{ top: -40 }}>
+              Drag to reposition · <kbd className="kbd !bg-transparent !text-bg !shadow-none">Esc</kbd> when done
+            </div>
+          );
+        return <QuickBar key={el.id} el={el} k={k} height={elHeight(el)} theme={project.theme} />;
+      })()}
+      <ContextMenu ctx={ctx} onClose={() => setCtx(null)} />
       <AnimatePresence>
         {dropHint && (
           <motion.div

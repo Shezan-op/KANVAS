@@ -4,26 +4,28 @@ import { AnimatePresence, motion } from "motion/react";
 import { create } from "zustand";
 import { CheckCircle2, AlertCircle, Info } from "lucide-react";
 
-type Toast = { id: number; text: string; kind: "ok" | "error" | "info" };
+type Action = { label: string; run: () => void };
+type Toast = { id: number; text: string; kind: "ok" | "error" | "info"; action?: Action };
 
 const useToasts = create<{ items: Toast[]; push: (t: Omit<Toast, "id">) => void; drop: (id: number) => void }>((set) => ({
   items: [],
   push: (t) => {
     const id = Date.now() + Math.random();
     set((s) => ({ items: [...s.items.slice(-3), { ...t, id }] }));
-    setTimeout(() => set((s) => ({ items: s.items.filter((x) => x.id !== id) })), t.kind === "error" ? 5200 : 2600);
+    setTimeout(() => set((s) => ({ items: s.items.filter((x) => x.id !== id) })), t.action ? 6000 : t.kind === "error" ? 5200 : 2600);
   },
   drop: (id) => set((s) => ({ items: s.items.filter((x) => x.id !== id) })),
 }));
 
 export const toast = {
-  ok: (text: string) => useToasts.getState().push({ text, kind: "ok" }),
+  ok: (text: string, action?: Action) => useToasts.getState().push({ text, kind: "ok", action }),
   error: (text: string) => useToasts.getState().push({ text, kind: "error" }),
-  info: (text: string) => useToasts.getState().push({ text, kind: "info" }),
+  info: (text: string, action?: Action) => useToasts.getState().push({ text, kind: "info", action }),
 };
 
 export function Toaster() {
   const items = useToasts((s) => s.items);
+  const drop = useToasts((s) => s.drop);
   return (
     <div className="pointer-events-none fixed bottom-6 left-1/2 z-[150] flex -translate-x-1/2 flex-col items-center gap-2">
       <AnimatePresence>
@@ -39,6 +41,17 @@ export function Toaster() {
           >
             {t.kind === "ok" ? <CheckCircle2 size={16} className="text-accent" /> : t.kind === "error" ? <AlertCircle size={16} className="text-red-400" /> : <Info size={16} />}
             {t.text}
+            {t.action && (
+              <button
+                onClick={() => {
+                  t.action!.run();
+                  drop(t.id);
+                }}
+                className="-my-1 -mr-2 ml-1 rounded-full bg-bg/15 px-2.5 py-1 text-[12px] font-semibold text-bg transition hover:bg-bg/25"
+              >
+                {t.action.label}
+              </button>
+            )}
           </motion.div>
         ))}
       </AnimatePresence>

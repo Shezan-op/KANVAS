@@ -64,7 +64,6 @@ function PaletteDemo() {
               <button
                 key={p.id}
                 onClick={() => setPi(i)}
-                data-cursor={p.name}
                 className={cn("relative h-9 w-9 rounded-full transition-transform duration-300 hover:scale-110", i === pi && "scale-110")}
                 style={{ background: `conic-gradient(${p.theme.bg} 0 50%, ${p.theme.accent} 50% 75%, ${p.theme.ink} 75%)` }}
               >
@@ -160,7 +159,6 @@ function TextureDemo() {
           onPointerEnter={() => setI(k)}
           className={cn("relative aspect-square overflow-hidden rounded-xl transition-all duration-500", k === i ? "ring-2 ring-ink" : "ring-1 ring-line")}
           style={{ background: k % 2 ? "#EFE9DD" : "#16150F" }}
-          data-cursor={t.name}
         >
           {mounted && <span className="absolute inset-0" style={{ ...textureCSS(t.id, 1, k % 2 === 0) }} />}
           <span className={cn("absolute bottom-1.5 left-2 font-mono text-[9px] tracking-wider uppercase", k % 2 ? "text-black/60" : "text-white/70")}>{t.name}</span>

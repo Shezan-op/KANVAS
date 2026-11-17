@@ -27,12 +27,15 @@ function hlStyle(style: HighlightStyle, color: string, size: number): CSSPropert
     case "italic":
       return { fontStyle: "italic", color };
     case "marker":
+      // A solid highlighter swipe: the text flips to whichever ink reads on the colour.
       return {
-        backgroundImage: `linear-gradient(transparent 52%, ${color} 52%, ${color} 92%, transparent 92%)`,
+        background: color,
+        color: isDark(color) ? "#FFFFFF" : "#0B0B0C",
         boxDecorationBreak: "clone",
         WebkitBoxDecorationBreak: "clone",
-        padding: "0 .08em",
-        margin: "0 -.04em",
+        padding: "0 .14em",
+        margin: "0 -.02em",
+        borderRadius: ".06em",
       };
     case "underline":
       return {

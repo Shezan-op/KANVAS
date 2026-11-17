@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, Reorder, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { Copy, Plus, Trash2 } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { SLIDE_W, slideHeight } from "@/lib/model/constants";
@@ -12,7 +12,8 @@ import { useEditor } from "@/store/editor";
 const THUMB_H = 92;
 
 export function Filmstrip() {
-  const project = useEditor((s) => s.project)!;
+  // Thumbnails render at low priority so dragging on the canvas never waits on them.
+  const project = useDeferredValue(useEditor((s) => s.project)!);
   const activeId = useEditor((s) => s.activeSlideId);
   const setActive = useEditor((s) => s.setActiveSlide);
   const mutate = useEditor((s) => s.mutate);

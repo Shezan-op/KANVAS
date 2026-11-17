@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Laptop } from "lucide-react";
 import { loadProject, saveProject } from "@/lib/storage";
-import { useEditor } from "@/store/editor";
+import { setOnSlideDeleted, useEditor } from "@/store/editor";
 import { Toaster, toast } from "@/components/ui/Toast";
 import { LogoMark } from "@/components/ui/Logo";
 import { TopBar } from "./TopBar";
@@ -91,6 +91,7 @@ export function Editor() {
   }, []);
 
   useHotkeys();
+  useEffect(() => setOnSlideDeleted(() => toast.info("Slide deleted", { label: "Undo", run: () => useEditor.getState().undo() })), []);
 
   if (missing)
     return (

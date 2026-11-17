@@ -54,10 +54,10 @@ export function Nav() {
         </div>
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className={buttonClass("ghost", "sm", "hidden sm:inline-flex")} data-cursor="Star">
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className={buttonClass("ghost", "sm", "hidden sm:inline-flex")}>
             <Github size={15} /> GitHub
           </a>
-          <Link href="/app" className={buttonClass("ink", "sm", "group")} data-cursor="Open">
+          <Link href="/app" className={buttonClass("ink", "sm", "group")}>
             Open editor <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
@@ -95,7 +95,6 @@ function DeckFan() {
         const r = e.currentTarget.getBoundingClientRect();
         setMx(((e.clientX - r.left) / r.width - 0.5) * 2);
       }}
-      data-cursor="Fan"
     >
       <AnimatePresence mode="popLayout">
         {slides.map((s, i) => {
@@ -128,7 +127,6 @@ function DeckFan() {
             key={id}
             onClick={() => setTi(i)}
             aria-label={`Show ${id}`}
-            data-cursor="none"
             className={cn("h-1.5 rounded-full transition-all duration-500", i === ti ? "w-6 bg-ink" : "w-1.5 bg-line-2 hover:bg-muted")}
           />
         ))}
@@ -142,7 +140,7 @@ export function Hero() {
   const y = useSpring(useTransform(scrollY, [0, 800], [0, 140]), { stiffness: 120, damping: 30 });
   const fade = useTransform(scrollY, [0, 600], [1, 0.2]);
   return (
-    <section className="relative overflow-hidden pt-36 pb-20">
+    <section className="relative overflow-hidden pt-32 pb-16">
       <HeroShader className="absolute inset-0 -z-10 h-[115%]" />
       <motion.div style={{ y, opacity: fade }} className="mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
         <motion.a
@@ -152,8 +150,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="group mb-8 inline-flex items-center gap-2 rounded-full bg-panel/80 py-1 pr-3 pl-1 text-[13px] text-ink-2 shadow-sm backdrop-blur"
-          data-cursor="Star"
+          className="group mb-7 inline-flex items-center gap-2 rounded-full bg-panel/80 py-1 pr-3 pl-1 text-[13px] text-ink-2 shadow-sm backdrop-blur"
         >
           <span className="rounded-full bg-ink px-2 py-0.5 text-[11px] font-semibold tracking-wide text-bg">NEW</span>
           Open source, MIT licensed, free forever
@@ -168,7 +165,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
-          className="mt-7 max-w-xl text-[18px] leading-relaxed text-ink-2 text-pretty"
+          className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-2 text-pretty"
         >
           Slyd is a free carousel maker built for laptops. Start from templates, stock photos, brand kits and real textures, then export
           pixel-perfect PNG, PDF or ZIP in one click.
@@ -178,7 +175,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
-          className="mt-9 flex flex-wrap items-center justify-center gap-3"
+          className="mt-8 flex flex-wrap items-center justify-center gap-3"
         >
           <MagneticLink href="/app" cursor="Create">
             Start creating, it&apos;s free
@@ -207,7 +204,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="mt-14"
+        className="mt-6 origin-top scale-[.62] sm:scale-[.8] lg:scale-100"
       >
         <DeckFan />
       </motion.div>

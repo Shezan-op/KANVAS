@@ -242,15 +242,6 @@ input[type="range"].range::-moz-range-thumb {
   animation: shimmer 1.6s ease-in-out infinite;
 }
 
-/* Hide default cursor where the smart cursor is active (pointer devices only) */
-@media (hover: hover) and (pointer: fine) {
-  .smart-cursor-on,
-  .smart-cursor-on a,
-  .smart-cursor-on button {
-    cursor: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

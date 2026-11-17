@@ -16,6 +16,7 @@ import { TEMPLATES, projectFromTemplate } from "@/lib/model/templates";
 import { uid } from "@/lib/model/factory";
 import { deleteProject, getPref, importProjectFile, listProjects, saveProject } from "@/lib/storage";
 import type { AspectId, Project } from "@/lib/model/types";
+import { useEditor } from "@/store/editor";
 
 function timeAgo(t: number) {
   const s = Math.round((Date.now() - t) / 1000);
@@ -38,7 +39,11 @@ export function Dashboard() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    listProjects().then(setProjects);
+    // The editor may still be flushing its last autosave; prefer its in-memory copy.
+    listProjects().then((ps) => {
+      const live = useEditor.getState().project;
+      setProjects(live ? ps.map((p) => (p.id === live.id ? live : p)) : ps);
+    });
   }, []);
 
   const create = async (templateId: string) => {
@@ -49,10 +54,15 @@ export function Dashboard() {
     router.push(`/app/edit?id=${p.id}`);
   };
 
-  // Deep link from the landing page: /app?template=noir
+  // Deep link from the landing page: /app?template=noir. Guarded so React's
+  // dev double-effects (and back-button revisits) never create duplicates.
+  const handled = useRef<string | null>(null);
   useEffect(() => {
     const t = params.get("template");
-    if (t) create(t);
+    if (!t || handled.current === t) return;
+    handled.current = t;
+    router.replace("/app");
+    create(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
@@ -63,11 +73,17 @@ export function Dashboard() {
     toast.ok("Duplicated");
   };
 
+  // Delete instantly, offer Undo. Faster than a confirm dialog and just as safe.
   const remove = async (p: Project) => {
-    if (!window.confirm(`Delete "${p.name}"? This can't be undone.`)) return;
     await deleteProject(p.id);
     setProjects((ps) => (ps ?? []).filter((x) => x.id !== p.id));
-    toast.info(`Deleted "${p.name}"`);
+    toast.info(`Deleted "${p.name}"`, {
+      label: "Undo",
+      run: async () => {
+        await saveProject(p);
+        setProjects((ps) => [p, ...(ps ?? [])].sort((a, b) => b.updatedAt - a.updatedAt));
+      },
+    });
   };
 
   const onImport = async (f: File) => {
@@ -89,7 +105,7 @@ export function Dashboard() {
     <div className="min-h-screen" onClick={() => setMenu(null)}>
       <header className="sticky top-0 z-30 border-b border-line bg-bg/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-8">
-          <Logo />
+          <Logo size="md" />
           <div className="flex-1" />
           <div className="relative w-72">
             <Search size={15} className="absolute top-1/2 left-3 -translate-y-1/2 text-muted" />

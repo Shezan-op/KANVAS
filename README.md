@@ -31,7 +31,7 @@ Optional: copy `.env.example` to `.env.local` and add Unsplash or Pexels keys. U
 | Styling | Tailwind CSS v4 + CSS tokens | One token set drives light and dark mode |
 | UI motion | Motion (Framer Motion) | Springs, layout animations, presence |
 | Scroll motion | GSAP + ScrollTrigger, Lenis | Pinned horizontal gallery, scrubbed reveals, smooth scroll |
-| 3D / shaders | Three.js | Hero "silk" fragment shader |
+| Shaders | Raw WebGL (~2 KB) | Hero "silk" fragment shader; Three.js was 130 KB for one quad |
 | State | Zustand + Immer | Small store, structural-sharing undo history |
 | Persistence | IndexedDB (idb-keyval) | No 5 MB localStorage limit |
 | Export | html-to-image, JSZip, jsPDF | The DOM that renders a slide is the DOM that gets exported |
@@ -66,6 +66,9 @@ src/
 - **Theme tokens.** Colours are stored as `$bg`, `$ink`, `$accent`, `$muted` or `$surface`, or as literal hex. Fonts are stored as `$heading`, `$body` or a family name. Templates use tokens, so restyling is one assignment.
 - **History by reference.** Every mutation goes through Immer, so each history entry is a structurally shared snapshot. Drags and slider scrubs coalesce into one undo step.
 - **Export-safe textures.** Noise textures are PNG tiles generated on a canvas (alpha noise only, no SVG filters or blend modes), so they survive html-to-image unchanged.
+- **Responsive images.** Previews ask the image host (Picsum, Unsplash, Pexels, wsrv) for roughly the pixels they paint, and load lazily. Exports always use full resolution.
+- **Cheap re-renders.** `SlideRenderer` is memoized on slide/theme/brand identity, and the filmstrip renders through `useDeferredValue`, so a drag costs ~1 ms per move even in a 12-slide deck.
+- **Lazy export.** html-to-image, JSZip and jsPDF load only when you press Export.
 - **CORS-safe images.** Hosts that send CORS headers pass through. Everything else goes through the open-source [wsrv.nl](https://wsrv.nl) proxy, so exports never taint the canvas.
 - **Fixed slide coordinates.** Every slide is 1080 px wide and its height depends on the aspect ratio. Changing aspect reflows elements proportionally.
 
