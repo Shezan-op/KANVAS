@@ -70,7 +70,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Canvas fonts: loaded globally so slides render identically everywhere. */}
         <link rel="stylesheet" href={googleFontsHref()} crossOrigin="anonymous" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         {/* rel="me" links the site to the author's verified profiles */}
         {AUTHOR.profiles.map((p) => (
           <link key={p.href} rel="me" href={p.href} />
