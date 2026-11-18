@@ -43,7 +43,7 @@ export function createSlydServer() {
         "Create a designed, editable social-media carousel and return a link that opens it in Slyd (the user's browser), where they can edit and export PNG/PDF/ZIP. " +
         "Write the words yourself: start with a 'cover' hook, one idea per slide, end with a 'cta'. 5–10 slides is ideal. " +
         "Highlight 1–3 key words per slide with *asterisks*. Any photo can be an https URL or a few search words. " +
-        "Everything visual is optional (template, format, palette, fonts, colours, textures, backgrounds, brand, freeform elements). Call get_carousel_guide for the full option list.",
+        "Everything visual is optional (template, format, palette, fonts, colours, textures, backgrounds, brand, freeform elements). The full option list is in get_carousel_guide.",
       inputSchema: CarouselSpec.shape,
       annotations: { title: "Create carousel", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },
@@ -74,7 +74,7 @@ export function createSlydServer() {
     {
       title: "Carousel guide",
       description:
-        "Everything needed to write a great Slyd carousel: copywriting rules, every slide layout and its fields, templates, palettes, fonts, textures, backgrounds, icons, freeform element coordinates, and a complete example. Call once before your first create_carousel if unsure.",
+        "Everything needed to write a great Slyd carousel: copywriting rules, every slide layout and its fields, templates, palettes, fonts, textures, backgrounds, icons, freeform element coordinates, and a complete example. Useful before a first carousel.",
       annotations: { title: "Carousel guide", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },
     async () => ({ content: [{ type: "text", text: carouselGuide() }] }),
@@ -85,7 +85,7 @@ export function createSlydServer() {
     {
       title: "Read carousel link",
       description:
-        "Turn a Slyd carousel link (…/app/new#s=… or #j=…) back into its JSON spec, so you can revise it. Edit the spec, then call create_carousel to get a new link.",
+        "Turn a Slyd carousel link (…/app/new#s=… or #j=…) back into its JSON spec, so it can be revised and passed to create_carousel for a new link.",
       inputSchema: { url: z.string().min(10).describe("The Slyd link the user shared.") },
       annotations: { title: "Read carousel link", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },

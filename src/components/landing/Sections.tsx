@@ -336,7 +336,7 @@ export function FinalCta() {
 
 export function Footer() {
   const cols = [
-    { h: "Product", l: [["Editor", "/app"], ["For AI agents", "/agents"], ["Templates", "#templates"], ["FAQ", "#faq"]] },
+    { h: "Product", l: [["Editor", "/app"], ["For AI agents", "/agents"], ["Templates", "#templates"], ["FAQ", "#faq"], ["Privacy", "/privacy"]] },
     { h: "Open source", l: [["GitHub", REPO_URL], ["GitLab mirror", GITLAB_REPO_URL], ["Report a bug", ISSUES_URL], ["MIT License", LICENSE_URL]] },
     { h: "Photos by", l: [["Unsplash", "https://unsplash.com"], ["Pexels", "https://pexels.com"], ["Openverse", "https://openverse.org"], ["Picsum", "https://picsum.photos"]] },
   ];
