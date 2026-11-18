@@ -5,22 +5,45 @@ import { create } from "zustand";
 import { CheckCircle2, AlertCircle, Info } from "lucide-react";
 
 type Action = { label: string; run: () => void };
-type Toast = { id: number; text: string; kind: "ok" | "error" | "info"; action?: Action };
+type Toast = { id: number; text: string; kind: "ok" | "error" | "info"; action?: Action; key?: string; onClose?: () => void };
+type Options = { key?: string; onClose?: () => void };
 
-const useToasts = create<{ items: Toast[]; push: (t: Omit<Toast, "id">) => void; drop: (id: number) => void }>((set) => ({
-  items: [],
-  push: (t) => {
-    const id = Date.now() + Math.random();
-    set((s) => ({ items: [...s.items.slice(-3), { ...t, id }] }));
-    setTimeout(() => set((s) => ({ items: s.items.filter((x) => x.id !== id) })), t.action ? 6000 : t.kind === "error" ? 5200 : 2600);
-  },
-  drop: (id) => set((s) => ({ items: s.items.filter((x) => x.id !== id) })),
-}));
+const timers = new Map<number, ReturnType<typeof setTimeout>>();
+const lifetime = (t: Pick<Toast, "action" | "kind">) => (t.action ? 6000 : t.kind === "error" ? 5200 : 2600);
+
+const useToasts = create<{ items: Toast[]; push: (t: Omit<Toast, "id">) => void; drop: (id: number) => void }>((set, get) => {
+  const expire = (id: number, ms: number) => {
+    clearTimeout(timers.get(id));
+    timers.set(id, setTimeout(() => get().drop(id), ms));
+  };
+  return {
+    items: [],
+    push: (t) => {
+      // A toast with the same key is updated in place (and its timer restarted) instead of stacking duplicates.
+      const same = t.key ? get().items.find((x) => x.key === t.key) : undefined;
+      if (same) {
+        set((s) => ({ items: s.items.map((x) => (x.id === same.id ? { ...x, ...t, id: same.id } : x)) }));
+        expire(same.id, lifetime(t));
+        return;
+      }
+      const id = Date.now() + Math.random();
+      set((s) => ({ items: [...s.items.slice(-3), { ...t, id }] }));
+      expire(id, lifetime(t));
+    },
+    drop: (id) => {
+      clearTimeout(timers.get(id));
+      timers.delete(id);
+      const t = get().items.find((x) => x.id === id);
+      set((s) => ({ items: s.items.filter((x) => x.id !== id) }));
+      t?.onClose?.();
+    },
+  };
+});
 
 export const toast = {
-  ok: (text: string, action?: Action) => useToasts.getState().push({ text, kind: "ok", action }),
+  ok: (text: string, action?: Action, opts?: Options) => useToasts.getState().push({ text, kind: "ok", action, ...opts }),
   error: (text: string) => useToasts.getState().push({ text, kind: "error" }),
-  info: (text: string, action?: Action) => useToasts.getState().push({ text, kind: "info", action }),
+  info: (text: string, action?: Action, opts?: Options) => useToasts.getState().push({ text, kind: "info", action, ...opts }),
 };
 
 export function Toaster() {

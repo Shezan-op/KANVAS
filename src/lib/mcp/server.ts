@@ -19,7 +19,21 @@ Nothing is stored on a server: the whole carousel travels inside the link.`;
 const pretty = (x: unknown) => JSON.stringify(x, null, 2);
 
 export function createSlydServer() {
-  const server = new McpServer({ name: "slyd", title: "Slyd — Carousel maker", version: "1.0.0", websiteUrl: SITE_URL }, { instructions: INSTRUCTIONS });
+  const server = new McpServer(
+    {
+      name: "slyd",
+      title: "Slyd — Carousel maker",
+      version: "1.1.0",
+      websiteUrl: SITE_URL,
+      // Shown by MCP clients (e.g. Claude's connector list) instead of a generic placeholder.
+      icons: [
+        { src: `${SITE_URL}/icon-512.png`, mimeType: "image/png", sizes: ["512x512"] },
+        { src: `${SITE_URL}/icon-192.png`, mimeType: "image/png", sizes: ["192x192"] },
+        { src: `${SITE_URL}/icon.svg`, mimeType: "image/svg+xml", sizes: ["any"] },
+      ],
+    },
+    { instructions: INSTRUCTIONS },
+  );
 
   server.registerTool(
     "create_carousel",

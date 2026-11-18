@@ -317,12 +317,15 @@ export const useEditor = create<EditorState>((set, get) => ({
     if (!project || project.slides.length <= 1) return;
     const sid = id ?? activeSlideId;
     const idx = project.slides.findIndex((s) => s.id === sid);
+    if (idx < 0) return;
+    const removed = project.slides[idx];
     get().mutate((d) => {
       d.slides.splice(idx, 1);
     });
     const next = get().project!.slides[Math.max(0, idx - 1)];
     if (sid === activeSlideId) set({ activeSlideId: next.id, selectedIds: [] });
-    onSlideDeleted?.();
+    deletedBatch.push({ slide: removed, index: idx });
+    onSlideDeleted?.(deletedBatch.length);
   },
 
   moveSlide: (from, to) => {
@@ -353,8 +356,28 @@ export const useEditor = create<EditorState>((set, get) => ({
 }));
 
 /** Hook for UI feedback (an "Undo" toast) without the store importing UI code. */
-let onSlideDeleted: (() => void) | undefined;
-export const setOnSlideDeleted = (fn: () => void) => (onSlideDeleted = fn);
+let onSlideDeleted: ((count: number) => void) | undefined;
+export const setOnSlideDeleted = (fn: (count: number) => void) => (onSlideDeleted = fn);
+
+/**
+ * Slides deleted since the last "Slide deleted" toast appeared. Undo puts back
+ * exactly these slides at their old positions, even if other edits happened since.
+ */
+let deletedBatch: { slide: Slide; index: number }[] = [];
+export const clearDeletedSlides = () => void (deletedBatch = []);
+export function restoreDeletedSlides() {
+  const items = [...deletedBatch].reverse();
+  deletedBatch = [];
+  if (!items.length) return;
+  const st = useEditor.getState();
+  st.mutate((d) => {
+    for (const { slide, index } of items) {
+      if (d.slides.some((s) => s.id === slide.id)) continue;
+      d.slides.splice(Math.min(index, d.slides.length), 0, slide as Draft<Slide>);
+    }
+  });
+  useEditor.setState({ activeSlideId: items[items.length - 1].slide.id, selectedIds: [], editingId: null });
+}
 
 /** Text height is content-driven; read it from the DOM when we need it. */
 export function measureHeight(id: string): number | null {

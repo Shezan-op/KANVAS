@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Laptop } from "lucide-react";
 import { loadProject, saveProject } from "@/lib/storage";
-import { setOnSlideDeleted, useEditor } from "@/store/editor";
+import { clearDeletedSlides, restoreDeletedSlides, setOnSlideDeleted, useEditor } from "@/store/editor";
 import { Toaster, toast } from "@/components/ui/Toast";
 import { LogoMark } from "@/components/ui/Logo";
 import { TopBar } from "./TopBar";
@@ -101,7 +101,12 @@ export function Editor() {
     router.replace(`/app/edit?id=${id}`);
     setTimeout(() => useEditor.getState().setModal(openParam), 350);
   }, [loaded, openParam, id, router]);
-  useEffect(() => setOnSlideDeleted(() => toast.info("Slide deleted", { label: "Undo", run: () => useEditor.getState().undo() })), []);
+  // One toast for a run of deletes ("3 slides deleted"), and Undo restores exactly those slides.
+  useEffect(() => {
+    setOnSlideDeleted((n) =>
+      toast.info(n === 1 ? "Slide deleted" : `${n} slides deleted`, { label: "Undo", run: restoreDeletedSlides }, { key: "slide-deleted", onClose: clearDeletedSlides }),
+    );
+  }, []);
 
   if (missing)
     return (
