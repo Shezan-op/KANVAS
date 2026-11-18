@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { googleFontsHref } from "@/lib/model/constants";
 import { Analytics } from "@vercel/analytics/next";
 import { AUTHOR, GITLAB_REPO_URL, REPO_URL, SITE_URL } from "@/lib/site";
+import { OG_ALT, OG_SIZE } from "@/lib/og";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -27,8 +28,15 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Slyd",
     url: SITE_URL,
+    locale: "en_US",
+    images: [{ url: "/og.jpg", secureUrl: `${SITE_URL}/og.jpg`, ...OG_SIZE, type: "image/jpeg", alt: OG_ALT }],
   },
-  twitter: { card: "summary_large_image", title: "Slyd — Carousels that stop the scroll", description: "Free, open source, laptop-first carousel maker." },
+  twitter: {
+    card: "summary_large_image",
+    title: "Slyd — Carousels that stop the scroll",
+    description: "Free, open source, laptop-first carousel maker.",
+    images: [{ url: "/og.jpg", alt: OG_ALT }],
+  },
 };
 
 /** Structured data: tells search engines who built Slyd and links every profile to the author. */
