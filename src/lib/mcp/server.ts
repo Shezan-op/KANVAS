@@ -40,10 +40,9 @@ export function createSlydServer() {
     {
       title: "Create carousel",
       description:
-        "Create a designed, editable social-media carousel and return a link that opens it in Slyd (the user's browser), where they can edit and export PNG/PDF/ZIP. " +
-        "Write the words yourself: start with a 'cover' hook, one idea per slide, end with a 'cta'. 5–10 slides is ideal. " +
-        "Highlight 1–3 key words per slide with *asterisks*. Any photo can be an https URL or a few search words. " +
-        "Everything visual is optional (template, format, palette, fonts, colours, textures, backgrounds, brand, freeform elements). The full option list is in get_carousel_guide.",
+        "Creates a designed, editable social-media carousel from a carousel spec and returns a link that opens it in the Slyd editor in the browser, where it can be edited and exported as PNG, PDF or ZIP. " +
+        "A spec is a list of slides (layouts: cover, point, list, quote, photo, stat, cta, blank) plus optional styling: template, format, palette, fonts, colours, textures, backgrounds, brand and freeform elements. " +
+        "Words wrapped in *asterisks* are highlighted. Photos can be https URLs or search words, which are matched to free stock photos. Nothing is stored: the carousel is encoded in the returned link.",
       inputSchema: CarouselSpec.shape,
       annotations: { title: "Create carousel", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },
@@ -58,9 +57,9 @@ export function createSlydServer() {
         "",
         `Open in Slyd: ${url}`,
         "",
-        "Share that link with the user as a clickable link. It opens their carousel in Slyd, where they can edit anything and export PNG, PDF or ZIP. The carousel lives in the link itself; nothing is uploaded.",
+        "The link opens the carousel in Slyd, where it can be edited and exported as PNG, PDF or ZIP. The carousel lives in the link itself; nothing is uploaded.",
         photos ? `Photos described in words are matched to free stock photos when the link opens (${photos} slide${photos > 1 ? "s" : ""}).` : "",
-        tips.length ? `\nSuggestions (optional, fix and call again if you agree):\n${tips.map((x) => `- ${x}`).join("\n")}` : "",
+        tips.length ? `\nOptional suggestions:\n${tips.map((x) => `- ${x}`).join("\n")}` : "",
       ].filter((l) => l !== "");
       return {
         content: [{ type: "text", text: lines.join("\n") }],
@@ -74,7 +73,7 @@ export function createSlydServer() {
     {
       title: "Carousel guide",
       description:
-        "Everything needed to write a great Slyd carousel: copywriting rules, every slide layout and its fields, templates, palettes, fonts, textures, backgrounds, icons, freeform element coordinates, and a complete example. Useful before a first carousel.",
+        "Returns reference documentation for the carousel spec: every slide layout and its fields, templates, palettes, fonts, textures, backgrounds, icons, freeform element coordinates, writing tips and a complete example.",
       annotations: { title: "Carousel guide", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },
     async () => ({ content: [{ type: "text", text: carouselGuide() }] }),
@@ -85,7 +84,7 @@ export function createSlydServer() {
     {
       title: "Read carousel link",
       description:
-        "Turn a Slyd carousel link (…/app/new#s=… or #j=…) back into its JSON spec, so it can be revised and passed to create_carousel for a new link.",
+        "Decodes a Slyd carousel link (…/app/new#s=… or #j=…) and returns the carousel spec it contains.",
       inputSchema: { url: z.string().min(10).describe("The Slyd link the user shared.") },
       annotations: { title: "Read carousel link", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },
@@ -96,7 +95,7 @@ export function createSlydServer() {
         if (!parsed.success) {
           return { isError: true, content: [{ type: "text", text: `The link decoded but isn't a valid carousel:\n${parsed.error.issues.map((i) => `- ${i.path.join(".")}: ${i.message}`).join("\n")}` }] };
         }
-        return { content: [{ type: "text", text: `Carousel spec (${parsed.data.slides.length} slides). Edit it and call create_carousel:\n\n${pretty(parsed.data)}` }], structuredContent: { spec: parsed.data } };
+        return { content: [{ type: "text", text: `Carousel spec (${parsed.data.slides.length} slides):\n\n${pretty(parsed.data)}` }], structuredContent: { spec: parsed.data } };
       } catch {
         return {
           isError: true,

@@ -15,7 +15,7 @@ import type { AspectId, HighlightStyle, ImageFilter, ShapeKind, TextureKind } fr
  *  - `elements` add freeform text/images/shapes/icons at exact positions on a 1080px-wide canvas.
  */
 
-const HL = "Wrap 1–3 key words in *asterisks* to highlight them.";
+const HL = "Words wrapped in *asterisks* are highlighted (1–3 per slide reads best).";
 const PHOTO = "An https image URL, or 2–5 search words describing the photo (e.g. 'minimal desk at sunrise'); Slyd finds a free stock photo.";
 
 const tuple = <T extends string>(xs: readonly T[]) => xs as unknown as [T, ...T[]];
@@ -126,7 +126,7 @@ const common = {
 };
 
 const cover = z.object({
-  layout: z.literal("cover").describe("The hook. Always the first slide."),
+  layout: z.literal("cover").describe("The hook slide, normally first."),
   kicker: z.string().max(40).optional().describe("Small label above the title, e.g. 'Founder lessons' or 'Part 1 of 3'."),
   title: z.string().min(1).max(110).describe(`The hook: a bold promise or tension in under ~10 words. ${HL}`),
   subtitle: z.string().max(140).optional().describe("One supporting line, e.g. what they get by swiping."),
