@@ -10,8 +10,8 @@ export const REPO_URL = process.env.NEXT_PUBLIC_REPO_URL || GITHUB_REPO_URL;
 export const ISSUES_URL = `${REPO_URL}/issues`;
 export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE`;
 
-/** Public URL of the deployed site, used for canonical/OG tags once it's live. */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "";
+/** Public URL of the deployed site: canonical links, share cards, sitemap. */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://tryslyd.vercel.app").replace(/\/$/, "");
 
 /**
  * Tag outbound links to the author's own site so its analytics can attribute

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { googleFontsHref } from "@/lib/model/constants";
+import { Analytics } from "@vercel/analytics/next";
 import { AUTHOR, GITLAB_REPO_URL, REPO_URL, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
   title: "Slyd — Carousels that stop the scroll",
   description:
     "Slyd is a free, open source carousel maker for Instagram, LinkedIn and X. Templates, stock photos, brand kits, textures and pixel-perfect exports — all in your browser.",
-  ...(SITE_URL ? { metadataBase: new URL(SITE_URL) } : {}),
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
+  verification: { google: "IooyyTv3W9f5d54zXwZwzYskzIoT8cjkhlRhOr9BWUs" },
   applicationName: "Slyd",
   authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
   creator: AUTHOR.name,
@@ -23,6 +26,7 @@ export const metadata: Metadata = {
     description: `Free, open source, laptop-first carousel maker by ${AUTHOR.name}.`,
     type: "website",
     siteName: "Slyd",
+    url: SITE_URL,
   },
   twitter: { card: "summary_large_image", title: "Slyd — Carousels that stop the scroll", description: "Free, open source, laptop-first carousel maker." },
 };
@@ -37,7 +41,7 @@ const jsonLd = {
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   license: "https://opensource.org/licenses/MIT",
   codeRepository: [REPO_URL, GITLAB_REPO_URL],
-  ...(SITE_URL ? { url: SITE_URL } : {}),
+  url: SITE_URL,
   author: {
     "@type": "Person",
     name: AUTHOR.name,
@@ -73,7 +77,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ))}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="font-sans grain">{children}</body>
+      <body className="font-sans grain">
+        {children}
+        {/* Privacy-friendly page views; enable "Analytics" for the project in the Vercel dashboard */}
+        <Analytics />
+      </body>
     </html>
   );
 }

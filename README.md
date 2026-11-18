@@ -1,5 +1,7 @@
 # Slyd
 
+**[Try it live → tryslyd.vercel.app](https://tryslyd.vercel.app)**
+
 Built by **[Venu Kumar Mutyala](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme)**, Gen AI Engineer · [LinkedIn](https://www.linkedin.com/in/venukumarmd) · [GitHub](https://github.com/mdvenukumar) · [GitLab](https://gitlab.com/venukumar.ai) · [Instagram](https://www.instagram.com/itsvenukumar)
 
 **Carousels that stop the scroll.** Slyd is a free, open source, laptop-first carousel maker for Instagram, LinkedIn, X and the rest. It runs in the browser: no account, no server, and your files stay on your machine.
