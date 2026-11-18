@@ -54,7 +54,8 @@ function Card({ rotate, left, top, bg, border, children }: { rotate: number; lef
   );
 }
 
-export async function renderOg() {
+/** `canvas` lets the same 1200×630 design sit centred on a larger image (GitHub wants 1280×640). */
+export async function renderOg(canvas: { width: number; height: number } = OG_SIZE) {
   const [sansBold, serifItalic, mono] = await Promise.all([googleFont("Inter Tight", 700), googleFont("Instrument Serif", 400, true), googleFont("JetBrains Mono", 500)]);
   const fonts = [
     sansBold && { name: "Inter Tight", data: sansBold, weight: 700 as const, style: "normal" as const },
@@ -65,7 +66,9 @@ export async function renderOg() {
 
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", background: C.bg, fontFamily: "Inter Tight", position: "relative", overflow: "hidden" }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: C.bg, overflow: "hidden" }}>
+      {/* The design is laid out at 1200×630; on a larger canvas the side slides bleed to the edge instead of being clipped. */}
+      <div style={{ width: OG_SIZE.width, height: OG_SIZE.height, flexShrink: 0, display: "flex", fontFamily: "Inter Tight", position: "relative" }}>
         {/* warm glow behind the headline */}
         <div style={{ position: "absolute", left: 300, top: 40, width: 600, height: 520, borderRadius: 999, background: "linear-gradient(135deg, rgba(255,90,31,.22), rgba(255,200,107,.10))", filter: "blur(70px)", display: "flex" }} />
 
@@ -119,7 +122,8 @@ export async function renderOg() {
           <div style={{ marginTop: 16, fontSize: 17, color: C.muted, fontFamily: "JetBrains Mono", letterSpacing: 0.5, display: "flex" }}>{`by ${AUTHOR.name}`}</div>
         </div>
       </div>
+      </div>
     ),
-    { ...OG_SIZE, fonts, headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } },
+    { ...canvas, fonts, headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } },
   );
 }

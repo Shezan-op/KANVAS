@@ -18,6 +18,7 @@ import { deleteProject, getPref, importProjectFile, listProjects, saveProject } 
 import type { AspectId, Project } from "@/lib/model/types";
 import { useEditor } from "@/store/editor";
 import { AUTHOR, tracked } from "@/lib/site";
+import { StarButton } from "@/components/ui/StarButton";
 
 function timeAgo(t: number) {
   const s = Math.round((Date.now() - t) / 1000);
@@ -126,6 +127,7 @@ export function Dashboard() {
               className="h-9 w-full rounded-xl bg-panel pr-3 pl-9 text-[13.5px] shadow-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-accent/40"
             />
           </div>
+          <StarButton />
           <Link href="/agents" className={buttonClass("ghost", "sm")}>
             <Bot size={15} /> AI agents
           </Link>

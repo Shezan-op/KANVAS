@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.venukumaraitech/slyd",
+  "title": "Slyd",
+  "description": "Create designed, editable Instagram and LinkedIn carousels from a prompt. No API key.",
+  "version": "1.1.0",
+  "websiteUrl": "https://tryslyd.vercel.app/agents",
+  "repository": {
+    "url": "https://github.com/venukumaraitech/slyd",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://tryslyd.vercel.app/icon-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    },
+    {
+      "src": "https://tryslyd.vercel.app/icon-192.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "192x192"
+      ]
+    },
+    {
+      "src": "https://tryslyd.vercel.app/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://tryslyd.vercel.app/mcp"
+    }
+  ]
+}

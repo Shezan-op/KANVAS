@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Try Slyd
+    url: https://tryslyd.vercel.app
+    about: Open the editor in your browser.
+  - name: Connect an AI agent
+    url: https://tryslyd.vercel.app/agents
+    about: Setup for Claude, ChatGPT, Cursor and VS Code.

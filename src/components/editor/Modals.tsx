@@ -15,6 +15,7 @@ import { toast } from "@/components/ui/Toast";
 import { Segmented } from "@/components/ui/controls";
 import { useEditor } from "@/store/editor";
 import { AUTHOR, tracked } from "@/lib/site";
+import { StarButton } from "@/components/ui/StarButton";
 
 export function Modals() {
   const modal = useEditor((s) => s.modal);
@@ -426,7 +427,7 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
         Download project file
       </button>
       <div className="mt-7 flex items-center justify-between border-t border-line pt-4 text-[12px] text-muted">
-        <span>Slyd · open source, MIT</span>
+        <StarButton label="Star Slyd" />
         <a href={tracked(AUTHOR.url, "editor-settings")} target="_blank" rel="author noopener" className="hover:text-accent">
           Built by <span className="text-ink-2">{AUTHOR.name}</span>
         </a>
