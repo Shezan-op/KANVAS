@@ -122,13 +122,13 @@ export function PhotosPanel() {
             </button>
           )}
         </form>
-        <div className="grid grid-cols-4 gap-1 rounded-xl bg-panel-2 p-1">
+        <div className="grid grid-cols-5 gap-0.5 rounded-xl bg-panel-2 p-1">
           {PROVIDERS.map((p) => (
             <button
               key={p.id}
               onClick={() => setProvider(p.id)}
               title={p.needsKey && !keys[p.id] ? `${p.name} needs a free API key` : p.name}
-              className={cn("relative rounded-lg py-1.5 text-[11.5px] font-medium transition-colors", provider === p.id ? "text-ink" : "text-muted hover:text-ink-2")}
+              className={cn("relative rounded-lg py-1.5 text-[10.5px] font-medium transition-colors", provider === p.id ? "text-ink" : "text-muted hover:text-ink-2")}
             >
               {provider === p.id && <motion.span layoutId="prov" className="absolute inset-0 rounded-lg bg-panel shadow-sm" transition={{ type: "spring", stiffness: 500, damping: 35 }} />}
               <span className="relative flex items-center justify-center gap-1">

@@ -336,7 +336,7 @@ export function FinalCta() {
 
 export function Footer() {
   const cols = [
-    { h: "Product", l: [["Editor", "/app"], ["Templates", "#templates"], ["Features", "#features"], ["FAQ", "#faq"]] },
+    { h: "Product", l: [["Editor", "/app"], ["For AI agents", "/agents"], ["Templates", "#templates"], ["FAQ", "#faq"]] },
     { h: "Open source", l: [["GitHub", REPO_URL], ["GitLab mirror", GITLAB_REPO_URL], ["Report a bug", ISSUES_URL], ["MIT License", LICENSE_URL]] },
     { h: "Photos by", l: [["Unsplash", "https://unsplash.com"], ["Pexels", "https://pexels.com"], ["Openverse", "https://openverse.org"], ["Picsum", "https://picsum.photos"]] },
   ];
@@ -413,5 +413,73 @@ export function Footer() {
         <span>Made with care on a laptop.</span>
       </div>
     </footer>
+  );
+}
+
+/* -------------------------------------------------------------- agents -- */
+
+export function AgentBand() {
+  const lines = [
+    { who: "you", text: "Turn my launch notes into a 6-slide carousel. Noir style, my brand." },
+    { who: "agent", text: "Done. Hook, four points, a stat and a CTA. Open it here:" },
+  ];
+  return (
+    <section className="mx-auto max-w-6xl px-6 py-24">
+      <div className="grid items-center gap-12 overflow-hidden rounded-[36px] bg-ink p-8 text-bg shadow-lg sm:p-12 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-bg/10 px-3 py-1 font-mono text-[11px] tracking-[.14em] uppercase">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> New · MCP
+          </span>
+          <h2 className="mt-5 text-[clamp(2rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
+            <SplitWords text="Or let your AI agent *make it.*" />
+          </h2>
+          <p className="mt-5 max-w-md text-[16px] leading-relaxed text-bg/70">
+            Connect Slyd to Claude, ChatGPT, Cursor or VS Code with one URL. Ask for a carousel and get a link that opens in the editor, fully designed and ready to export.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <MagneticLink href="/agents" cursor="Connect">
+              Connect your agent <ArrowRight size={16} />
+            </MagneticLink>
+          </div>
+          <p className="mt-4 font-mono text-[12px] text-bg/50">No install · no API key · nothing stored</p>
+        </div>
+        <Reveal className="flex flex-col gap-3">
+          {lines.map((l, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 + i * 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className={cn("max-w-[88%] rounded-2xl px-4 py-3 text-[14.5px] leading-relaxed", l.who === "you" ? "self-end rounded-br-md bg-accent text-accent-ink" : "self-start rounded-bl-md bg-bg/10")}
+            >
+              {l.text}
+            </motion.div>
+          ))}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 1.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="flex max-w-[88%] items-center gap-3 self-start rounded-2xl bg-bg p-3 text-ink"
+          >
+            <div className="flex -space-x-6">
+              {["noir", "editorial", "aurora"].map((id, i) => {
+                const p = demo(id);
+                return (
+                  <div key={id} className="overflow-hidden rounded-md shadow-md" style={{ transform: `rotate(${(i - 1) * 6}deg)` }}>
+                    <ScaledSlide width={54} slide={p.slides[0]} doc={p} index={0} total={p.slides.length} />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="min-w-0 pl-2">
+              <div className="truncate text-[13.5px] font-semibold">Launch notes carousel</div>
+              <div className="font-mono text-[11.5px] text-muted">tryslyd.vercel.app/app/new#…</div>
+            </div>
+          </motion.div>
+        </Reveal>
+      </div>
+    </section>
   );
 }

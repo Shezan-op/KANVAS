@@ -137,7 +137,7 @@ export function Filmstrip() {
           </AnimatePresence>
         </div>
       </div>
-      <div className="pointer-events-none absolute right-5 bottom-2 font-mono text-[10.5px] text-muted">
+      <div className="pointer-events-none absolute top-2 right-5 font-mono text-[10.5px] text-muted">
         {project.slides.length} slides · drag to reorder
       </div>
     </div>

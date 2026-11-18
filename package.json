@@ -2,7 +2,7 @@
   "name": "slyd",
   "private": true,
   "version": "0.1.0",
-  "description": "Slyd \u2014 an open source, laptop-first carousel maker.",
+  "description": "Free, open source carousel maker for Instagram, LinkedIn and X, with a hosted MCP server so AI agents can create carousels.",
   "license": "MIT",
   "author": {
     "name": "Venu Kumar Mutyala",
@@ -19,11 +19,16 @@
   "keywords": [
     "carousel",
     "carousel-maker",
-    "instagram",
-    "linkedin",
+    "instagram-carousel",
+    "linkedin-carousel",
+    "social-media",
     "design-tool",
+    "mcp",
+    "model-context-protocol",
+    "ai-agents",
     "nextjs",
-    "local-first"
+    "local-first",
+    "open-source"
   ],
   "scripts": {
     "dev": "next dev",
@@ -33,6 +38,7 @@
     "icons": "node scripts/icons.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "gsap": "^3.15.1",
@@ -49,6 +55,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "sharp": "^0.35.5",
+    "zod": "^4.6.7",
     "zustand": "^5.1.0"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Laptop } from "lucide-react";
 import { loadProject, saveProject } from "@/lib/storage";
 import { setOnSlideDeleted, useEditor } from "@/store/editor";
@@ -91,6 +91,16 @@ export function Editor() {
   }, []);
 
   useHotkeys();
+
+  // Links from agents can ask to land straight in the phone preview or the export dialog.
+  const openParam = params.get("open");
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current || !loaded || (openParam !== "preview" && openParam !== "export")) return;
+    opened.current = true;
+    router.replace(`/app/edit?id=${id}`);
+    setTimeout(() => useEditor.getState().setModal(openParam), 350);
+  }, [loaded, openParam, id, router]);
   useEffect(() => setOnSlideDeleted(() => toast.info("Slide deleted", { label: "Undo", run: () => useEditor.getState().undo() })), []);
 
   if (missing)

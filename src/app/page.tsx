@@ -2,7 +2,7 @@ import { SmoothScroll } from "@/components/landing/SmoothScroll";
 import { Hero, Nav } from "@/components/landing/Hero";
 import { PlatformMarquee, TemplateGallery } from "@/components/landing/Gallery";
 import { Bento } from "@/components/landing/Bento";
-import { Faq, FinalCta, Footer, HowItWorks, Manifesto, Pricing, Stats, UseCases } from "@/components/landing/Sections";
+import { AgentBand, Faq, FinalCta, Footer, HowItWorks, Manifesto, Pricing, Stats, UseCases } from "@/components/landing/Sections";
 
 export default function Landing() {
   return (
@@ -16,6 +16,7 @@ export default function Landing() {
         <TemplateGallery />
         <Bento />
         <HowItWorks />
+        <AgentBand />
         <Stats />
         <UseCases />
         <Pricing />

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Copy, FileUp, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
+import { Bot, Copy, FileUp, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -89,6 +89,15 @@ export function Dashboard() {
 
   const onImport = async (f: File) => {
     try {
+      // A Carousel Spec (what agents write) opens through the same path as a link.
+      const raw = JSON.parse(await f.text());
+      if (Array.isArray(raw?.slides) && raw.slides[0]?.layout && !raw.theme) {
+        const json = new TextEncoder().encode(JSON.stringify(raw));
+        let bin = "";
+        json.forEach((b) => (bin += String.fromCharCode(b)));
+        router.push(`/app/new#j=${btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")}`);
+        return;
+      }
       const p = await importProjectFile(f);
       p.id = uid();
       p.updatedAt = Date.now();
@@ -117,6 +126,9 @@ export function Dashboard() {
               className="h-9 w-full rounded-xl bg-panel pr-3 pl-9 text-[13.5px] shadow-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-accent/40"
             />
           </div>
+          <Link href="/agents" className={buttonClass("ghost", "sm")}>
+            <Bot size={15} /> AI agents
+          </Link>
           <Button size="sm" variant="ghost" onClick={() => fileRef.current?.click()}>
             <FileUp size={15} /> Import
           </Button>

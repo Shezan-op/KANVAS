@@ -1,111 +1,174 @@
+<div align="center">
+
+<a href="https://tryslyd.vercel.app"><img src="https://tryslyd.vercel.app/og.jpg" alt="Slyd: carousels that stop the scroll" width="100%" /></a>
+
 # Slyd
 
-**[Try it live → tryslyd.vercel.app](https://tryslyd.vercel.app)**
+**Carousels that stop the scroll.**
 
-Built by **[Venu Kumar Mutyala](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme)**, Gen AI Engineer · [LinkedIn](https://www.linkedin.com/in/venukumarmd) · [GitHub](https://github.com/mdvenukumar) · [GitLab](https://gitlab.com/venukumar.ai) · [Instagram](https://www.instagram.com/itsvenukumar)
+A free, open source carousel maker for Instagram, LinkedIn and X.<br />
+Design in your browser, or let your AI agent build the carousel for you.
 
-**Carousels that stop the scroll.** Slyd is a free, open source, laptop-first carousel maker for Instagram, LinkedIn, X and the rest. It runs in the browser: no account, no server, and your files stay on your machine.
+[**Open Slyd**](https://tryslyd.vercel.app) · [**Connect your AI agent**](https://tryslyd.vercel.app/agents) · [**Agent docs**](https://tryslyd.vercel.app/llms.txt)
 
-- 9 templates built on live theme tokens: change one palette or font pair and every slide follows
-- 8 slide layouts: hook, numbered point, list, quote, photo + text, big number, CTA, blank
-- Stock photos from Unsplash, Pexels, Openverse and Picsum in one search. Openverse and Picsum need no key.
-- Brand kit (avatar, name, handle, page counter, swipe arrow) shown on every slide
-- Textures: film grain, risograph, paper, dot grid, graph, ruled
-- `*asterisk*` highlights in five styles: colour, italic, marker, underline, pill
-- Canvas editing: drag, resize, rotate, snapping guides, marquee select, Alt-drag to duplicate, layers, lock and hide
-- Undo/redo, copy/paste, image paste from the clipboard, drag-and-drop from your desktop
-- Phone preview (Instagram and LinkedIn mockups) with swipe
-- Export to PNG, JPG, PDF (LinkedIn documents) or ZIP at 1×, 2× or 3×, with fonts embedded
-- Autosave to IndexedDB, plus portable `.slyd.json` project files
+[![Live](https://img.shields.io/badge/live-tryslyd.vercel.app-FF5A1F?style=flat-square)](https://tryslyd.vercel.app)
+[![MCP](https://img.shields.io/badge/MCP-ready-141311?style=flat-square)](https://tryslyd.vercel.app/agents)
+[![License: MIT](https://img.shields.io/badge/license-MIT-141311?style=flat-square)](./LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-141311?style=flat-square&logo=nextdotjs)](https://nextjs.org)
+[![No sign-up](https://img.shields.io/badge/sign--up-not%20required-141311?style=flat-square)](https://tryslyd.vercel.app/app)
 
-## Quick start
+</div>
+
+---
+
+## Why Slyd
+
+Most carousel tools want a subscription, an account and your attention. Slyd just opens. Pick a mood, write your hook, drop in a photo and export. Everything runs in your browser, and your work never leaves your machine.
+
+- **Free, with no tiers or watermarks.** Every feature is available to everyone.
+- **Private by design.** No account and no uploads. Projects are saved in your browser.
+- **Built for laptops.** Keyboard-first, with a shortcut for every action.
+- **Agent-ready.** Claude, ChatGPT, Cursor and VS Code can create carousels for you through MCP.
+
+## Features
+
+**Design**
+- 9 templates (Editorial, Noir, Swiss, Aurora, Notebook, Photo story, Field guide, Terracotta, Blank), built on live theme tokens, so one palette or font change restyles every slide
+- 8 slide layouts: hook, numbered point, list, quote, photo with caption, big number, call to action, blank
+- 12 palettes, 10 font pairs and 14 typefaces; film grain, risograph, paper and grid textures; mesh and gradient backgrounds
+- Word highlights in five styles: colour, italic, marker, underline, pill. Just wrap words in `*asterisks*`
+
+**Editing**
+- Drag, resize and rotate, with snapping guides, box select, layers, locking, and Alt-drag to duplicate
+- A quick toolbar on every selection, right-click menus, and drag-to-reposition inside photos
+- Unlimited undo, copy and paste, and paste images straight from the clipboard
+
+**Content**
+- One search across Unsplash, Pexels, Openverse, Wikimedia Commons and Picsum, with credits saved automatically
+- A brand kit (name, handle, avatar, page counter, swipe arrow) added to every slide
+
+**Publishing**
+- Formats: square 1:1, portrait 4:5, tall 3:4, story 9:16, wide 16:9
+- Phone preview with Instagram and LinkedIn mockups
+- Export to PNG, JPG, a LinkedIn-ready PDF, or a ZIP of everything at 1×, 2× or 3×, with fonts embedded
+
+## Create carousels with your AI agent
+
+Slyd runs a hosted [Model Context Protocol](https://modelcontextprotocol.io) server. There's nothing to install and no API key to set up.
+
+```
+https://tryslyd.vercel.app/mcp
+```
+
+| Client | Setup |
+| --- | --- |
+| **Claude** (claude.ai, Desktop) | Settings → Connectors → *Add custom connector* → paste the URL |
+| **Claude Code** | `claude mcp add --transport http slyd https://tryslyd.vercel.app/mcp` |
+| **ChatGPT** | Settings → Apps & Connectors → *Create* → paste the URL, no authentication |
+| **Cursor** · **VS Code** | One-click install at [tryslyd.vercel.app/agents](https://tryslyd.vercel.app/agents) |
+| **Anything else** | Remote MCP over Streamable HTTP, or `npx -y mcp-remote https://tryslyd.vercel.app/mcp` |
+
+Then ask for what you want:
+
+> *"Turn my last LinkedIn post into a 7-slide carousel in the Noir style, with my handle @avamakes."*
+
+Your agent writes the carousel, Slyd designs it, and you get a link that opens it in the editor, ready to tweak and export.
+
+| Tool | What it does |
+| --- | --- |
+| `create_carousel` | Builds a carousel from a spec and returns a link that opens it in Slyd |
+| `get_carousel_guide` | Layouts, options and copywriting rules, so the agent gets it right the first time |
+| `read_carousel_link` | Turns a Slyd link back into a spec, so the agent can revise it |
+| `carousel_from_text` *(prompt)* | Turns any post, thread or notes into a carousel |
+
+Agents can use the whole editor: every template, layout, palette, font, texture and background, your brand kit, photos found from a short description, and freeform text, images, shapes and icons placed anywhere.
+
+**Privacy:** the whole carousel travels inside the link's `#fragment`, which browsers never send to a server. Nothing is stored.
+
+**No MCP?** Any assistant that can read a web page can build a link from [`/llms.txt`](https://tryslyd.vercel.app/llms.txt), using the [JSON Schema](https://tryslyd.vercel.app/carousel.schema.json).
+
+<details>
+<summary><b>Example spec</b></summary>
+
+```json
+{
+  "template": "noir",
+  "format": "4:5",
+  "brand": { "name": "Ava Reyes", "handle": "@avamakes" },
+  "slides": [
+    { "layout": "cover", "kicker": "Remote work", "title": "We cut meetings by *70%*. Here's how." },
+    { "layout": "point", "title": "Default to *writing*", "body": "Every decision starts as a doc." },
+    { "layout": "stat", "value": "70%", "label": "fewer meetings after six months." },
+    { "layout": "photo", "photo": "calm minimal home office", "title": "Protect *deep work*" },
+    { "layout": "cta", "title": "Useful? *Save it* for later.", "button": "Follow for more →" }
+  ]
+}
+```
+
+</details>
+
+## Run it yourself
+
+Requires Node.js 20 or later.
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev          # http://localhost:3000
 ```
 
-Optional: copy `.env.example` to `.env.local` and add Unsplash or Pexels keys. Users can also paste their own keys in the app under **Settings**.
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Public URL, used for links, share cards and the MCP server's links |
+| `NEXT_PUBLIC_UNSPLASH_ACCESS_KEY` · `NEXT_PUBLIC_PEXELS_API_KEY` | Optional stock photo keys. These end up in the browser, so don't set them on a public deployment. Visitors can add their own keys in Settings. |
 
-## Stack
+Deploys to Vercel with no extra configuration.
 
-| Concern | Choice | Why |
-| --- | --- | --- |
-| Framework | Next.js 15 (App Router) | SSR/SEO for the landing page; the editor is a static client route |
-| Styling | Tailwind CSS v4 + CSS tokens | One token set drives light and dark mode |
-| UI motion | Motion (Framer Motion) | Springs, layout animations, presence |
-| Scroll motion | GSAP + ScrollTrigger, Lenis | Pinned horizontal gallery, scrubbed reveals, smooth scroll |
-| Shaders | Raw WebGL (~2 KB) | Hero "silk" fragment shader; Three.js was 130 KB for one quad |
-| State | Zustand + Immer | Small store, structural-sharing undo history |
-| Persistence | IndexedDB (idb-keyval) | No 5 MB localStorage limit |
-| Export | html-to-image, JSZip, jsPDF | The DOM that renders a slide is the DOM that gets exported |
+## Built with
 
-## Architecture
+Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Motion · GSAP · WebGL · Zustand · Immer · Zod · MCP SDK · html-to-image · jsPDF
+
+<details>
+<summary><b>Architecture</b></summary>
+
+- **One renderer.** `SlideRenderer` draws every slide in the editor, thumbnails, previews, the landing page and the export, so what you see is exactly what you export.
+- **Theme tokens.** Colours and fonts are stored as tokens (`$accent`, `$heading`), so restyling a carousel is a single change.
+- **Carousel Spec.** A single Zod schema (`src/lib/spec`) drives validation, the MCP tools, the JSON Schema and the agent docs, so they never drift apart.
+- **Stateless MCP.** `/mcp` is a pure function of its input. There's no database, no session and nothing to leak.
+- **Fast by default.** Images are fetched at their display size, rendering is memoized, and export code loads only when you export.
 
 ```
 src/
-  app/                      Routes: / (landing), /app (dashboard), /app/edit?id= (editor)
-  lib/
-    model/
-      types.ts              The document model (Project → Slide → Element)
-      constants.ts          Aspect ratios, fonts, palettes, font pairs, meshes
-      resolve.ts            Theme tokens → CSS, backgrounds, textures, image filters
-      factory.ts            Element/slide/project constructors
-      templates.ts          Layouts + templates (style × sequence of layouts)
-    stock/index.ts          Provider interface + Unsplash/Pexels/Openverse/Picsum
-    export.ts               Font embedding, rendering, ZIP/PDF packaging
-    storage.ts              IndexedDB projects + prefs, import/export files
-    image.ts                CORS-safe image URLs, upload compression
-  store/editor.ts           Editor state, history (undo/redo), all editing actions
-  components/
-    slide/SlideRenderer.tsx The single source of truth for how a slide looks
-    editor/                 Canvas, panels, inspector, filmstrip, modals, hotkeys
-    landing/                Landing page sections, shader, scroll choreography
-    ui/                     Buttons, controls, cursor, toasts, theme toggle
+  app/            Routes: landing, dashboard, editor, /agents, /mcp, /llms.txt
+  components/     Editor, landing page, slide renderer, UI kit
+  lib/model/      Document model, templates, themes, textures
+  lib/spec/       Carousel Spec: schema, compiler, links, agent guide
+  lib/mcp/        MCP server (tools and prompt)
+  lib/stock/      Stock photo providers
+  store/          Editor state and undo history
 ```
 
-### Key decisions
-
-- **One renderer everywhere.** `SlideRenderer` draws slides in the editor, thumbnails, the phone preview, the landing page and the export. The editor only wraps each element with interaction chrome through `renderElement`. What you see is exactly what you export.
-- **Theme tokens.** Colours are stored as `$bg`, `$ink`, `$accent`, `$muted` or `$surface`, or as literal hex. Fonts are stored as `$heading`, `$body` or a family name. Templates use tokens, so restyling is one assignment.
-- **History by reference.** Every mutation goes through Immer, so each history entry is a structurally shared snapshot. Drags and slider scrubs coalesce into one undo step.
-- **Export-safe textures.** Noise textures are PNG tiles generated on a canvas (alpha noise only, no SVG filters or blend modes), so they survive html-to-image unchanged.
-- **Responsive images.** Previews ask the image host (Picsum, Unsplash, Pexels, wsrv) for roughly the pixels they paint, and load lazily. Exports always use full resolution.
-- **Cheap re-renders.** `SlideRenderer` is memoized on slide/theme/brand identity, and the filmstrip renders through `useDeferredValue`, so a drag costs ~1 ms per move even in a 12-slide deck.
-- **Lazy export.** html-to-image, JSZip and jsPDF load only when you press Export.
-- **CORS-safe images.** Hosts that send CORS headers pass through. Everything else goes through the open-source [wsrv.nl](https://wsrv.nl) proxy, so exports never taint the canvas.
-- **Fixed slide coordinates.** Every slide is 1080 px wide and its height depends on the aspect ratio. Changing aspect reflows elements proportionally.
-
-### Adding things
-
-- **Template:** add an entry to `TEMPLATES` in `lib/model/templates.ts` (a `Style` plus a sequence of layouts).
-- **Palette or font pair:** add to `PALETTES` / `FONT_PAIRS` in `constants.ts`. New fonts also go in `CANVAS_FONTS`.
-- **Photo provider:** implement `Provider` in `lib/stock/index.ts` and add it to `PROVIDERS`.
-- **Element type:** extend `SlideElement` in `types.ts`, render it in `ElementContent`, then add inspector controls.
+</details>
 
 ## Roadmap
 
-- Optional AI layer: hook writer, thread → carousel, outline → slides
-- Custom font upload
-- Multi-select resize and grouping
-- Shareable read-only links
+- [x] Editor, templates, brand kit, stock photos, export
+- [x] Hosted MCP server for AI agents
+- [ ] In-app AI: paste a post and get a carousel (bring your own key)
+- [ ] Custom font upload
+- [ ] Grouping and multi-select resize
+
+## Contributing
+
+Issues and pull requests are welcome. For larger changes, please open an issue first to talk through the approach.
 
 ## Author
 
-Slyd is designed and built by **Venu Kumar Mutyala**, Gen AI Engineer.
+Designed and built by **[Venu Kumar Mutyala](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme)**, Gen AI Engineer.
 
-- Portfolio: [venukumar.vercel.app](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme-author)
-- LinkedIn: [in/venukumarmd](https://www.linkedin.com/in/venukumarmd)
-- GitHub: [@mdvenukumar](https://github.com/mdvenukumar)
-- GitLab: [@venukumar.ai](https://gitlab.com/venukumar.ai)
-- Instagram: [@itsvenukumar](https://www.instagram.com/itsvenukumar)
+[Portfolio](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme-links) · [LinkedIn](https://www.linkedin.com/in/venukumarmd) · [GitHub](https://github.com/mdvenukumar) · [GitLab](https://gitlab.com/venukumar.ai) · [Instagram](https://www.instagram.com/itsvenukumar)
 
-Source: [GitHub](https://github.com/venukumaraitech/slyd) · [GitLab mirror](https://gitlab.com/venukumar.ai/slyd)
+If you build on Slyd, please keep the author credit.
 
-If you fork Slyd, please keep the author credit in the footer and README.
+## License
 
-## Credits
-
-Photos come from their respective providers under their licenses. Slyd stores attribution with every stock photo you use.
-
-MIT © 2026 Venu Kumar Mutyala and Slyd contributors
+[MIT](./LICENSE) © 2026 Venu Kumar Mutyala. Stock photos belong to their creators and are used under their providers' licenses; Slyd records attribution for every photo you use.

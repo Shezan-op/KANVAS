@@ -30,6 +30,7 @@ export function Nav() {
     ["Templates", "#templates"],
     ["How it works", "#how"],
     ["FAQ", "#faq"],
+    ["For agents", "/agents"],
   ];
   return (
     <motion.header

@@ -20,7 +20,7 @@ export interface StockPhoto {
   track?: () => void;
 }
 
-export type ProviderId = "unsplash" | "pexels" | "openverse" | "picsum";
+export type ProviderId = "unsplash" | "pexels" | "openverse" | "wikimedia" | "picsum";
 
 export interface SearchResult {
   photos: StockPhoto[];
@@ -172,6 +172,59 @@ const openverse: Provider = {
   },
 };
 
+/** Wikimedia Commons: keyless, CORS-enabled, freely licensed. A reliable backup when Openverse is down. */
+const stripHtml = (h?: string) => (h ? h.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim() : "");
+const wikimedia: Provider = {
+  id: "wikimedia",
+  name: "Wikimedia",
+  needsKey: false,
+  searchable: true,
+  async search(q, page, { orientation }) {
+    const params = new URLSearchParams({
+      action: "query",
+      generator: "search",
+      gsrsearch: `filetype:bitmap ${q || "landscape"}`,
+      gsrnamespace: "6",
+      gsrlimit: "30",
+      gsroffset: String((page - 1) * 30),
+      prop: "imageinfo",
+      iiprop: "url|extmetadata|size",
+      iiurlwidth: "1920", // Wikimedia asks for its standard thumbnail sizes
+      format: "json",
+      origin: "*",
+    });
+    const r = await fetch(`https://commons.wikimedia.org/w/api.php?${params}`);
+    if (!r.ok) throw new Error(`Wikimedia ${r.status}`);
+    const json = await r.json();
+    const pages = (Object.values(json?.query?.pages ?? {}) as any[])
+      .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+      .map((p) => ({ p, ii: p.imageinfo?.[0] }))
+      .filter(({ ii }) => ii?.thumburl && ii.width >= 800);
+    // Prefer the requested shape, but a well-matched photo in another shape beats none (it gets cropped to fit).
+    const shaped = pages.filter(({ ii }) => (orientation === "portrait" ? ii.height >= ii.width * 0.9 : orientation === "landscape" ? ii.width >= ii.height : true));
+    const photos = (shaped.length ? shaped : pages)
+      .map(({ p, ii }) => {
+        const m = ii.extmetadata ?? {};
+        return {
+          id: `wm-${p.pageid}`,
+          provider: "wikimedia" as const,
+          thumb: String(ii.thumburl).replace("/1920px-", "/640px-"),
+          full: ii.thumburl as string,
+          w: ii.thumbwidth ?? ii.width,
+          h: ii.thumbheight ?? ii.height,
+          alt: stripHtml(m.ImageDescription?.value).slice(0, 120) || String(p.title).replace(/^File:|\.\w+$/g, ""),
+          credit: {
+            provider: "Wikimedia Commons",
+            author: stripHtml(m.Artist?.value) || "Unknown",
+            sourceUrl: ii.descriptionurl,
+            license: stripHtml(m.LicenseShortName?.value) || undefined,
+          },
+        };
+      });
+    return { photos, hasMore: !!json?.continue };
+  },
+};
+
 const picsum: Provider = {
   id: "picsum",
   name: "Picsum",
@@ -200,7 +253,7 @@ const picsum: Provider = {
   },
 };
 
-export const PROVIDERS: Provider[] = [unsplash, pexels, openverse, picsum];
+export const PROVIDERS: Provider[] = [unsplash, pexels, openverse, wikimedia, picsum];
 export const getProvider = (id: ProviderId) => PROVIDERS.find((p) => p.id === id)!;
 
 /** Best default: a keyed provider if configured, otherwise Openverse. */
