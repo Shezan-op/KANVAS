@@ -14,6 +14,7 @@ import { cn } from "@/components/ui/cn";
 import { toast } from "@/components/ui/Toast";
 import { Segmented } from "@/components/ui/controls";
 import { useEditor } from "@/store/editor";
+import { AUTHOR, tracked } from "@/lib/site";
 
 export function Modals() {
   const modal = useEditor((s) => s.modal);
@@ -424,6 +425,12 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
       <button onClick={() => download(exportProjectFile(project), `${slug(project.name)}.slyd.json`)} className="h-9 rounded-xl bg-ink px-4 text-[13px] font-medium text-bg">
         Download project file
       </button>
+      <div className="mt-7 flex items-center justify-between border-t border-line pt-4 text-[12px] text-muted">
+        <span>Slyd · open source, MIT</span>
+        <a href={tracked(AUTHOR.url, "editor-settings")} target="_blank" rel="author noopener" className="hover:text-accent">
+          Built by <span className="text-ink-2">{AUTHOR.name}</span>
+        </a>
+      </div>
     </Shell>
   );
 }

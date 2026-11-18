@@ -1,5 +1,7 @@
 # Slyd
 
+Built by **[Venu Kumar Mutyala](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme)**, Gen AI Engineer · [LinkedIn](https://www.linkedin.com/in/venukumarmd) · [GitHub](https://github.com/mdvenukumar) · [GitLab](https://gitlab.com/venukumar.ai) · [Instagram](https://www.instagram.com/itsvenukumar)
+
 **Carousels that stop the scroll.** Slyd is a free, open source, laptop-first carousel maker for Instagram, LinkedIn, X and the rest. It runs in the browser: no account, no server, and your files stay on your machine.
 
 - 9 templates built on live theme tokens: change one palette or font pair and every slide follows
@@ -86,8 +88,22 @@ src/
 - Multi-select resize and grouping
 - Shareable read-only links
 
+## Author
+
+Slyd is designed and built by **Venu Kumar Mutyala**, Gen AI Engineer.
+
+- Portfolio: [venukumar.vercel.app](https://venukumar.vercel.app/?utm_source=slyd&utm_medium=referral&utm_campaign=credit&utm_content=readme-author)
+- LinkedIn: [in/venukumarmd](https://www.linkedin.com/in/venukumarmd)
+- GitHub: [@mdvenukumar](https://github.com/mdvenukumar)
+- GitLab: [@venukumar.ai](https://gitlab.com/venukumar.ai)
+- Instagram: [@itsvenukumar](https://www.instagram.com/itsvenukumar)
+
+Source: [GitHub](https://github.com/venukumaraitech/slyd) · [GitLab](https://gitlab.com/venukumar.ai/slyd)
+
+If you fork Slyd, please keep the author credit in the footer and README.
+
 ## Credits
 
 Photos come from their respective providers under their licenses. Slyd stores attribution with every stock photo you use.
 
-MIT © Slyd contributors
+MIT © 2026 Venu Kumar Mutyala and Slyd contributors

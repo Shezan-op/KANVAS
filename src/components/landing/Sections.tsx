@@ -14,7 +14,7 @@ import { cn } from "@/components/ui/cn";
 import { HeroShader } from "./HeroShader";
 import { CountUp, Eyebrow, Reveal, SectionHead, SplitWords } from "./primitives";
 import { demo } from "./demo";
-import { ISSUES_URL, LICENSE_URL, REPO_URL } from "@/lib/site";
+import { AUTHOR, GITHUB_REPO_URL, ISSUES_URL, LICENSE_URL, REPO_URL, tracked } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -337,15 +337,27 @@ export function FinalCta() {
 export function Footer() {
   const cols = [
     { h: "Product", l: [["Editor", "/app"], ["Templates", "#templates"], ["Features", "#features"], ["FAQ", "#faq"]] },
-    { h: "Open source", l: [["GitLab", REPO_URL], ["Report a bug", ISSUES_URL], ["Contribute", REPO_URL], ["MIT License", LICENSE_URL]] },
+    { h: "Open source", l: [["GitLab", REPO_URL], ["GitHub", GITHUB_REPO_URL], ["Report a bug", ISSUES_URL], ["MIT License", LICENSE_URL]] },
     { h: "Photos by", l: [["Unsplash", "https://unsplash.com"], ["Pexels", "https://pexels.com"], ["Openverse", "https://openverse.org"], ["Picsum", "https://picsum.photos"]] },
   ];
   return (
     <footer className="mx-auto max-w-6xl px-6 pt-20 pb-10">
-      <div className="grid gap-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="grid gap-12 md:grid-cols-[1.3fr_repeat(4,1fr)]">
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-muted">A free, open source carousel maker. Built on a laptop, for laptops.</p>
+          <a
+            href={tracked(AUTHOR.url, "footer-card")}
+            target="_blank"
+            rel="me author noopener"
+            className="group mt-6 inline-flex items-center gap-3 rounded-2xl bg-panel py-2 pr-4 pl-2 shadow-sm transition hover:shadow-md"
+          >
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-ink font-serif text-[17px] text-bg italic">vk</span>
+            <span className="leading-tight">
+              <span className="block text-[11px] tracking-wide text-muted">Designed &amp; built by</span>
+              <span className="block text-[14px] font-medium text-ink transition-colors group-hover:text-accent">{AUTHOR.name}</span>
+            </span>
+          </a>
         </div>
         {cols.map((c) => (
           <div key={c.h}>
@@ -361,6 +373,23 @@ export function Footer() {
             </ul>
           </div>
         ))}
+        <div>
+          <div className="mb-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase">Creator</div>
+          <ul className="flex flex-col gap-2.5">
+            {AUTHOR.profiles.map((p) => (
+              <li key={p.href}>
+                <a
+                  href={p.href === AUTHOR.url ? tracked(p.href, "footer-links") : p.href}
+                  target="_blank"
+                  rel="me noopener"
+                  className="text-[14px] text-ink-2 transition-colors hover:text-accent"
+                >
+                  {p.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="mt-20 overflow-hidden">
         <motion.div
@@ -374,7 +403,13 @@ export function Footer() {
         </motion.div>
       </div>
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[13px] text-muted">
-        <span>© {new Date().getFullYear()} Slyd contributors · MIT License</span>
+        <span>
+          © {new Date().getFullYear()}{" "}
+          <a href={tracked(AUTHOR.url, "copyright")} target="_blank" rel="author noopener" className="text-ink-2 hover:text-accent">
+            {AUTHOR.name}
+          </a>{" "}
+          &amp; Slyd contributors · MIT License
+        </span>
         <span>Made with care on a laptop.</span>
       </div>
     </footer>

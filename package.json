@@ -2,8 +2,29 @@
   "name": "slyd",
   "private": true,
   "version": "0.1.0",
-  "description": "Slyd — an open source, laptop-first carousel maker.",
+  "description": "Slyd \u2014 an open source, laptop-first carousel maker.",
   "license": "MIT",
+  "author": {
+    "name": "Venu Kumar Mutyala",
+    "url": "https://venukumar.vercel.app"
+  },
+  "homepage": "https://github.com/venukumaraitech/slyd",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/venukumaraitech/slyd.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/venukumar.ai/slyd/-/issues"
+  },
+  "keywords": [
+    "carousel",
+    "carousel-maker",
+    "instagram",
+    "linkedin",
+    "design-tool",
+    "nextjs",
+    "local-first"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",

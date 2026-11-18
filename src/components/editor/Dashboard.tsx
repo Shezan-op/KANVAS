@@ -17,6 +17,7 @@ import { uid } from "@/lib/model/factory";
 import { deleteProject, getPref, importProjectFile, listProjects, saveProject } from "@/lib/storage";
 import type { AspectId, Project } from "@/lib/model/types";
 import { useEditor } from "@/store/editor";
+import { AUTHOR, tracked } from "@/lib/site";
 
 function timeAgo(t: number) {
   const s = Math.round((Date.now() - t) / 1000);
@@ -259,6 +260,12 @@ export function Dashboard() {
             </div>
           )}
         </section>
+        <footer className="mt-20 flex items-center justify-between border-t border-line pt-6 text-[12.5px] text-muted">
+          <span>Projects are saved in this browser. Export a .slyd.json file to back one up.</span>
+          <a href={tracked(AUTHOR.url, "dashboard")} target="_blank" rel="author noopener" className="hover:text-accent">
+            Slyd by <span className="text-ink-2">{AUTHOR.name}</span>
+          </a>
+        </footer>
       </main>
       <Toaster />
     </div>

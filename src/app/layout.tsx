@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { googleFontsHref } from "@/lib/model/constants";
+import { AUTHOR, GITHUB_REPO_URL, REPO_URL, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -11,10 +12,38 @@ export const metadata: Metadata = {
   title: "Slyd — Carousels that stop the scroll",
   description:
     "Slyd is a free, open source carousel maker for Instagram, LinkedIn and X. Templates, stock photos, brand kits, textures and pixel-perfect exports — all in your browser.",
+  ...(SITE_URL ? { metadataBase: new URL(SITE_URL) } : {}),
+  applicationName: "Slyd",
+  authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
+  creator: AUTHOR.name,
+  publisher: AUTHOR.name,
+  keywords: ["carousel maker", "instagram carousel", "linkedin carousel", "open source", "design tool"],
   openGraph: {
     title: "Slyd — Carousels that stop the scroll",
-    description: "Free, open source, laptop-first carousel maker.",
+    description: `Free, open source, laptop-first carousel maker by ${AUTHOR.name}.`,
     type: "website",
+    siteName: "Slyd",
+  },
+  twitter: { card: "summary_large_image", title: "Slyd — Carousels that stop the scroll", description: "Free, open source, laptop-first carousel maker." },
+};
+
+/** Structured data: tells search engines who built Slyd and links every profile to the author. */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Slyd",
+  applicationCategory: "DesignApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  license: "https://opensource.org/licenses/MIT",
+  codeRepository: [REPO_URL, GITHUB_REPO_URL],
+  ...(SITE_URL ? { url: SITE_URL } : {}),
+  author: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    jobTitle: AUTHOR.title,
+    url: AUTHOR.url,
+    sameAs: AUTHOR.profiles.filter((p) => p.href !== AUTHOR.url).map((p) => p.href),
   },
 };
 
@@ -38,6 +67,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Canvas fonts: loaded globally so slides render identically everywhere. */}
         <link rel="stylesheet" href={googleFontsHref()} crossOrigin="anonymous" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        {/* rel="me" links the site to the author's verified profiles */}
+        {AUTHOR.profiles.map((p) => (
+          <link key={p.href} rel="me" href={p.href} />
+        ))}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="font-sans grain">{children}</body>
     </html>
