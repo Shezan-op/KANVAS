@@ -98,7 +98,7 @@ Slyd is designed and built by **Venu Kumar Mutyala**, Gen AI Engineer.
 - GitLab: [@venukumar.ai](https://gitlab.com/venukumar.ai)
 - Instagram: [@itsvenukumar](https://www.instagram.com/itsvenukumar)
 
-Source: [GitHub](https://github.com/venukumaraitech/slyd) · [GitLab](https://gitlab.com/venukumar.ai/slyd)
+Source: [GitHub](https://github.com/venukumaraitech/slyd) · [GitLab mirror](https://gitlab.com/venukumar.ai/slyd)
 
 If you fork Slyd, please keep the author credit in the footer and README.
 

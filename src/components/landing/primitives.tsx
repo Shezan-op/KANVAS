@@ -46,7 +46,7 @@ export function SplitWords({ text, className, delay = 0, immediate = false }: { 
         const hl = !!m;
         const tail = m?.[2] ?? "";
         const words = (m ? m[1] : tok).split(" ");
-        return words.map((w, wi) => (
+        const nodes = words.map((w, wi) => (
           <Fragment key={`${k}-${wi}`}>
             <span className="inline-block overflow-hidden pb-[0.12em] align-bottom mb-[-0.12em]">
               <motion.span
@@ -63,6 +63,14 @@ export function SplitWords({ text, className, delay = 0, immediate = false }: { 
             {wi < words.length - 1 ? " " : null}
           </Fragment>
         ));
+        // A highlighted phrase ("*Make it yours.*") never splits across lines.
+        return hl ? (
+          <span key={k} className="whitespace-nowrap">
+            {nodes}
+          </span>
+        ) : (
+          nodes
+        );
       })}
     </span>
   );

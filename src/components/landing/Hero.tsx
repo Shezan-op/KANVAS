@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
 import { ArrowRight, Star } from "lucide-react";
-import { Gitlab } from "@/components/ui/GitlabIcon";
+import { Github } from "@/components/ui/BrandIcons";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { MagneticLink, buttonClass } from "@/components/ui/Button";
@@ -54,7 +54,7 @@ export function Nav() {
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
           <a href={REPO_URL} target="_blank" rel="noreferrer" className={buttonClass("ghost", "sm", "hidden sm:inline-flex")}>
-            <Gitlab size={15} /> GitLab
+            <Github size={15} /> GitHub
           </a>
           <Link href="/app" className={buttonClass("ink", "sm", "group")}>
             Open editor <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />

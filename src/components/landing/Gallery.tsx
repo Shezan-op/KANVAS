@@ -89,7 +89,7 @@ export function TemplateGallery() {
         <div className="flex flex-col gap-5">
           <Eyebrow>Templates</Eyebrow>
           <h2 className="max-w-2xl text-[clamp(2.2rem,4.4vw,4rem)] leading-none font-semibold tracking-[-0.035em]">
-            <SplitWords text="Pick a mood. *Make it yours.*" />
+            <SplitWords text={"Pick a mood.\n*Make it yours.*"} />
           </h2>
         </div>
         <p className="hidden max-w-xs text-[15px] leading-relaxed text-muted lg:block">

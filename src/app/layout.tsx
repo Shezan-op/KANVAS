@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { googleFontsHref } from "@/lib/model/constants";
-import { AUTHOR, GITHUB_REPO_URL, REPO_URL, SITE_URL } from "@/lib/site";
+import { AUTHOR, GITLAB_REPO_URL, REPO_URL, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -36,7 +36,7 @@ const jsonLd = {
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   license: "https://opensource.org/licenses/MIT",
-  codeRepository: [REPO_URL, GITHUB_REPO_URL],
+  codeRepository: [REPO_URL, GITLAB_REPO_URL],
   ...(SITE_URL ? { url: SITE_URL } : {}),
   author: {
     "@type": "Person",

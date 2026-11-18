@@ -7,14 +7,14 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Check, GraduationCap, Megaphone, Palette, Plus, Rocket, Sparkles, X } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
-import { Gitlab } from "@/components/ui/GitlabIcon";
+import { Github } from "@/components/ui/BrandIcons";
 import { MagneticLink } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/components/ui/cn";
 import { HeroShader } from "./HeroShader";
 import { CountUp, Eyebrow, Reveal, SectionHead, SplitWords } from "./primitives";
 import { demo } from "./demo";
-import { AUTHOR, GITHUB_REPO_URL, ISSUES_URL, LICENSE_URL, REPO_URL, tracked } from "@/lib/site";
+import { AUTHOR, GITLAB_REPO_URL, ISSUES_URL, LICENSE_URL, REPO_URL, tracked } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -255,7 +255,7 @@ export function Pricing() {
 /* ----------------------------------------------------------------- faq -- */
 
 const FAQ = [
-  ["Is Slyd really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitLab star is how you can say thanks."],
+  ["Is Slyd really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitHub star is how you can say thanks."],
   ["Where are my projects stored?", "In your browser's IndexedDB, on your machine. Nothing is uploaded. You can export any project as a .slyd.json file to back it up or move it."],
   ["Can I use the stock photos commercially?", "Unsplash and Pexels photos are free for commercial use under their licenses. Openverse results are limited to licenses that allow commercial use and modification. Slyd saves the credit with every photo, so attribution is one glance away."],
   ["Do I need an API key for photos?", "No. Openverse and Picsum work without one. To search Unsplash or Pexels too, paste your own free key in Settings. It stays in your browser."],
@@ -279,7 +279,7 @@ export function Faq() {
           <p className="mt-5 max-w-sm text-[15px] text-muted">
             Something else? Open an issue on{" "}
             <a href={ISSUES_URL} className="text-ink underline decoration-line-2 underline-offset-4 hover:decoration-accent">
-              GitLab
+              GitHub
             </a>
             .
           </p>
@@ -326,7 +326,7 @@ export function FinalCta() {
             Start creating <ArrowRight size={17} />
           </MagneticLink>
           <MagneticLink href={REPO_URL} external variant="soft" cursor="Star">
-            <Gitlab size={17} /> Star on GitLab
+            <Github size={17} /> Star on GitHub
           </MagneticLink>
         </Reveal>
       </div>
@@ -337,7 +337,7 @@ export function FinalCta() {
 export function Footer() {
   const cols = [
     { h: "Product", l: [["Editor", "/app"], ["Templates", "#templates"], ["Features", "#features"], ["FAQ", "#faq"]] },
-    { h: "Open source", l: [["GitLab", REPO_URL], ["GitHub", GITHUB_REPO_URL], ["Report a bug", ISSUES_URL], ["MIT License", LICENSE_URL]] },
+    { h: "Open source", l: [["GitHub", REPO_URL], ["GitLab mirror", GITLAB_REPO_URL], ["Report a bug", ISSUES_URL], ["MIT License", LICENSE_URL]] },
     { h: "Photos by", l: [["Unsplash", "https://unsplash.com"], ["Pexels", "https://pexels.com"], ["Openverse", "https://openverse.org"], ["Picsum", "https://picsum.photos"]] },
   ];
   return (

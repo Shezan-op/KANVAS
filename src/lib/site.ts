@@ -3,10 +3,12 @@
  * Forks: set NEXT_PUBLIC_REPO_URL (and keep the author credit, per the license).
  */
 
-export const REPO_URL = process.env.NEXT_PUBLIC_REPO_URL || "https://gitlab.com/venukumar.ai/slyd";
-export const ISSUES_URL = `${REPO_URL}/-/issues`;
-export const LICENSE_URL = `${REPO_URL}/-/blob/main/LICENSE`;
+/** Primary home is GitHub; GitLab is a mirror. */
 export const GITHUB_REPO_URL = "https://github.com/venukumaraitech/slyd";
+export const GITLAB_REPO_URL = "https://gitlab.com/venukumar.ai/slyd";
+export const REPO_URL = process.env.NEXT_PUBLIC_REPO_URL || GITHUB_REPO_URL;
+export const ISSUES_URL = `${REPO_URL}/issues`;
+export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE`;
 
 /** Public URL of the deployed site, used for canonical/OG tags once it's live. */
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "";
