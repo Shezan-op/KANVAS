@@ -42,7 +42,7 @@ export function Philosophy() {
 }
 
 /* -------------------------------------------------------------
-   2. SPATIAL CAPABILITIES (PILL-FREE MINIMALIST GRID)
+   2. SPATIAL CAPABILITIES (MAX 8PX CORNER RADIUS)
 ---------------------------------------------------------------- */
 export function Capabilities() {
   const cards = [
@@ -81,12 +81,13 @@ export function Capabilities() {
         </h2>
       </Reveal>
 
+      {/* Cards constrained to max 8px radius (rounded-lg) */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c, i) => (
-          <Reveal key={c.title} delay={i * 0.08} className="group relative flex flex-col justify-between rounded-3xl border border-line bg-panel p-6 shadow-sm transition-all duration-300 hover:border-ink hover:shadow-lg">
+          <Reveal key={c.title} delay={i * 0.08} className="group relative flex flex-col justify-between rounded-lg border border-line bg-panel p-6 shadow-sm transition-all duration-300 hover:border-ink hover:shadow-lg">
             <div>
               <div className="flex items-center justify-between mb-5">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-panel-2 text-ink">
+                <span className="grid h-10 w-10 place-items-center rounded-lg bg-panel-2 text-ink">
                   <c.icon size={20} />
                 </span>
                 <span className="font-mono text-[11px] text-muted uppercase tracking-wider">
@@ -108,12 +109,13 @@ export function Capabilities() {
 }
 
 /* -------------------------------------------------------------
-   3. DEVELOPERS & LEADLINKED (HONEST OPERATOR CARD)
+   3. DEVELOPERS & LEADLINKED (MAX 8PX CORNER RADIUS)
 ---------------------------------------------------------------- */
 export function DeveloperSpotlight() {
   return (
     <section id="developers" className="mx-auto max-w-5xl px-6 py-24">
-      <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-panel/75 p-8 shadow-2xl backdrop-blur-2xl sm:p-12">
+      {/* Container constrained to max 8px radius (rounded-lg) */}
+      <div className="relative overflow-hidden rounded-lg border border-white/10 bg-panel/75 p-8 shadow-2xl backdrop-blur-2xl sm:p-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
             <Eyebrow className="mb-4">The Developers</Eyebrow>
@@ -121,7 +123,7 @@ export function DeveloperSpotlight() {
               LeadLinked &amp; Shezan
             </h2>
             <p className="mt-3 text-[15.5px] leading-relaxed text-muted">
-              Built and maintained by LeadLinked &amp; Shezan. We like shipping clean, punchy tools that solve real problems without the corporate corporate fluff.
+              Built and maintained by LeadLinked &amp; Shezan. We like shipping clean, punchy tools that solve real problems without corporate fluff.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -129,7 +131,7 @@ export function DeveloperSpotlight() {
                 href="https://github.com/Shezan-op/KANVAS"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[13px] font-semibold text-bg shadow-sm transition hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-lg bg-ink px-5 py-2.5 text-[13px] font-semibold text-bg shadow-sm transition hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Github size={16} /> LeadLinked GitHub
               </a>
@@ -137,14 +139,14 @@ export function DeveloperSpotlight() {
                 href="https://github.com/Shezan-op"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-5 py-2.5 text-[13px] font-medium text-ink transition hover:bg-panel-2"
+                className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-5 py-2.5 text-[13px] font-medium text-ink transition hover:bg-panel-2"
               >
                 Shezan Profile <ArrowRight size={14} />
               </a>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 rounded-2xl border border-line bg-panel-2/60 p-6 font-mono text-[12px] sm:min-w-[260px]">
+          <div className="flex flex-col gap-3 rounded-lg border border-line bg-panel-2/60 p-6 font-mono text-[12px] sm:min-w-[260px]">
             <div className="flex items-center justify-between text-muted pb-2 border-b border-line">
               <span>Repo</span>
               <span className="text-ink">Shezan-op/KANVAS</span>
@@ -169,7 +171,7 @@ export function DeveloperSpotlight() {
 }
 
 /* -------------------------------------------------------------
-   4. AGENT BAND (MCP INTERACTION)
+   4. AGENT BAND (MAX 8PX CORNER RADIUS)
 ---------------------------------------------------------------- */
 export function AgentBand() {
   const lines = [
@@ -178,7 +180,7 @@ export function AgentBand() {
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
-      <div className="grid items-center gap-12 overflow-hidden rounded-[36px] bg-ink p-8 text-bg shadow-2xl sm:p-12 lg:grid-cols-[1.1fr_1fr]">
+      <div className="grid items-center gap-12 overflow-hidden rounded-lg bg-ink p-8 text-bg shadow-2xl sm:p-12 lg:grid-cols-[1.1fr_1fr]">
         <div>
           <span className="font-mono text-[11px] tracking-[.18em] uppercase text-accent">
             AI Agent Integration
@@ -192,7 +194,7 @@ export function AgentBand() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/agents"
-              className="inline-flex items-center gap-2 rounded-full bg-bg px-6 py-3 text-[14px] font-semibold text-ink shadow-md transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-lg bg-bg px-6 py-2.5 text-[14px] font-semibold text-ink shadow-md transition hover:opacity-90"
             >
               Connect MCP Agent <ArrowRight size={15} />
             </Link>
@@ -207,7 +209,7 @@ export function AgentBand() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 + i * 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className={cn("max-w-[88%] rounded-2xl px-4 py-3 text-[14.5px] leading-relaxed", l.who === "you" ? "self-end rounded-br-md bg-accent text-accent-ink" : "self-start rounded-bl-md bg-bg/10")}
+              className={cn("max-w-[88%] rounded-lg px-4 py-3 text-[14.5px] leading-relaxed", l.who === "you" ? "self-end bg-accent text-accent-ink" : "self-start bg-bg/10")}
             >
               {l.text}
             </motion.div>
@@ -217,7 +219,7 @@ export function AgentBand() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 1.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex max-w-[88%] items-center gap-3 self-start rounded-2xl bg-bg p-3 text-ink shadow-xl"
+            className="flex max-w-[88%] items-center gap-3 self-start rounded-lg bg-bg p-3 text-ink shadow-xl"
           >
             <div className="flex -space-x-6">
               {["noir", "editorial", "aurora"].map((id, i) => {
@@ -274,7 +276,7 @@ export function Faq() {
           <div key={q} className="border-b border-line">
             <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-6 py-5 text-left">
               <span className="text-[17px] font-medium tracking-tight text-ink">{q}</span>
-              <span className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-full transition-colors text-sm", open === i ? "bg-ink text-bg" : "bg-panel-2 text-muted")}>
+              <span className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-md transition-colors text-sm", open === i ? "bg-ink text-bg" : "bg-panel-2 text-muted")}>
                 {open === i ? "−" : "+"}
               </span>
             </button>
@@ -293,12 +295,12 @@ export function Faq() {
 }
 
 /* -------------------------------------------------------------
-   6. FINAL CTA
+   6. FINAL CTA (MAX 8PX RADIUS)
 ---------------------------------------------------------------- */
 export function FinalCta() {
   return (
     <section className="px-4 pb-6">
-      <div className="relative isolate overflow-hidden rounded-[40px] border border-white/10 bg-panel px-6 py-28 text-center shadow-xl">
+      <div className="relative isolate overflow-hidden rounded-lg border border-white/10 bg-panel px-6 py-28 text-center shadow-xl">
         <HeroShader className="absolute inset-0 -z-10 opacity-70" />
         <h2 className="mx-auto max-w-3xl text-[clamp(2.6rem,6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-ink">
           Stop scrolling. <em className="font-serif italic font-normal text-ink">Start creating.</em>
@@ -309,17 +311,17 @@ export function FinalCta() {
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <Link
             href="/app"
-            className="inline-flex items-center gap-2 rounded-full bg-ink px-8 py-3.5 text-[15px] font-semibold text-bg shadow-lg transition hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-lg bg-ink px-7 py-3 text-[14.5px] font-semibold text-bg shadow-lg transition hover:scale-[1.02] active:scale-[0.98]"
           >
-            Open KANVAS Studio <ArrowRight size={16} />
+            Open KANVAS Studio <ArrowRight size={15} />
           </Link>
           <a
             href={REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-line bg-panel-2 px-6 py-3.5 text-[15px] font-medium text-ink transition hover:bg-line"
+            className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel-2 px-6 py-3 text-[14px] font-medium text-ink transition hover:bg-line"
           >
-            <Github size={16} /> Star on GitHub
+            <Github size={15} /> Star on GitHub
           </a>
         </div>
       </div>
