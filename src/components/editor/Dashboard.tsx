@@ -51,6 +51,7 @@ function timeAgo(t: number) {
 
 export function Dashboard() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [aspect, setAspect] = useState<AspectId>("4:5");
   const [q, setQ] = useState("");
@@ -59,6 +60,10 @@ export function Dashboard() {
   const [menu, setMenu] = useState<string | null>(null);
   const [menuUp, setMenuUp] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!menu) return;
@@ -137,12 +142,13 @@ export function Dashboard() {
   };
 
   const templatePreviews = useMemo(() => {
+    if (!mounted) return [];
     let list = TEMPLATES;
     if (selectedTemplateTag !== "all") {
       list = list.filter((t) => t.tags.includes(selectedTemplateTag));
     }
     return list.map((t) => ({ t, p: projectFromTemplate(t, aspect) }));
-  }, [aspect, selectedTemplateTag]);
+  }, [aspect, selectedTemplateTag, mounted]);
 
   const filteredProjects = useMemo(() => {
     return (projects ?? []).filter((p) => {
@@ -180,6 +186,7 @@ export function Dashboard() {
           <div className="relative w-48 sm:w-72 md:w-96">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input
+              suppressHydrationWarning
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Filter your decks & slides..."
@@ -427,7 +434,7 @@ export function Dashboard() {
                           <span>&bull;</span>
                           <span className="font-mono">{p.aspect}</span>
                           <span>&bull;</span>
-                          <span>{timeAgo(p.updatedAt)}</span>
+                          <span suppressHydrationWarning>{timeAgo(p.updatedAt)}</span>
                           {p.archived && (
                             <span className="rounded bg-muted/20 px-1.5 py-0.2 text-[10px] uppercase font-mono text-muted">Archived</span>
                           )}

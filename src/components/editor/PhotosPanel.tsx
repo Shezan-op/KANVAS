@@ -2,12 +2,12 @@
 
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, KeyRound, Loader2, Search, Wallpaper, X } from "lucide-react";
+import { ArrowRight, KeyRound, Loader2, Search, Wallpaper, X, UploadCloud } from "lucide-react";
 import { PROVIDERS, defaultProvider, getKeys, getProvider, setKey, type ProviderId, type StockPhoto } from "@/lib/stock";
 import { cn } from "@/components/ui/cn";
 import { toast } from "@/components/ui/Toast";
 import { useEditor } from "@/store/editor";
-import { DND_MIME, insertImage, replaceImage, setBackgroundImage, type ImagePayload } from "./insert";
+import { DND_MIME, filesToPayloads, insertImage, replaceImage, setBackgroundImage, type ImagePayload } from "./insert";
 
 const SUGGESTIONS = ["minimal", "workspace", "texture", "nature", "city night", "abstract", "coffee", "portrait", "architecture", "ocean"];
 
@@ -23,8 +23,10 @@ export function PhotosPanel() {
   const [error, setError] = useState<string | null>(null);
   const [keys, setKeysState] = useState<Partial<Record<ProviderId, string>>>({});
   const [keyDraft, setKeyDraft] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const sentinel = useRef<HTMLDivElement>(null);
   const reqId = useRef(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setKeysState(getKeys());
@@ -88,6 +90,24 @@ export function PhotosPanel() {
     } else insertImage(toPayload(p));
   };
 
+  const handleCustomFileUpload = async (files: FileList | null) => {
+    if (!files || !files.length) return;
+    setIsUploading(true);
+    try {
+      const payloads = await filesToPayloads(files);
+      if (!payloads.length) {
+        toast.error("Please choose valid image files");
+        return;
+      }
+      setBackgroundImage(payloads[0]);
+      toast.ok("Custom photo applied as background!");
+    } catch {
+      toast.error("Failed to load custom image");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   // Simple two-column masonry
   const cols: StockPhoto[][] = [[], []];
   const heights = [0, 0];
@@ -99,7 +119,28 @@ export function PhotosPanel() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="space-y-2.5 px-4 pt-1 pb-3">
+      <div className="space-y-3 px-4 pt-1 pb-3">
+        {/* Direct Local Image Upload Button */}
+        <div>
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-line-2 bg-panel-2/60 px-3 py-2 text-[12.5px] font-medium text-ink transition hover:border-ink hover:bg-panel-2"
+          >
+            <UploadCloud size={16} className="text-muted transition-colors group-hover:text-ink" />
+            <span>{isUploading ? "Uploading..." : "Upload custom photo"}</span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={(e) => handleCustomFileUpload(e.target.files)}
+          />
+        </div>
+
+        {/* Search Input */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -112,9 +153,9 @@ export function PhotosPanel() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => e.stopPropagation()}
-            placeholder={meta.searchable ? `Search ${meta.name}` : "Picsum is a curated feed"}
+            placeholder={meta.searchable ? `Search ${meta.name}...` : "Picsum curated feed"}
             disabled={!meta.searchable}
-            className="h-10 w-full rounded-xl bg-panel-2 pr-9 pl-9 text-[13.5px] outline-none placeholder:text-muted focus:ring-2 focus:ring-accent/40 disabled:opacity-60"
+            className="h-9 w-full rounded-xl bg-panel-2 pr-8 pl-9 text-[13px] outline-none placeholder:text-muted focus:ring-1 focus:ring-ink disabled:opacity-60"
           />
           {q && (
             <button type="button" onClick={() => (setQ(""), setQuery(""))} className="absolute top-1/2 right-2.5 -translate-y-1/2 text-muted hover:text-ink">
@@ -122,26 +163,39 @@ export function PhotosPanel() {
             </button>
           )}
         </form>
-        <div className="grid grid-cols-5 gap-0.5 rounded-xl bg-panel-2 p-1">
-          {PROVIDERS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setProvider(p.id)}
-              title={p.needsKey && !keys[p.id] ? `${p.name} needs a free API key` : p.name}
-              className={cn("relative rounded-lg py-1.5 text-[10.5px] font-medium transition-colors", provider === p.id ? "text-ink" : "text-muted hover:text-ink-2")}
-            >
-              {provider === p.id && <motion.span layoutId="prov" className="absolute inset-0 rounded-lg bg-panel shadow-sm" transition={{ type: "spring", stiffness: 500, damping: 35 }} />}
-              <span className="relative flex items-center justify-center gap-1">
-                {p.name}
-                {p.needsKey && !keys[p.id] && <KeyRound size={10} className="opacity-60" />}
-              </span>
-            </button>
-          ))}
+
+        {/* Scrollable Provider Pills with Generous Spacing */}
+        <div className="no-scrollbar flex items-center gap-1.5 overflow-x-auto rounded-xl bg-panel-2/70 p-1">
+          {PROVIDERS.map((p) => {
+            const isSelected = provider === p.id;
+            return (
+              <button
+                key={p.id}
+                onClick={() => setProvider(p.id)}
+                title={p.needsKey && !keys[p.id] ? `${p.name} needs a free API key` : p.name}
+                className={cn(
+                  "relative flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition-colors",
+                  isSelected ? "bg-panel text-ink shadow-sm" : "text-muted hover:text-ink"
+                )}
+              >
+                <span>{p.name}</span>
+                {p.needsKey && !keys[p.id] && <KeyRound size={10} className="opacity-50" />}
+              </button>
+            );
+          })}
         </div>
+
         {meta.searchable && (
           <div className="flex items-center gap-1">
             {([undefined, "portrait", "landscape", "squarish"] as const).map((o) => (
-              <button key={o ?? "any"} onClick={() => setOrientation(o)} className={cn("rounded-md px-2 py-0.5 text-[11px] capitalize", orientation === o ? "bg-accent-soft text-accent" : "text-muted hover:text-ink")}>
+              <button
+                key={o ?? "any"}
+                onClick={() => setOrientation(o)}
+                className={cn(
+                  "rounded-md px-2 py-0.5 text-[11px] capitalize transition-colors",
+                  orientation === o ? "bg-ink text-bg font-medium" : "text-muted hover:text-ink"
+                )}
+              >
                 {o === "squarish" ? "Square" : o ?? "Any"}
               </button>
             ))}
@@ -152,21 +206,21 @@ export function PhotosPanel() {
       <div className="scroll-thin flex-1 overflow-y-auto px-4 pb-6">
         {needsKey ? (
           <div className="rounded-2xl bg-panel-2 p-4">
-            <KeyRound size={18} className="text-accent" />
+            <KeyRound size={18} className="text-ink" />
             <h4 className="mt-2 text-[14px] font-semibold">Connect {meta.name}</h4>
             <p className="mt-1 text-[12.5px] leading-relaxed text-muted">
               Paste a free API key from{" "}
               <a href={meta.keyUrl} target="_blank" rel="noreferrer" className="text-ink underline underline-offset-2">
                 {meta.name}
               </a>
-              . It stays in this browser and is only sent to {meta.name}. Openverse works without a key.
+              . Stored locally on this device.
             </p>
             <form
               className="mt-3 flex gap-1.5"
               onSubmit={(e) => {
                 e.preventDefault();
                 if (!keyDraft.trim()) return;
-                setKey(provider, keyDraft);
+                setKey(provider, keyDraft.trim());
                 setKeysState(getKeys());
                 setKeyDraft("");
                 toast.ok(`${meta.name} connected`);
@@ -177,7 +231,7 @@ export function PhotosPanel() {
                 onChange={(e) => setKeyDraft(e.target.value)}
                 onKeyDown={(e) => e.stopPropagation()}
                 placeholder="Access key"
-                className="h-9 min-w-0 flex-1 rounded-lg bg-panel px-2.5 font-mono text-[12px] outline-none focus:ring-2 focus:ring-accent/40"
+                className="h-9 min-w-0 flex-1 rounded-lg bg-panel px-2.5 font-mono text-[12px] outline-none focus:ring-1 focus:ring-ink"
               />
               <button className="grid h-9 w-9 place-items-center rounded-lg bg-ink text-bg">
                 <ArrowRight size={15} />
@@ -189,7 +243,11 @@ export function PhotosPanel() {
             {!query && meta.searchable && (
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {SUGGESTIONS.map((s) => (
-                  <button key={s} onClick={() => (setQ(s), setQuery(s))} className="rounded-full bg-panel-2 px-2.5 py-1 text-[11.5px] text-ink-2 hover:bg-line">
+                  <button
+                    key={s}
+                    onClick={() => (setQ(s), setQuery(s))}
+                    className="rounded-full bg-panel-2 px-2.5 py-1 text-[11.5px] text-ink-2 hover:bg-line transition-colors"
+                  >
                     {s}
                   </button>
                 ))}
