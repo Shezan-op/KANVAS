@@ -1,12 +1,11 @@
 import { SmoothScroll } from "@/components/landing/SmoothScroll";
 import { Hero, Nav } from "@/components/landing/Hero";
 import { PlatformMarquee, TemplateGallery } from "@/components/landing/Gallery";
-import { Bento } from "@/components/landing/Bento";
-import { AgentBand, Faq, FinalCta, Footer, HowItWorks, Manifesto, Pricing, Stats, UseCases } from "@/components/landing/Sections";
+import { Philosophy, Capabilities, DeveloperSpotlight, AgentBand, Faq, FinalCta, Footer } from "@/components/landing/Sections";
 
 export const metadata = {
-  title: "KANVAS — Minimalist Visual Carousel Studio",
-  description: "Bespoke, offline-first carousel creation suite built with Apple HIG and Steve Jobs minimalist craftsmanship.",
+  title: "KANVAS — Spatial Visual Carousel Studio by LeadLinked & Shezan",
+  description: "Next-generation, offline-first carousel and presentation studio engineered by LeadLinked & Shezan with visionOS spatial glass craftsmanship.",
 };
 
 export default function Landing() {
@@ -17,14 +16,11 @@ export default function Landing() {
       <main className="overflow-x-clip bg-bg text-ink">
         <Hero />
         <PlatformMarquee />
-        <Manifesto />
+        <Philosophy />
         <TemplateGallery />
-        <Bento />
-        <HowItWorks />
+        <Capabilities />
+        <DeveloperSpotlight />
         <AgentBand />
-        <Stats />
-        <UseCases />
-        <Pricing />
         <Faq />
         <FinalCta />
       </main>

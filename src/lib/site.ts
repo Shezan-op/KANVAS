@@ -1,5 +1,5 @@
 /**
- * KANVAS site-wide constants and repository configuration.
+ * LeadLinked & Shezan - KANVAS Configuration
  */
 
 export const GITHUB_REPO_URL = process.env.NEXT_PUBLIC_REPO_URL || "https://github.com/Shezan-op/KANVAS";
@@ -25,10 +25,11 @@ export function tracked(url: string, placement: string) {
 }
 
 export const AUTHOR = {
-  name: "KANVAS Studio",
-  title: "Next-Gen Design Engineering",
-  url: "https://trykanvas.app",
+  name: "LeadLinked & Shezan",
+  title: "LeadLinked Creative Technologies",
+  url: "https://github.com/Shezan-op/KANVAS",
   profiles: [
-    { label: "Studio", href: "https://trykanvas.app" }
+    { label: "LeadLinked", href: "https://github.com/Shezan-op/KANVAS" },
+    { label: "Shezan (GitHub)", href: "https://github.com/Shezan-op" },
   ],
 } as const;

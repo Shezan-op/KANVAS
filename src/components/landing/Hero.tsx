@@ -4,11 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
-import { ArrowRight, Star, Sparkles, MonitorDown, LogIn, UserCheck } from "lucide-react";
+import { ArrowRight, Star, Sparkles, MonitorDown, UserCheck, ShieldCheck, Zap } from "lucide-react";
 import { StarButton } from "@/components/ui/StarButton";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { MagneticLink, buttonClass } from "@/components/ui/Button";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { cn } from "@/components/ui/cn";
 import { HeroShader } from "./HeroShader";
@@ -38,10 +37,10 @@ export function Nav() {
   });
 
   const links = [
-    ["Features", "#features"],
+    ["Capabilities", "#capabilities"],
+    ["Spatial Engine", "#engine"],
     ["Templates", "#templates"],
-    ["How it works", "#how"],
-    ["Pricing", "#pricing"],
+    ["Developers", "#developers"],
     ["FAQ", "#faq"],
   ];
 
@@ -62,24 +61,37 @@ export function Nav() {
       >
         <nav
           className={cn(
-            "flex w-full max-w-6xl items-center justify-between rounded-2xl px-3 py-2 pl-4 transition-[background,box-shadow,backdrop-filter] duration-500",
-            solid ? "bg-panel/75 shadow-lg backdrop-blur-2xl ring-1 ring-line" : "bg-transparent",
+            "flex w-full max-w-5xl items-center justify-between rounded-full px-4 py-2.5 transition-all duration-500",
+            solid
+              ? "border border-white/10 bg-panel/75 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] backdrop-blur-2xl ring-1 ring-white/5"
+              : "border border-transparent bg-panel/20 backdrop-blur-md",
           )}
         >
-          <Logo />
+          <div className="flex items-center gap-3">
+            <Logo />
+            <span className="hidden rounded-full border border-line bg-panel-2 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted sm:inline-block">
+              LeadLinked &amp; Shezan
+            </span>
+          </div>
+
           <div className="hidden items-center gap-1 md:flex">
             {links.map(([l, h]) => (
-              <a key={h} href={h} className="rounded-lg px-3 py-1.5 text-[14px] text-ink-2 transition-colors hover:bg-line hover:text-ink">
+              <a
+                key={h}
+                href={h}
+                className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-ink-2 transition-all hover:bg-white/10 hover:text-ink"
+              >
                 {l}
               </a>
             ))}
           </div>
+
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <StarButton className="hidden sm:inline-flex" />
             <button
               onClick={handleEnterKanvas}
-              className={buttonClass("ink", "sm", "group flex items-center gap-1.5 rounded-full px-4 shadow-sm")}
+              className="group inline-flex items-center gap-2 rounded-full bg-ink px-4 py-1.5 text-[13px] font-semibold text-bg shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               {session ? (
                 <>
@@ -89,7 +101,7 @@ export function Nav() {
               ) : (
                 <>
                   <span>Enter K.A.N.V.A.S.</span>
-                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
             </button>
@@ -111,7 +123,6 @@ export function Nav() {
 
 const DECK_TEMPLATES = ["editorial", "noir", "aurora", "photo", "swiss"];
 
-/** A fanned stack of real, rendered slides that cycles through templates. */
 function DeckFan() {
   const [ti, setTi] = useState(0);
   const [hover, setHover] = useState(false);
@@ -165,7 +176,7 @@ function DeckFan() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{ width: 280 }}
             >
-              <div className="group relative overflow-hidden rounded-2xl bg-panel shadow-2xl ring-1 ring-line transition-all duration-300 hover:scale-[1.03] hover:ring-ink">
+              <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-panel shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-ink">
                 <ScaledSlide width={280} slide={s} doc={p} index={i} total={slides.length} />
               </div>
             </motion.div>
@@ -179,7 +190,7 @@ function DeckFan() {
 export function Hero() {
   const router = useRouter();
   const { scrollY } = useScroll();
-  const y = useSpring(useTransform(scrollY, [0, 800], [0, 140]), { stiffness: 120, damping: 30 });
+  const y = useSpring(useTransform(scrollY, [0, 800], [0, 120]), { stiffness: 120, damping: 30 });
   const fade = useTransform(scrollY, [0, 600], [1, 0.2]);
   const [authOpen, setAuthOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
@@ -198,46 +209,48 @@ export function Hero() {
   };
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-16">
+    <section className="relative overflow-hidden pt-36 pb-20">
       <HeroShader className="absolute inset-0 -z-10 h-[115%]" />
-      <motion.div style={{ y, opacity: fade }} className="mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
-        <motion.a
-          href={REPO_URL}
-          target="_blank"
-          rel="noreferrer"
-          initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+      
+      <motion.div style={{ y, opacity: fade }} className="mx-auto flex max-w-4xl flex-col items-center px-6 text-center">
+        {/* Sleek VisionOS floating glass pill */}
+        <motion.div
+          initial={{ opacity: 0, y: 12, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="group mb-7 inline-flex items-center gap-2 rounded-full border border-line bg-panel/85 py-1.5 pr-4 pl-1.5 text-[13px] text-ink shadow-sm backdrop-blur-xl hover:border-ink transition-colors"
+          className="group mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-panel/70 px-4 py-1.5 text-[12.5px] font-medium text-ink shadow-[0_8px_24px_-8px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
         >
-          <span className="rounded-full bg-ink px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-bg">KANVAS 2.0</span>
-          <span>Apple HIG Minimalist Carousel Studio &bull; MIT Licensed</span>
-          <Star size={13} className="text-accent transition-transform duration-500 group-hover:rotate-[72deg]" />
-        </motion.a>
+          <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse" />
+          <span className="tracking-wide text-ink-2">Architected by</span>
+          <span className="font-semibold text-ink">LeadLinked &amp; Shezan</span>
+          <span className="text-white/20">&bull;</span>
+          <span className="font-mono text-[11px] text-muted">Offline Engine</span>
+        </motion.div>
 
-        <h1 className="text-[clamp(3.2rem,8.6vw,7.6rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-balance">
-          <SplitWords text={"Visual carousels that\n*command* the feed."} immediate delay={0.1} />
+        {/* Master headline */}
+        <h1 className="text-[clamp(3.2rem,8.4vw,7.2rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-balance">
+          <SplitWords text={"Spatial visual studio for\n*commanding* ideas."} immediate delay={0.1} />
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
-          className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-2 text-pretty"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+          className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2 sm:text-[19px]"
         >
-          KANVAS is an offline-first visual creation suite designed for creators, founders, and teams. Built with precision typography, spatial glass, curated templates, and zero cloud tracking.
+          Created by LeadLinked &amp; Shezan. A pure, offline-first carousel and document architecture designed with Apple Human Interface precision, spatial glass surfaces, and zero telemetry.
         </motion.p>
 
-        {/* Primary Action Buttons */}
+        {/* VisionOS Floating Controls Pill */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+          className="mt-9 flex flex-wrap items-center justify-center gap-3.5"
         >
           <button
             onClick={handleEnterClick}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3 text-[15px] font-medium text-bg shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            className="group relative inline-flex items-center gap-2.5 rounded-full bg-ink px-8 py-3.5 text-[15px] font-medium text-bg shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
           >
             <Sparkles size={16} />
             <span>Enter K.A.N.V.A.S.</span>
@@ -247,37 +260,46 @@ export function Hero() {
           {installState === "prompt" && (
             <button
               onClick={install}
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-panel/80 px-6 py-3 text-[14px] font-medium text-ink shadow-sm backdrop-blur-md transition-all hover:bg-panel hover:border-ink"
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-panel/80 px-6 py-3.5 text-[14px] font-medium text-ink shadow-md backdrop-blur-xl transition-all hover:bg-panel hover:border-ink"
             >
               <MonitorDown size={16} />
-              <span>Install App (PWA)</span>
+              <span>Install PWA</span>
             </button>
           )}
 
-          <MagneticLink href="#templates" variant="soft" cursor="Look">
-            Browse templates
-          </MagneticLink>
+          <a
+            href="#capabilities"
+            className="inline-flex items-center gap-1.5 rounded-full border border-line bg-panel-2/60 px-5 py-3.5 text-[14px] font-medium text-ink-2 backdrop-blur-md transition-all hover:bg-panel-2 hover:text-ink"
+          >
+            Explore System
+          </a>
         </motion.div>
 
+        {/* Minimalist Trust Triple */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 1 }}
-          className="mt-6 flex items-center gap-4 font-mono text-[11px] tracking-[.12em] text-muted uppercase"
+          transition={{ delay: 0.9, duration: 1 }}
+          className="mt-8 flex items-center gap-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase"
         >
-          <span>Private Local Auth</span>
-          <span className="h-1 w-1 rounded-full bg-muted/50" />
-          <span>Works offline</span>
-          <span className="h-1 w-1 rounded-full bg-muted/50" />
-          <span>Your files stay on device</span>
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck size={13} className="text-accent" /> 100% Local Storage
+          </span>
+          <span className="h-1 w-1 rounded-full bg-muted/40" />
+          <span className="flex items-center gap-1.5">
+            <Zap size={13} className="text-accent" /> Zero Latency
+          </span>
+          <span className="h-1 w-1 rounded-full bg-muted/40" />
+          <span>Independent Studio</span>
         </motion.div>
       </motion.div>
 
+      {/* Floating 3D Carousel Fan */}
       <motion.div
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="mt-6 origin-top scale-[.62] sm:scale-[.8] lg:scale-100"
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+        className="mt-10 origin-top scale-[.62] sm:scale-[.8] lg:scale-100"
       >
         <DeckFan />
       </motion.div>

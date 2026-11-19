@@ -2,117 +2,171 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { useLayoutEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Check, GraduationCap, Megaphone, Palette, Plus, Rocket, Sparkles, X } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Check, Code2, Cpu, Globe, Laptop, Layers, Lock, Shield, Sparkles, Terminal, Wand2, X } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { Github } from "@/components/ui/BrandIcons";
-import { MagneticLink } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/components/ui/cn";
 import { HeroShader } from "./HeroShader";
-import { CountUp, Eyebrow, Reveal, SectionHead, SplitWords } from "./primitives";
+import { Eyebrow, Reveal, SplitWords } from "./primitives";
 import { demo } from "./demo";
 import { AUTHOR, GITLAB_REPO_URL, ISSUES_URL, LICENSE_URL, REPO_URL, tracked } from "@/lib/site";
 
-gsap.registerPlugin(ScrollTrigger);
-
-/* ---------------------------------------------------------- manifesto -- */
-
-/** Words light up as you scroll: a GSAP scrubbed reveal. */
-export function Manifesto() {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const text =
-    "Most carousel tools want a subscription, an account and your attention. KANVAS just opens. You write the hook, pick a mood, drop in a photo and export. It's the tool we wanted on our own laptops, so we made it free for everyone.";
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".mf-word",
-        { opacity: 0.12 },
-        { opacity: 1, stagger: 0.05, ease: "none", scrollTrigger: { trigger: ref.current, start: "top 75%", end: "bottom 45%", scrub: true } },
-      );
-    }, ref);
-    return () => ctx.revert();
-  }, []);
+/* -------------------------------------------------------------
+   1. SYSTEM PHILOSOPHY (MINIMALIST MANIFESTO)
+---------------------------------------------------------------- */
+export function Philosophy() {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-36">
+    <section id="capabilities" className="relative mx-auto max-w-5xl px-6 py-28 border-t border-line">
       <Reveal>
-        <Eyebrow className="mb-10">Why KANVAS</Eyebrow>
+        <div className="flex items-center gap-2 mb-6">
+          <span className="h-2 w-2 rounded-full bg-accent" />
+          <Eyebrow>Architecture &amp; Philosophy</Eyebrow>
+        </div>
       </Reveal>
-      <p ref={ref} className="text-[clamp(1.8rem,3.6vw,3.2rem)] leading-[1.15] font-medium tracking-tight text-balance">
-        {text.split(" ").map((w, i) => (
-          <span key={i} className={cn("mf-word", ["free", "just", "opens."].includes(w) && "font-serif font-normal italic text-accent")}>
-            {w}{" "}
-          </span>
-        ))}
-      </p>
+      
+      <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-start">
+        <p className="text-[clamp(1.9rem,3.8vw,3.2rem)] font-medium leading-[1.12] tracking-tight text-ink text-balance">
+          Software should feel like an extension of your mind—quiet, instant, and completely yours.
+        </p>
+
+        <div className="space-y-6 text-[15.5px] leading-relaxed text-ink-2">
+          <p>
+            Developed by <strong className="text-ink font-semibold">LeadLinked &amp; Shezan</strong>, KANVAS abandons bloated subscription paywalls, server queues, and intrusive trackers.
+          </p>
+          <p>
+            Every frame renders client-side via hardware-accelerated SVG and canvas pipelines. Your data stays in your browser&apos;s isolated IndexedDB—never transmitted, indexed, or shared.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
 
-/* ------------------------------------------------------- how it works -- */
+/* -------------------------------------------------------------
+   2. SPATIAL CAPABILITIES BENTO (VISION-PRO INSPIRED)
+---------------------------------------------------------------- */
+export function Capabilities() {
+  const cards = [
+    {
+      icon: Cpu,
+      title: "Client-Side Rendering Engine",
+      description: "Zero round-trips. Instant 4K export to PNG, SVG, or multi-page PDF right inside your device's memory.",
+      tag: "Engine",
+    },
+    {
+      icon: Shield,
+      title: "Private Local Architecture",
+      description: "IndexedDB persistent storage with offline PWA readiness. No telemetry, analytics, or cloud dependencies.",
+      tag: "Security",
+    },
+    {
+      icon: Layers,
+      title: "Apple HIG Typography Scales",
+      description: "Modular font scales, optical kerning, and calibrated contrast ratios tuned for effortless readability.",
+      tag: "Craft",
+    },
+    {
+      icon: Terminal,
+      title: "Autonomous Agent MCP API",
+      description: "Direct Model Context Protocol integration. Connect Cursor, Claude, or ChatGPT to generate entire slide decks programmatically.",
+      tag: "Protocol",
+    },
+  ];
 
-const STEPS = [
-  { n: "01", t: "Pick a starting point", d: "Choose one of nine templates, or start blank. Pick the format: square, portrait, story or wide.", tpl: "noir" },
-  { n: "02", t: "Write, drop, restyle", d: "Edit text right on the slide and wrap words in *asterisks* to highlight them. Drag in photos, then swap palettes until it feels right.", tpl: "editorial" },
-  { n: "03", t: "Preview like a follower", d: "Swipe through a phone preview before you post, so you see what your audience will see.", tpl: "aurora" },
-  { n: "04", t: "Export and post", d: "One click for PNGs, a PDF for LinkedIn, or a ZIP of everything.", tpl: "photo" },
-];
-
-export function HowItWorks() {
-  const root = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(0);
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".how-step").forEach((el, i) => {
-        ScrollTrigger.create({ trigger: el, start: "top 55%", end: "bottom 55%", onToggle: (s) => s.isActive && setActive(i) });
-      });
-    }, root);
-    return () => ctx.revert();
-  }, []);
-  const p = demo(STEPS[active].tpl);
   return (
-    <section ref={root} id="how" className="mx-auto max-w-6xl px-6 py-24">
-      <SectionHead eyebrow="How it works" title="From blank page to *posted* in minutes." center={false} />
-      <div className="grid gap-16 lg:grid-cols-[1fr_420px]">
-        <div className="flex flex-col">
-          {STEPS.map((s, i) => (
-            <div key={s.n} className="how-step flex min-h-[46vh] gap-8 border-t border-line py-10">
-              <span className={cn("font-mono text-[13px] transition-colors duration-500", i === active ? "text-accent" : "text-muted")}>{s.n}</span>
-              <div className={cn("transition-all duration-700", i === active ? "opacity-100" : "opacity-30 blur-[1px]")}>
-                <h3 className="text-[clamp(1.6rem,2.8vw,2.4rem)] font-semibold tracking-[-0.03em]">{s.t}</h3>
-                <p className="mt-3 max-w-md text-[16px] leading-relaxed text-muted">{s.d}</p>
+    <section id="engine" className="mx-auto max-w-6xl px-6 py-24">
+      <Reveal className="mb-14">
+        <Eyebrow className="mb-3">System Capabilities</Eyebrow>
+        <h2 className="text-[clamp(2.2rem,4vw,3.6rem)] font-semibold tracking-tight text-ink">
+          Engineered for creators who value craft over noise.
+        </h2>
+      </Reveal>
+
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {cards.map((c, i) => (
+          <Reveal key={c.title} delay={i * 0.08} className="group relative flex flex-col justify-between rounded-3xl border border-line bg-panel p-6 shadow-sm transition-all duration-300 hover:border-ink hover:shadow-lg">
+            <div>
+              <div className="flex items-center justify-between mb-5">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-panel-2 text-ink">
+                  <c.icon size={20} />
+                </span>
+                <span className="rounded-full border border-line bg-panel-2 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">
+                  {c.tag}
+                </span>
               </div>
+              <h3 className="text-[17px] font-semibold text-ink tracking-tight mb-2">{c.title}</h3>
+              <p className="text-[13.5px] leading-relaxed text-muted">{c.description}</p>
             </div>
-          ))}
-        </div>
-        <div className="relative hidden lg:block">
-          <div className="sticky top-[18vh]">
-            <div className="relative mx-auto w-85 rounded-[48px] bg-ink p-3 shadow-lg">
-              <div className="overflow-hidden rounded-[38px] bg-black">
-                <div className="flex items-center gap-2 px-4 py-3 text-white">
-                  <div className="h-7 w-7 rounded-full bg-accent" />
-                  <span className="text-[12px] font-semibold">avamakes</span>
-                  <span className="ml-auto text-[16px] leading-none opacity-70">···</span>
-                </div>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={active}
-                    initial={{ opacity: 0, x: 40, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, x: -40, filter: "blur(6px)" }}
-                    transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <ScaledSlide width={316} slide={p.slides[Math.min(active, p.slides.length - 1)]} doc={p} index={active} total={p.slides.length} />
-                  </motion.div>
-                </AnimatePresence>
-                <div className="flex items-center justify-center gap-1 py-3">
-                  {[0, 1, 2, 3, 4].map((d) => (
-                    <span key={d} className={cn("h-1.5 w-1.5 rounded-full transition-colors", d === active ? "bg-sky-400" : "bg-white/30")} />
-                  ))}
-                </div>
-              </div>
+            <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between font-mono text-[11px] text-muted">
+              <span>0{i + 1}</span>
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-ink">&rarr;</span>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------
+   3. DEVELOPERS & LEADLINKED SPOTLIGHT (VISIONOS GLASS CARD)
+---------------------------------------------------------------- */
+export function DeveloperSpotlight() {
+  return (
+    <section id="developers" className="mx-auto max-w-5xl px-6 py-24">
+      <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-panel/70 p-8 shadow-2xl backdrop-blur-2xl sm:p-12">
+        <div className="absolute top-0 right-0 -z-10 h-72 w-72 rounded-full bg-accent/10 blur-[100px]" />
+        
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-2 rounded-full border border-line bg-panel-2 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-muted">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Creators &amp; Maintainers
+            </span>
+            <h2 className="mt-4 text-[clamp(2.2rem,4.5vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
+              LeadLinked &amp; Shezan
+            </h2>
+            <p className="mt-3 text-[15.5px] leading-relaxed text-muted">
+              Dedicated to building fast, private, and beautifully crafted creative utilities. KANVAS is maintained as an open-source gift to developers, marketers, and spatial designers worldwide.
+            </p>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a
+                href="https://github.com/Shezan-op/KANVAS"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[13px] font-semibold text-bg shadow-sm transition hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Github size={16} /> LeadLinked GitHub
+              </a>
+              <a
+                href="https://github.com/Shezan-op"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-5 py-2.5 text-[13px] font-medium text-ink transition hover:bg-panel-2"
+              >
+                Shezan Profile <ArrowRight size={14} />
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-2xl border border-line bg-panel-2/60 p-6 font-mono text-[12px] sm:min-w-[260px]">
+            <div className="flex items-center justify-between text-muted pb-2 border-b border-line">
+              <span>Repository</span>
+              <span className="text-ink">Shezan-op/KANVAS</span>
+            </div>
+            <div className="flex items-center justify-between text-muted py-1">
+              <span>License</span>
+              <span className="text-ink">MIT Free Forever</span>
+            </div>
+            <div className="flex items-center justify-between text-muted py-1">
+              <span>Backend Tracking</span>
+              <span className="text-emerald-500 font-semibold">Zero / None</span>
+            </div>
+            <div className="flex items-center justify-between text-muted pt-2 border-t border-line">
+              <span>Status</span>
+              <span className="text-accent">Active Release 2.0</span>
             </div>
           </div>
         </div>
@@ -121,328 +175,38 @@ export function HowItWorks() {
   );
 }
 
-/* --------------------------------------------------------------- stats -- */
-
-export function Stats() {
-  const items = [
-    { v: 9, s: "", l: "Templates", d: "Each built on live theme tokens" },
-    { v: 12, s: "", l: "Palettes", d: "Tuned for contrast on phones" },
-    { v: 14, s: "", l: "Typefaces", d: "Embedded into every export" },
-    { v: 0, s: "", l: "Sign-ups", d: "Open the app and start making" },
+/* -------------------------------------------------------------
+   4. AGENT BAND (MCP INTERACTION)
+---------------------------------------------------------------- */
+export function AgentBand() {
+  const lines = [
+    { who: "you", text: "Create a 5-slide product launch carousel for KANVAS with spatial aesthetics." },
+    { who: "agent", text: "Generated 5 slides with cover, 3 feature breakdowns, and CTA. Open preview:" },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[28px] bg-line shadow-sm lg:grid-cols-4">
-        {items.map((it, i) => (
-          <Reveal key={it.l} delay={i * 0.06} className="bg-panel p-8">
-            <div className="text-[clamp(3rem,5vw,4.5rem)] leading-none font-semibold tracking-tighter">
-              <CountUp to={it.v} suffix={it.s} />
-            </div>
-            <div className="mt-4 text-[15px] font-medium">{it.l}</div>
-            <div className="mt-1 text-[13px] text-muted">{it.d}</div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------------------------------------- use cases -- */
-
-const USES = [
-  { icon: Rocket, t: "Founders", d: "Turn launch notes, lessons and metrics into posts people save." },
-  { icon: GraduationCap, t: "Educators", d: "Break a concept into one idea per slide. Students remember it." },
-  { icon: Megaphone, t: "Marketers", d: "Keep campaigns on brand with one palette, one font pair and one footer." },
-  { icon: Palette, t: "Designers", d: "Pixel-level control, real textures, and exports up to 3×." },
-  { icon: Sparkles, t: "Creators", d: "Ship a carousel a day without fighting your tools." },
-];
-
-export function UseCases() {
-  return (
-    <section className="mx-auto max-w-6xl px-6 py-28">
-      <SectionHead eyebrow="Made for" title="Whatever you're *teaching*, telling or selling." />
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {USES.map((u, i) => (
-          <Reveal key={u.t} delay={i * 0.06}>
-            <motion.div
-              whileHover={{ y: -6 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="group flex h-full flex-col gap-10 rounded-3xl bg-panel p-6 shadow-sm"
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-panel-2 text-ink-2 transition-all duration-500 group-hover:rotate-[-8deg] group-hover:bg-accent group-hover:text-accent-ink">
-                <u.icon size={19} />
-              </span>
-              <div>
-                <h3 className="text-[17px] font-semibold tracking-tight">{u.t}</h3>
-                <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">{u.d}</p>
-              </div>
-            </motion.div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------- pricing -- */
-
-export function Pricing() {
-  const yes = ["All 9 templates & every layout", "Unsplash, Pexels & Openverse search", "Brand kit, palettes, 14 fonts", "PNG, JPG, PDF & ZIP export up to 3×", "Unlimited projects, saved locally", "Self-host it. Fork it. Ship it."];
-  const no = ["$15–$30 every month", "Watermarks on the free plan", "Export limits", "Your drafts on someone else's server"];
-  return (
-    <section className="mx-auto max-w-5xl px-6 py-28">
-      <SectionHead eyebrow="Pricing" title="Start simple. *Stay* free." sub="No tiers, no trials, no feature walls. KANVAS is MIT licensed, and that won't change." />
-      <div className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
-        <Reveal className="relative overflow-hidden rounded-4xl bg-ink p-9 text-bg shadow-lg">
-          <div aria-hidden className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-accent opacity-40 blur-3xl" />
-          <div className="relative">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[11px] tracking-[.16em] uppercase opacity-70">KANVAS</span>
-              <span className="rounded-full bg-accent px-3 py-1 text-[11px] font-semibold text-accent-ink">The full box</span>
-            </div>
-            <div className="mt-8 flex items-end gap-3">
-              <span className="text-[88px] leading-none font-semibold tracking-[-0.06em]">$0</span>
-              <span className="mb-3 text-[15px] opacity-60">forever, for everyone</span>
-            </div>
-            <ul className="mt-8 flex flex-col gap-3">
-              {yes.map((y) => (
-                <li key={y} className="flex items-center gap-3 text-[15px]">
-                  <span className="grid h-5 w-5 place-items-center rounded-full bg-accent text-accent-ink">
-                    <Check size={12} strokeWidth={3} />
-                  </span>
-                  {y}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-10">
-              <MagneticLink href="/app" cursor="Go" className="bg-bg text-ink shadow-none hover:brightness-95" variant="soft">
-                Open the editor <ArrowRight size={16} />
-              </MagneticLink>
-            </div>
-          </div>
-        </Reveal>
-        <Reveal delay={0.1} className="rounded-4xl bg-panel p-9 shadow-sm">
-          <span className="font-mono text-[11px] tracking-[.16em] text-muted uppercase">The usual alternative</span>
-          <div className="mt-8 flex items-end gap-3">
-            <span className="relative text-[64px] leading-none font-semibold tracking-tighter text-muted">
-              $24
-              <motion.span
-                className="absolute top-1/2 left-0 h-0.75 w-full origin-left bg-accent"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
-              />
-            </span>
-            <span className="mb-2 text-[15px] text-muted">/ month</span>
-          </div>
-          <ul className="mt-8 flex flex-col gap-3">
-            {no.map((n) => (
-              <li key={n} className="flex items-center gap-3 text-[15px] text-muted">
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-panel-2">
-                  <X size={11} strokeWidth={3} />
-                </span>
-                {n}
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------------------------------------------- faq -- */
-
-const FAQ = [
-  ["Is KANVAS really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitHub star is how you can say thanks."],
-  ["Where are my projects stored?", "In your browser's IndexedDB, on your machine. Nothing is uploaded. You can export any project as a .KANVAS.json file to back it up or move it."],
-  ["Can I use the stock photos commercially?", "Unsplash and Pexels photos are free for commercial use under their licenses. Openverse results are limited to licenses that allow commercial use and modification. KANVAS saves the credit with every photo, so attribution is one glance away."],
-  ["Do I need an API key for photos?", "No. Openverse and Picsum work without one. To search Unsplash or Pexels too, paste your own free key in Settings. It stays in your browser."],
-  ["What sizes can I export?", "Square 1:1, portrait 4:5, tall 3:4, story 9:16 and wide 16:9, all 1080px wide, at 1×, 2× or 3×. PDF export is made for LinkedIn document posts."],
-  ["Why laptop-first?", "Carousels are written, not tapped. KANVAS is designed around a keyboard, a trackpad and a 13–16\" screen, and every action has a shortcut. Phones get a friendly heads-up."],
-  ["Is there AI?", "Not yet, on purpose. The editor comes first. An optional AI layer for drafting hooks and outlines is on the roadmap."],
-];
-
-export function Faq() {
-  const [open, setOpen] = useState<number | null>(0);
-  return (
-    <section id="faq" className="mx-auto grid max-w-6xl gap-12 px-6 py-28 lg:grid-cols-[1fr_1.4fr]">
-      <div>
-        <Reveal>
-          <Eyebrow>FAQ</Eyebrow>
-        </Reveal>
-        <h2 className="mt-5 text-[clamp(2.2rem,4vw,3.6rem)] leading-none font-semibold tracking-[-0.035em]">
-          <SplitWords text="Questions, *answered.*" />
-        </h2>
-        <Reveal delay={0.1}>
-          <p className="mt-5 max-w-sm text-[15px] text-muted">
-            Something else? Open an issue on{" "}
-            <a href={ISSUES_URL} className="text-ink underline decoration-line-2 underline-offset-4 hover:decoration-accent">
-              GitHub
-            </a>
-            .
-          </p>
-        </Reveal>
-      </div>
-      <div className="flex flex-col">
-        {FAQ.map(([q, a], i) => (
-          <Reveal key={q} delay={i * 0.04} className="border-b border-line">
-            <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-6 py-6 text-left">
-              <span className="text-[18px] font-medium tracking-tight">{q}</span>
-              <motion.span animate={{ rotate: open === i ? 45 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors", open === i ? "bg-accent text-accent-ink" : "bg-panel shadow-sm")}>
-                <Plus size={15} />
-              </motion.span>
-            </button>
-            <AnimatePresence initial={false}>
-              {open === i && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }} className="overflow-hidden">
-                  <p className="max-w-xl pb-7 text-[15.5px] leading-relaxed text-muted">{a}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------------------------------------------- cta -- */
-
-export function FinalCta() {
-  return (
-    <section className="px-4 pb-4">
-      <div className="relative isolate overflow-hidden rounded-[40px] bg-bg-2 px-6 py-32 text-center shadow-sm">
-        <HeroShader className="absolute inset-0 -z-10 opacity-90" />
-        <h2 className="mx-auto max-w-4xl text-[clamp(2.8rem,7vw,6.4rem)] leading-[0.95] font-semibold tracking-[-0.045em] text-balance">
-          <SplitWords text="Make the next one *unskippable.*" />
-        </h2>
-        <Reveal delay={0.2}>
-          <p className="mx-auto mt-6 max-w-md text-[17px] text-ink-2">Open the editor and start. Your first carousel can go out today.</p>
-        </Reveal>
-        <Reveal delay={0.3} className="mt-10 flex flex-wrap justify-center gap-3">
-          <MagneticLink href="/app" cursor="Create">
-            Start creating <ArrowRight size={17} />
-          </MagneticLink>
-          <MagneticLink href={REPO_URL} external variant="soft" cursor="Star">
-            <Github size={17} /> Star on GitHub
-          </MagneticLink>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-export function Footer() {
-  const cols = [
-    { h: "Product", l: [["Editor", "/app"], ["For AI agents", "/agents"], ["Templates", "#templates"], ["FAQ", "#faq"], ["Privacy", "/privacy"]] },
-    { h: "Open source", l: [["GitHub", REPO_URL], ["GitLab mirror", GITLAB_REPO_URL], ["Report a bug", ISSUES_URL], ["MIT License", LICENSE_URL]] },
-    { h: "Photos by", l: [["Unsplash", "https://unsplash.com"], ["Pexels", "https://pexels.com"], ["Openverse", "https://openverse.org"], ["Picsum", "https://picsum.photos"]] },
-  ];
-  return (
-    <footer className="mx-auto max-w-6xl px-6 pt-20 pb-10">
-      <div className="grid gap-12 md:grid-cols-[1.3fr_repeat(4,1fr)]">
-        <div>
-          <Logo />
-          <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-muted">A free, open source carousel maker. Built on a laptop, for laptops.</p>
-          <a
-            href={tracked(AUTHOR.url, "footer-card")}
-            target="_blank"
-            rel="me author noopener"
-            className="group mt-6 inline-flex items-center gap-3 rounded-2xl bg-panel py-2 pr-4 pl-2 shadow-sm transition hover:shadow-md"
-          >
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-ink font-serif text-[17px] text-bg italic">vk</span>
-            <span className="leading-tight">
-              <span className="block text-[11px] tracking-wide text-muted">Designed &amp; built by</span>
-              <span className="block text-[14px] font-medium text-ink transition-colors group-hover:text-accent">{AUTHOR.name}</span>
-            </span>
-          </a>
-        </div>
-        {cols.map((c) => (
-          <div key={c.h}>
-            <div className="mb-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase">{c.h}</div>
-            <ul className="flex flex-col gap-2.5">
-              {c.l.map(([l, h]) => (
-                <li key={l}>
-                  <Link href={h} className="text-[14px] text-ink-2 transition-colors hover:text-accent">
-                    {l}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-        <div>
-          <div className="mb-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase">Creator</div>
-          <ul className="flex flex-col gap-2.5">
-            {AUTHOR.profiles.map((p) => (
-              <li key={p.href}>
-                <a
-                  href={p.href === AUTHOR.url ? tracked(p.href, "footer-links") : p.href}
-                  target="_blank"
-                  rel="me noopener"
-                  className="text-[14px] text-ink-2 transition-colors hover:text-accent"
-                >
-                  {p.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className="mt-20 overflow-hidden">
-        <motion.div
-          initial={{ y: "60%" }}
-          whileInView={{ y: "0%" }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="pr-[0.1em] pb-[0.24em] font-serif text-[clamp(6rem,24vw,22rem)] leading-[0.85] tracking-[-0.04em] text-ink italic select-none"
-        >
-          KANVAS<span className="text-accent">.</span>
-        </motion.div>
-      </div>
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[13px] text-muted">
-        <span>
-          © {new Date().getFullYear()}{" "}
-          <a href={tracked(AUTHOR.url, "copyright")} target="_blank" rel="author noopener" className="text-ink-2 hover:text-accent">
-            {AUTHOR.name}
-          </a>{" "}
-          &amp; KANVAS contributors · MIT License
-        </span>
-        <span>Made with care on a laptop.</span>
-      </div>
-    </footer>
-  );
-}
-
-/* -------------------------------------------------------------- agents -- */
-
-export function AgentBand() {
-  const lines = [
-    { who: "you", text: "Turn my launch notes into a 6-slide carousel. Noir style, my brand." },
-    { who: "agent", text: "Done. Hook, four points, a stat and a CTA. Open it here:" },
-  ];
-  return (
-    <section className="mx-auto max-w-6xl px-6 py-24">
-      <div className="grid items-center gap-12 overflow-hidden rounded-[36px] bg-ink p-8 text-bg shadow-lg sm:p-12 lg:grid-cols-[1.1fr_1fr]">
+      <div className="grid items-center gap-12 overflow-hidden rounded-[36px] bg-ink p-8 text-bg shadow-2xl sm:p-12 lg:grid-cols-[1.1fr_1fr]">
         <div>
           <span className="inline-flex items-center gap-2 rounded-full bg-bg/10 px-3 py-1 font-mono text-[11px] tracking-[.14em] uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> New · MCP
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Model Context Protocol
           </span>
           <h2 className="mt-5 text-[clamp(2rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
-            <SplitWords text="Or let your AI agent *make it.*" />
+            <SplitWords text="Let your AI agent *design it.*" />
           </h2>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-bg/70">
-            Connect KANVAS to Claude, ChatGPT, Cursor or VS Code with one URL. Ask for a carousel and get a link that opens in the editor, fully designed and ready to export.
+            Connect KANVAS to Claude, ChatGPT, Cursor or VS Code with native MCP. Request a deck and receive a direct link opening right into your local editor.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <MagneticLink href="/agents" cursor="Connect">
-              Connect your agent <ArrowRight size={16} />
-            </MagneticLink>
+            <Link
+              href="/agents"
+              className="inline-flex items-center gap-2 rounded-full bg-bg px-6 py-3 text-[14px] font-semibold text-ink shadow-md transition hover:opacity-90"
+            >
+              Connect MCP Agent <ArrowRight size={15} />
+            </Link>
           </div>
-          <p className="mt-4 font-mono text-[12px] text-bg/50">No install · no API key · nothing stored</p>
+          <p className="mt-4 font-mono text-[12px] text-bg/50">Zero configuration · Instant URL handoff · Offline safe</p>
         </div>
+
         <Reveal className="flex flex-col gap-3">
           {lines.map((l, i) => (
             <motion.div
@@ -461,7 +225,7 @@ export function AgentBand() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 1.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex max-w-[88%] items-center gap-3 self-start rounded-2xl bg-bg p-3 text-ink"
+            className="flex max-w-[88%] items-center gap-3 self-start rounded-2xl bg-bg p-3 text-ink shadow-xl"
           >
             <div className="flex -space-x-6">
               {["noir", "editorial", "aurora"].map((id, i) => {
@@ -474,12 +238,138 @@ export function AgentBand() {
               })}
             </div>
             <div className="min-w-0 pl-2">
-              <div className="truncate text-[13.5px] font-semibold">Launch notes carousel</div>
-              <div className="font-mono text-[11.5px] text-muted">tryKANVAS.vercel.app/app/new#…</div>
+              <div className="truncate text-[13.5px] font-semibold">Spatial Design Deck</div>
+              <div className="font-mono text-[11.5px] text-muted">localhost:3000/app/edit?id=…</div>
             </div>
           </motion.div>
         </Reveal>
       </div>
     </section>
+  );
+}
+
+/* -------------------------------------------------------------
+   5. MINIMALIST FAQ
+---------------------------------------------------------------- */
+const FAQ_ITEMS = [
+  ["Who builds and maintains KANVAS?", "KANVAS is built and maintained by LeadLinked and Shezan as a modern, privacy-first open-source creation suite."],
+  ["Is KANVAS completely free?", "Yes. Released under the permissive MIT license. There are no paid subscriptions, locked features, watermarks, or usage limits."],
+  ["Where are my carousels saved?", "Exclusively on your machine inside your browser's IndexedDB storage. Nothing is ever synced to external servers unless you manually export."],
+  ["Can I upload my own photos?", "Yes. Use the newly redesigned Photos panel to upload high-resolution local images directly from your computer, or choose from curated royalty-free sources."],
+  ["Can I install it as a desktop app?", "Yes. KANVAS is a fully configured Progressive Web App (PWA). Click 'Install PWA' to run it in its own distraction-free window on macOS, Windows, or Linux."],
+];
+
+export function Faq() {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="mx-auto grid max-w-5xl gap-12 px-6 py-24 lg:grid-cols-[1fr_1.4fr] border-t border-line">
+      <div>
+        <Eyebrow>Inquiries</Eyebrow>
+        <h2 className="mt-4 text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
+          Frequently Answered
+        </h2>
+        <p className="mt-4 text-[15px] text-muted leading-relaxed">
+          Need technical support or want to contribute? Connect directly on our{" "}
+          <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4 hover:text-accent">
+            GitHub repository
+          </a>
+          .
+        </p>
+      </div>
+
+      <div className="flex flex-col">
+        {FAQ_ITEMS.map(([q, a], i) => (
+          <div key={q} className="border-b border-line">
+            <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-6 py-5 text-left">
+              <span className="text-[17px] font-medium tracking-tight text-ink">{q}</span>
+              <span className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-full transition-colors text-sm", open === i ? "bg-ink text-bg" : "bg-panel-2 text-muted")}>
+                {open === i ? "−" : "+"}
+              </span>
+            </button>
+            <AnimatePresence initial={false}>
+              {open === i && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
+                  <p className="pb-6 text-[14.5px] leading-relaxed text-muted">{a}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------
+   6. FINAL VISIONOS CTA
+---------------------------------------------------------------- */
+export function FinalCta() {
+  return (
+    <section className="px-4 pb-6">
+      <div className="relative isolate overflow-hidden rounded-[40px] border border-white/10 bg-panel px-6 py-28 text-center shadow-xl">
+        <HeroShader className="absolute inset-0 -z-10 opacity-70" />
+        <h2 className="mx-auto max-w-3xl text-[clamp(2.6rem,6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-ink">
+          Craft slides that <em className="font-serif italic font-normal">command attention</em>.
+        </h2>
+        <p className="mx-auto mt-5 max-w-md text-[16px] text-ink-2">
+          Open the editor right in your browser. No registration required.
+        </p>
+        <div className="mt-9 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/app"
+            className="inline-flex items-center gap-2 rounded-full bg-ink px-8 py-3.5 text-[15px] font-semibold text-bg shadow-lg transition hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Launch Studio <ArrowRight size={16} />
+          </Link>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-panel-2 px-6 py-3.5 text-[15px] font-medium text-ink transition hover:bg-line"
+          >
+            <Github size={16} /> Star on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------
+   7. CLEAN ARCHITECTURAL FOOTER
+---------------------------------------------------------------- */
+export function Footer() {
+  return (
+    <footer className="mx-auto max-w-6xl px-6 pt-16 pb-12 border-t border-line">
+      <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
+        <div>
+          <Logo />
+          <p className="mt-3 text-[14px] text-muted max-w-sm">
+            High-contrast visual carousel and document creation engine. Architected by LeadLinked &amp; Shezan.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-6 text-[13.5px] font-medium text-ink-2">
+          <Link href="/app" className="hover:text-ink transition-colors">Workspace</Link>
+          <Link href="/agents" className="hover:text-ink transition-colors">Agent MCP</Link>
+          <a href="https://github.com/Shezan-op/KANVAS" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">GitHub</a>
+          <a href="https://github.com/Shezan-op" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">Shezan</a>
+          <Link href="/privacy" className="hover:text-ink transition-colors">Privacy</Link>
+        </div>
+      </div>
+
+      <div className="mt-12 overflow-hidden">
+        <div className="font-serif text-[clamp(4.5rem,18vw,16rem)] leading-[0.8] tracking-[-0.04em] text-ink/10 select-none">
+          KANVAS
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-line/60 text-[12px] text-muted font-mono">
+        <span>
+          &copy; {new Date().getFullYear()} LeadLinked &amp; Shezan &bull; MIT Licensed
+        </span>
+        <span>Built with care by LeadLinked &amp; Shezan.</span>
+      </div>
+    </footer>
   );
 }
