@@ -12,7 +12,7 @@ const INSTRUCTIONS = `Slyd makes designed social-media carousels (Instagram, Lin
 Workflow:
 1. If you are unsure about layouts, templates or options, call get_carousel_guide once.
 2. Write the carousel: a 'cover' hook first, one idea per slide, a 'cta' last, 5–10 slides. Use *asterisks* to highlight 1–3 key words per slide. Photos can be search words.
-3. Call create_carousel. Give the user the returned link as a clickable link. It opens Slyd in their browser, ready to edit and export as PNG/PDF/ZIP.
+3. Call create_carousel. Give the user the link as a markdown link named after the carousel, exactly as returned, e.g. [Open “Sleep tips” in Slyd](https://tryslyd.vercel.app/c/sleep-tips#s=…), rather than pasting the long address. It opens Slyd in their browser, ready to edit and export as PNG/PDF/ZIP.
 4. Every carousel has an id (in the create_carousel result). When the user asks for changes to a carousel already made, call update_carousel with that id and the full revised spec. Do not call create_carousel again for edits: update_carousel changes the same carousel in their browser, while create_carousel adds a separate one.
 5. To revise a carousel from a link the user pastes, call read_carousel_link, edit the spec, and call update_carousel with its id (or create_carousel if the link has no id).
 6. Theming: template, palette, colors (exact hex), accent, fonts, headingFont/bodyFont, highlight, texture and align style the whole carousel; myTheme: true applies the user's own saved Slyd theme.
@@ -41,13 +41,14 @@ export function createSlydServer() {
   /** Shared by create and update: build the link and a short, readable summary. */
   const respond = async (parsed: CarouselSpec, updated: boolean) => {
     const url = await specLink(parsed, SITE_URL);
+    const name = (parsed.title ?? (parsed.slides.find((s) => "title" in s && s.title) as { title?: string } | undefined)?.title ?? "your carousel").replace(/\*/g, "");
     const tips = lintSpec(parsed);
     const t = TEMPLATES.find((x) => x.id === (parsed.template ?? "editorial"))!;
     const photos = parsed.slides.filter((s) => ("photo" in s && s.photo) || s.background?.photo || s.elements?.some((e) => e.type === "image")).length;
     const lines = [
       `${updated ? "Carousel updated" : "Carousel ready"}: ${parsed.slides.length} slides · ${t.name} template · ${parsed.format ?? "4:5"} · id ${parsed.id}`,
       "",
-      `Open in Slyd: ${url}`,
+      `Open in Slyd: [Open “${name}” in Slyd](${url})`,
       "",
       updated
         ? "Opening this link replaces the earlier version of this carousel in the user's browser (with an Undo), instead of adding a copy."
@@ -58,7 +59,7 @@ export function createSlydServer() {
     ].filter((l) => l !== "");
     return {
       content: [{ type: "text" as const, text: lines.join("\n") }],
-      structuredContent: { id: parsed.id!, url, slides: parsed.slides.length, template: t.id, format: parsed.format ?? "4:5", suggestions: tips },
+      structuredContent: { id: parsed.id!, url, markdown: `[Open “${name}” in Slyd](${url})`, slides: parsed.slides.length, template: t.id, format: parsed.format ?? "4:5", suggestions: tips },
     };
   };
 
@@ -111,7 +112,7 @@ export function createSlydServer() {
     {
       title: "Read carousel link",
       description:
-        "Decodes a Slyd carousel link (…/app/new#s=… or #j=…) and returns the carousel spec it contains, including its carousel id when it has one.",
+        "Decodes a Slyd carousel link (…/c/<name>#s=…, …/app/new#s=… or #j=…) and returns the carousel spec it contains, including its carousel id when it has one.",
       inputSchema: { url: z.string().min(10).describe("The Slyd link the user shared.") },
       annotations: { title: "Read carousel link", readOnlyHint: true, idempotentHint: true, openWorldHint: false },
     },
@@ -126,7 +127,7 @@ export function createSlydServer() {
       } catch {
         return {
           isError: true,
-          content: [{ type: "text", text: "That doesn't look like a Slyd carousel link. Links look like https://tryslyd.vercel.app/app/new#s=… . Links to saved projects (/app/edit?id=…) only exist in the user's browser and can't be read." }],
+          content: [{ type: "text", text: "That doesn't look like a Slyd carousel link. Links look like https://tryslyd.vercel.app/c/<name>#s=… . Links to saved projects (/app/edit?id=…) only exist in the user's browser and can't be read." }],
         };
       }
     },

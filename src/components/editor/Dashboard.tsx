@@ -11,6 +11,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Toaster, toast } from "@/components/ui/Toast";
 import { cn } from "@/components/ui/cn";
+import { InstallButton, InstallCard } from "@/components/ui/InstallApp";
 import { ASPECTS } from "@/lib/model/constants";
 import { TEMPLATES, projectFromTemplate } from "@/lib/model/templates";
 import { uid } from "@/lib/model/factory";
@@ -38,6 +39,18 @@ export function Dashboard() {
   const [aspect, setAspect] = useState<AspectId>("4:5");
   const [q, setQ] = useState("");
   const [menu, setMenu] = useState<string | null>(null);
+  // Open the card menu upwards when there isn't room for it below the button.
+  const [menuUp, setMenuUp] = useState(false);
+  useEffect(() => {
+    if (!menu) return;
+    const close = (e: Event) => (e.type === "scroll" || (e as KeyboardEvent).key === "Escape") && setMenu(null);
+    window.addEventListener("keydown", close);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => {
+      window.removeEventListener("keydown", close);
+      window.removeEventListener("scroll", close);
+    };
+  }, [menu]);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -129,6 +142,7 @@ export function Dashboard() {
               className="h-9 w-full rounded-xl bg-panel pr-3 pl-9 text-[13.5px] shadow-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-accent/40"
             />
           </div>
+          <InstallButton />
           <StarButton />
           <Link href="/agents" className={buttonClass("ghost", "sm")}>
             <Bot size={15} /> AI agents
@@ -236,13 +250,14 @@ export function Dashboard() {
                       <div className="min-w-0">
                         <div className="truncate text-[14px] font-medium">{p.name}</div>
                         <div className="text-[12px] text-muted">
-                          {p.slides.length} slides · {p.aspect} · {timeAgo(p.updatedAt)}
+                          {p.slides.length} {p.slides.length === 1 ? "slide" : "slides"} · {p.aspect} · {timeAgo(p.updatedAt)}
                         </div>
                       </div>
                       <div className="relative">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            setMenuUp(window.innerHeight - e.currentTarget.getBoundingClientRect().bottom < 110);
                             setMenu(menu === p.id ? null : p.id);
                           }}
                           className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-line hover:text-ink"
@@ -253,10 +268,13 @@ export function Dashboard() {
                         <AnimatePresence>
                           {menu === p.id && (
                             <motion.div
-                              initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                              initial={{ opacity: 0, scale: 0.95, y: menuUp ? 4 : -4 }}
                               animate={{ opacity: 1, scale: 1, y: 0 }}
                               exit={{ opacity: 0, scale: 0.95 }}
-                              className="absolute right-0 z-20 mt-1 w-40 origin-top-right rounded-xl bg-panel p-1 shadow-lg"
+                              className={cn(
+                                "absolute right-0 z-20 w-40 rounded-xl bg-panel p-1 shadow-lg ring-1 ring-line",
+                                menuUp ? "bottom-full mb-1 origin-bottom-right" : "top-full mt-1 origin-top-right",
+                              )}
                               onClick={(e) => e.stopPropagation()}
                             >
                               <button onClick={() => (duplicate(p), setMenu(null))} className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] hover:bg-line">
@@ -284,6 +302,7 @@ export function Dashboard() {
         </footer>
       </main>
       <Toaster />
+      <InstallCard />
     </div>
   );
 }

@@ -2,8 +2,8 @@
  * Spec ⇄ link. The spec travels in the URL *fragment* (after #), which browsers
  * never send to a server, so a carousel's content stays private until opened.
  *
- *   /app/new#s=<base64url(deflate-raw(json))>   compact, what Slyd's MCP server emits
- *   /app/new#j=<base64url(json)>                 plain, easy for any agent to build by hand
+ *   /c/<name>#s=<base64url(deflate-raw(json))>   what Slyd's MCP server emits; <name> is just a readable label
+ *   /app/new#s=…  ·  /app/new#j=<base64url(json)>   also accepted (#j= is easy for any agent to build by hand)
  */
 
 const b64url = {
@@ -40,6 +40,23 @@ export async function decodeSpec(input: string): Promise<unknown> {
   throw new Error("This link doesn't contain a carousel.");
 }
 
-export async function specLink(spec: unknown, siteUrl: string) {
-  return `${siteUrl.replace(/\/$/, "")}/app/new#${await encodeSpec(spec)}`;
+/** A readable label for the link path, from the carousel's title or hook: "Sleep *better* tonight" → "sleep-better-tonight". */
+type Named = { title?: string; slides?: object[] };
+
+export function linkName(spec: Named) {
+  const hook = spec.slides?.map((s) => (s as { title?: unknown }).title).find((t): t is string => typeof t === "string");
+  const raw = spec.title ?? hook ?? "carousel";
+  const slug = raw
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48)
+    .replace(/-+$/, "");
+  return slug || "carousel";
+}
+
+export async function specLink(spec: Named, siteUrl: string) {
+  return `${siteUrl.replace(/\/$/, "")}/c/${linkName(spec)}#${await encodeSpec(spec)}`;
 }
