@@ -1,18 +1,9 @@
 import { ImageResponse } from "next/og";
 import { AUTHOR, SITE_URL } from "@/lib/site";
 
-/**
- * The social share card (WhatsApp, LinkedIn, X, Slack…), served at /og.jpg.
- *
- * Layout is centre-weighted on purpose: when a platform shows the small
- * thumbnail it crops the middle square, which still holds the logo and the
- * full headline. The large card adds the fanned slides on either side.
- */
-
 export const OG_SIZE = { width: 1200, height: 630 };
-export const OG_ALT = "KANVAS: carousels that stop the scroll. A free, open source carousel maker.";
+export const OG_ALT = "KANVAS: Pro Carousel Studio & Visual Engine";
 
-/** TTF from Google Fonts (an older user agent gets TTF, which Satori needs). Falls back if offline. */
 async function googleFont(family: string, weight: number, italic = false): Promise<ArrayBuffer | null> {
   try {
     const q = `${family.replace(/ /g, "+")}:${italic ? "ital,wght@1," : "wght@"}${weight}`;
@@ -28,7 +19,17 @@ async function googleFont(family: string, weight: number, italic = false): Promi
   }
 }
 
-const C = { bg: "#F3F0E9", ink: "#141311", muted: "#77736A", accent: "#FF5A1F", line: "rgba(20,19,17,.10)" };
+// Apple HIG Obsidian & Vision Pro Spatial Aesthetic
+const C = {
+  bg: "#0A0A0C",
+  surface: "#141417",
+  cardBorder: "rgba(255,255,255,0.08)",
+  ink: "#FFFFFF",
+  muted: "#94949E",
+  accent: "#10B981", // Emerald highlight
+  accentGlow: "rgba(16, 185, 129, 0.22)",
+  glass: "rgba(22, 22, 26, 0.75)"
+};
 
 function Card({ rotate, left, top, bg, border, children }: { rotate: number; left: number; top: number; bg: string; border?: string; children: React.ReactNode }) {
   return (
@@ -37,13 +38,13 @@ function Card({ rotate, left, top, bg, border, children }: { rotate: number; lef
         position: "absolute",
         left,
         top,
-        width: 230,
-        height: 288,
-        borderRadius: 20,
+        width: 234,
+        height: 292,
+        borderRadius: 22,
         background: bg,
-        border: border ?? "none",
+        border: border ?? `1px solid ${C.cardBorder}`,
         transform: `rotate(${rotate}deg)`,
-        boxShadow: "0 40px 70px -30px rgba(0,0,0,.45)",
+        boxShadow: "0 35px 80px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,0.06)",
         display: "flex",
         flexDirection: "column",
         padding: 24,
@@ -54,74 +55,91 @@ function Card({ rotate, left, top, bg, border, children }: { rotate: number; lef
   );
 }
 
-/** `canvas` lets the same 1200×630 design sit centred on a larger image (GitHub wants 1280×640). */
 export async function renderOg(canvas: { width: number; height: number } = OG_SIZE) {
-  const [sansBold, serifItalic, mono] = await Promise.all([googleFont("Inter Tight", 700), googleFont("Instrument Serif", 400, true), googleFont("JetBrains Mono", 500)]);
+  const [sansBold, serifItalic, mono] = await Promise.all([
+    googleFont("Inter Tight", 700),
+    googleFont("Instrument Serif", 400, true),
+    googleFont("JetBrains Mono", 500)
+  ]);
   const fonts = [
     sansBold && { name: "Inter Tight", data: sansBold, weight: 700 as const, style: "normal" as const },
     serifItalic && { name: "Instrument Serif", data: serifItalic, weight: 400 as const, style: "italic" as const },
     mono && { name: "JetBrains Mono", data: mono, weight: 500 as const, style: "normal" as const },
   ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 400 | 500 | 700; style: "normal" | "italic" }[];
-  const host = SITE_URL.replace(/^https?:\/\//, "");
 
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: C.bg, overflow: "hidden" }}>
-      {/* The design is laid out at 1200×630; on a larger canvas the side slides bleed to the edge instead of being clipped. */}
-      <div style={{ width: OG_SIZE.width, height: OG_SIZE.height, flexShrink: 0, display: "flex", fontFamily: "Inter Tight", position: "relative" }}>
-        {/* warm glow behind the headline */}
-        <div style={{ position: "absolute", left: 300, top: 40, width: 600, height: 520, borderRadius: 999, background: "linear-gradient(135deg, rgba(255,90,31,.22), rgba(255,200,107,.10))", filter: "blur(70px)", display: "flex" }} />
+        <div style={{ width: OG_SIZE.width, height: OG_SIZE.height, flexShrink: 0, display: "flex", fontFamily: "Inter Tight", position: "relative" }}>
+          
+          {/* Subtle Vision Pro Ambient Luminescence */}
+          <div style={{ position: "absolute", left: 320, top: 40, width: 560, height: 480, borderRadius: 999, background: "radial-gradient(circle, rgba(16,185,129,0.18) 0%, rgba(99,102,241,0.08) 50%, transparent 70%)", filter: "blur(60px)", display: "flex" }} />
 
-        {/* Left slides (outside the centre square) */}
-        <Card rotate={-14} left={-70} top={250} bg="#F2EDE4" border={`1px solid ${C.line}`}>
-          <div style={{ width: 32, height: 5, background: "#D9481C", marginBottom: 20 }} />
-          <div style={{ fontFamily: "Instrument Serif", fontSize: 36, color: "#1A1714", lineHeight: 1.02, display: "flex", flexWrap: "wrap" }}>
-            How to write carousels people&nbsp;<span style={{ fontStyle: "italic", color: "#D9481C" }}>finish.</span>
-          </div>
-        </Card>
-        <Card rotate={-6} left={70} top={70} bg="#0C0C0D">
-          <div style={{ fontSize: 58, fontWeight: 700, color: "#D4FF3A", letterSpacing: -2.5, lineHeight: 0.9, marginBottom: 16 }}>01</div>
-          <div style={{ display: "flex", flexDirection: "column", fontSize: 28, fontWeight: 700, color: "#F4F2EE", lineHeight: 1.08, letterSpacing: -1 }}>
-            <span>Ship faster with</span>
-            <span style={{ display: "flex" }}>
-              <span style={{ background: "#D4FF3A", color: "#0B0B0C", padding: "0 6px", borderRadius: 3 }}>fewer</span>
-            </span>
-            <span>meetings.</span>
-          </div>
-        </Card>
-
-        {/* Right slides */}
-        <Card rotate={7} left={900} top={60} bg="linear-gradient(160deg, #5B4BFF 0%, #FF5FA2 55%, #19D3C5 100%)">
-          <div style={{ fontFamily: "JetBrains Mono", fontSize: 12, color: "rgba(255,255,255,.8)", letterSpacing: 2, marginBottom: 16 }}>CREATOR PLAYBOOK</div>
-          <div style={{ fontSize: 34, fontWeight: 700, color: "#fff", lineHeight: 1.05, letterSpacing: -1 }}>Grow without going viral.</div>
-        </Card>
-        <Card rotate={13} left={1030} top={300} bg="#FFF4C9" border={`1px solid ${C.line}`}>
-          <div style={{ fontSize: 52, fontWeight: 700, color: "#3A5BFF", letterSpacing: -2, lineHeight: 1 }}>3.1×</div>
-          <div style={{ marginTop: 12, fontSize: 22, color: "#1E1B10", lineHeight: 1.2 }}>more reach than single images</div>
-        </Card>
-
-        {/* Centre column: everything that matters lives inside the middle 630px */}
-        <div style={{ position: "absolute", left: 285, top: 0, width: 630, height: 630, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
-            <div style={{ position: "relative", width: 44, height: 44, display: "flex" }}>
-              <div style={{ position: "absolute", left: 16, top: 2, width: 18, height: 26, borderRadius: 5, background: C.accent, opacity: 0.45, transform: "rotate(14deg)" }} />
-              <div style={{ position: "absolute", left: 12, top: 6, width: 18, height: 26, borderRadius: 5, background: C.accent, opacity: 0.75, transform: "rotate(5deg)" }} />
-              <div style={{ position: "absolute", left: 7, top: 10, width: 18, height: 26, borderRadius: 5, background: C.ink, transform: "rotate(-7deg)" }} />
+          {/* Left Slide 1: Obsidian Editorial */}
+          <Card rotate={-12} left={-60} top={240} bg="#131316" border="1px solid rgba(255,255,255,0.1)">
+            <div style={{ width: 36, height: 5, background: C.accent, borderRadius: 2, marginBottom: 20 }} />
+            <div style={{ fontFamily: "Instrument Serif", fontSize: 34, color: "#FFFFFF", lineHeight: 1.05, display: "flex", flexWrap: "wrap" }}>
+              How top creators build carousels that&nbsp;<span style={{ fontStyle: "italic", color: C.accent }}>convert.</span>
             </div>
-            <div style={{ fontFamily: "Instrument Serif", fontStyle: "italic", fontSize: 48, color: C.ink, marginTop: -6 }}>KANVAS</div>
+          </Card>
+
+          {/* Left Slide 2: Numbered Takeaway (Apple Noir) */}
+          <Card rotate={-5} left={75} top={70} bg="#16161A" border="1px solid rgba(16,185,129,0.3)">
+            <div style={{ fontSize: 54, fontWeight: 700, color: C.accent, letterSpacing: -2, lineHeight: 0.9, marginBottom: 16 }}>01</div>
+            <div style={{ display: "flex", flexDirection: "column", fontSize: 26, fontWeight: 700, color: "#FFFFFF", lineHeight: 1.15, letterSpacing: -0.5 }}>
+              <span>Ruthless focus.</span>
+              <span style={{ display: "flex", marginTop: 4 }}>
+                <span style={{ background: "rgba(16,185,129,0.15)", color: C.accent, padding: "2px 8px", borderRadius: 6, border: "1px solid rgba(16,185,129,0.3)" }}>One big idea</span>
+              </span>
+              <span style={{ marginTop: 4 }}>per slide.</span>
+            </div>
+          </Card>
+
+          {/* Right Slide 1: Spatial Mesh */}
+          <Card rotate={6} left={895} top={65} bg="linear-gradient(145deg, #181920 0%, #0F172A 100%)" border="1px solid rgba(99,102,241,0.35)">
+            <div style={{ fontFamily: "JetBrains Mono", fontSize: 11, color: "#818CF8", letterSpacing: 2, marginBottom: 16 }}>CREATOR SUITE</div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: "#FFFFFF", lineHeight: 1.08, letterSpacing: -0.8 }}>Scale your reach with zero friction.</div>
+          </Card>
+
+          {/* Right Slide 2: Big Stat Hero */}
+          <Card rotate={13} left={1025} top={295} bg="#121316" border="1px solid rgba(255,255,255,0.12)">
+            <div style={{ fontSize: 50, fontWeight: 700, color: "#60A5FA", letterSpacing: -2, lineHeight: 1 }}>3.8×</div>
+            <div style={{ marginTop: 12, fontSize: 21, color: "#D1D5DB", lineHeight: 1.25 }}>higher engagement than standard posts</div>
+          </Card>
+
+          {/* Centre Column: Hero Presentation */}
+          <div style={{ position: "absolute", left: 285, top: 0, width: 630, height: 630, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            
+            {/* Logo Badge */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28, background: "rgba(255,255,255,0.04)", padding: "8px 18px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.08)" }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: C.accent, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ color: "#0E0E10", fontWeight: 900, fontSize: 14 }}>K</span>
+              </div>
+              <span style={{ fontFamily: "JetBrains Mono", fontSize: 13, color: "#FFFFFF", letterSpacing: 2, fontWeight: 700 }}>KANVAS</span>
+            </div>
+
+            {/* Typography Master Headline */}
+            <div style={{ fontSize: 74, fontWeight: 700, color: "#FFFFFF", letterSpacing: -3.5, lineHeight: 0.98, textAlign: "center" }}>Carousels that</div>
+            <div style={{ display: "flex", alignItems: "baseline", fontSize: 74, fontWeight: 700, color: "#FFFFFF", letterSpacing: -3.5, lineHeight: 1.08, textAlign: "center" }}>
+              <span style={{ fontFamily: "Instrument Serif", fontStyle: "italic", fontWeight: 400, color: C.accent, letterSpacing: -1, marginRight: 12, fontSize: 84 }}>command</span>
+              attention.
+            </div>
+
+            {/* Subtitle */}
+            <div style={{ marginTop: 20, fontSize: 21, color: C.muted, textAlign: "center", lineHeight: 1.4, maxWidth: 520, display: "flex" }}>
+              The high-contrast, local-first visual studio for LinkedIn, Instagram &amp; X.
+            </div>
+
+            {/* Glass Pill URL badge */}
+            <div style={{ marginTop: 32, display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.06)", color: "#FFFFFF", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999, padding: "10px 24px", fontFamily: "JetBrains Mono", fontSize: 16, letterSpacing: 0.5, backdropFilter: "blur(20px)" }}>
+              github.com/Shezan-op/KANVAS
+            </div>
+
+            <div style={{ marginTop: 16, fontSize: 14, color: "#71717A", fontFamily: "JetBrains Mono", letterSpacing: 1, display: "flex" }}>
+              PRO VISUAL ENGINE · STANDALONE PWA · NATIVE MCP
+            </div>
           </div>
-          <div style={{ fontSize: 78, fontWeight: 700, color: C.ink, letterSpacing: -3.5, lineHeight: 0.98 }}>Carousels that</div>
-          <div style={{ display: "flex", alignItems: "baseline", fontSize: 78, fontWeight: 700, color: C.ink, letterSpacing: -3.5, lineHeight: 1.08 }}>
-            <span style={{ fontFamily: "Instrument Serif", fontStyle: "italic", fontWeight: 400, color: C.accent, letterSpacing: -1, marginRight: 12, fontSize: 88 }}>stop</span>
-            the scroll.
-          </div>
-          <div style={{ marginTop: 24, fontSize: 25, color: C.muted, textAlign: "center", lineHeight: 1.35, maxWidth: 500, display: "flex" }}>Free, open source carousel maker for Instagram, LinkedIn and X.</div>
-          <div style={{ marginTop: 34, display: "flex", alignItems: "center", gap: 10, background: C.ink, color: C.bg, borderRadius: 999, padding: "12px 22px", fontFamily: "JetBrains Mono", fontSize: 18, letterSpacing: 0.5 }}>
-            {host}
-          </div>
-          <div style={{ marginTop: 16, fontSize: 17, color: C.muted, fontFamily: "JetBrains Mono", letterSpacing: 0.5, display: "flex" }}>{`by ${AUTHOR.name}`}</div>
         </div>
-      </div>
       </div>
     ),
     { ...canvas, fonts, headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } },
