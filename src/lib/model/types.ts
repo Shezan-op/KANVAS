@@ -143,6 +143,10 @@ export interface Project {
   brand: BrandKit;
   slides: Slide[];
   templateId?: string;
+  /** Carousel id from an agent's spec: later links with the same id update this project. */
+  sourceId?: string;
+  /** Fingerprint of the last spec applied, so re-opening the same link doesn't overwrite edits. */
+  sourceHash?: string;
   createdAt: number;
   updatedAt: number;
 }

@@ -7,7 +7,7 @@ import { SLIDE_W, slideHeight } from "@/lib/model/constants";
 import { cloneElement, cloneSlide, reflowForAspect, uid } from "@/lib/model/factory";
 import type { AspectId, Project, Slide, SlideElement } from "@/lib/model/types";
 
-export type LeftTab = "templates" | "layouts" | "text" | "photos" | "elements" | "uploads" | "brand";
+export type LeftTab = "templates" | "style" | "write" | "layouts" | "text" | "photos" | "elements" | "uploads" | "brand";
 export type SaveState = "saved" | "saving" | "dirty" | "error";
 
 const HISTORY_LIMIT = 200;

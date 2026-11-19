@@ -3,7 +3,7 @@
   "name": "io.github.venukumaraitech/slyd",
   "title": "Slyd",
   "description": "Create designed, editable Instagram and LinkedIn carousels from a prompt. No API key.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "websiteUrl": "https://tryslyd.vercel.app/agents",
   "repository": {
     "url": "https://github.com/venukumaraitech/slyd",

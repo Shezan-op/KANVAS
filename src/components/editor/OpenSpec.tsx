@@ -11,8 +11,8 @@ import { CarouselSpec } from "@/lib/spec/schema";
 import { compileSpec, type PendingPhoto } from "@/lib/spec/compile";
 import { decodeSpec } from "@/lib/spec/link";
 import { defaultProvider, getKeys, getProvider } from "@/lib/stock";
-import { getPref, saveProject } from "@/lib/storage";
-import type { BrandKit, Project } from "@/lib/model/types";
+import { getPref, listProjects, previousVersionKey, saveProject, setPref } from "@/lib/storage";
+import type { BrandKit, Project, Theme } from "@/lib/model/types";
 
 type Step = "read" | "build" | "photos" | "save";
 const STEPS: { id: Step; label: string; icon: typeof Check }[] = [
@@ -21,6 +21,14 @@ const STEPS: { id: Step; label: string; icon: typeof Check }[] = [
   { id: "photos", label: "Finding photos", icon: ImageIcon },
   { id: "save", label: "Saving to your browser", icon: Check },
 ];
+
+/** Small stable fingerprint (FNV-1a) of a spec, to tell a re-opened link from a new version. */
+const fingerprint = (x: unknown) => {
+  const str = JSON.stringify(x);
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 0x01000193);
+  return (h >>> 0).toString(36);
+};
 
 const within = <T,>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<never>((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
 
@@ -77,6 +85,7 @@ export function OpenSpec() {
   const [step, setStep] = useState<Step>("read");
   const [photos, setPhotos] = useState<{ done: number; total: number }>({ done: 0, total: 0 });
   const [error, setError] = useState<{ title: string; details: string[] } | null>(null);
+  const [updating, setUpdating] = useState(false);
   const ran = useRef(false);
 
   useEffect(() => {
@@ -105,17 +114,36 @@ export function OpenSpec() {
         });
         return;
       }
+      const spec = parsed.data;
+      const open = spec.open && spec.open !== "editor" ? `&open=${spec.open}` : "";
+      const print = fingerprint(spec);
+
+      // Same carousel id as one already in this browser → update it in place instead of adding a copy.
+      const existing = spec.id ? (await listProjects()).find((p) => p.sourceId === spec.id) : undefined;
+      if (existing && existing.sourceHash === print) {
+        // The exact same link opened again: keep any edits made since and just open it.
+        router.replace(`/app/edit?id=${existing.id}${open}`);
+        return;
+      }
+      if (existing) setUpdating(true);
+
       setStep("build");
-      const brand = await getPref<BrandKit | undefined>("brand", undefined);
-      const { project, pending } = compileSpec(parsed.data, brand);
+      const [brand, myTheme] = await Promise.all([getPref<BrandKit | undefined>("brand", undefined), getPref<Theme | undefined>("myTheme", undefined)]);
+      const { project, pending } = compileSpec(spec, existing?.brand ?? brand, myTheme);
+      project.sourceHash = print;
       if (pending.length) {
         setStep("photos");
         setPhotos({ done: 0, total: pending.length });
         await resolvePhotos(project, pending, (done) => setPhotos({ done, total: pending.length }));
       }
       setStep("save");
+      if (existing) {
+        await setPref(previousVersionKey(existing.id), existing);
+        await saveProject({ ...project, id: existing.id, createdAt: existing.createdAt, updatedAt: Date.now() });
+        router.replace(`/app/edit?id=${existing.id}&updated=1${open}`);
+        return;
+      }
       await saveProject(project);
-      const open = parsed.data.open && parsed.data.open !== "editor" ? `&open=${parsed.data.open}` : "";
       router.replace(`/app/edit?id=${project.id}${open}`);
     })().catch((e) => setError({ title: "Something went wrong", details: [String((e as Error)?.message ?? e)] }));
   }, [router]);
@@ -153,7 +181,7 @@ export function OpenSpec() {
               <LogoMark className="h-14 w-14" />
             </motion.div>
             <h1 className="mt-6 text-[22px] font-semibold tracking-tight">
-              Opening your <span className="font-serif font-normal italic text-accent">carousel</span>
+              {updating ? "Updating" : "Opening"} your <span className="font-serif font-normal italic text-accent">carousel</span>
             </h1>
             <ul className="mt-6 flex w-full flex-col gap-2">
               {STEPS.map((s, i) => {

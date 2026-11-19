@@ -78,6 +78,7 @@ Your agent writes the carousel, Slyd designs it, and you get a link that opens i
 | --- | --- |
 | `create_carousel` | Builds a carousel from a spec and returns a link that opens it in Slyd |
 | `get_carousel_guide` | Layouts, options and copywriting rules, so the agent gets it right the first time |
+| `update_carousel` | Revises a carousel it already made; the new link updates the same carousel in your browser (with Undo) |
 | `read_carousel_link` | Turns a Slyd link back into a spec, so the agent can revise it |
 | `carousel_from_text` *(prompt)* | Turns any post, thread or notes into a carousel |
 

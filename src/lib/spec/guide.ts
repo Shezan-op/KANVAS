@@ -78,7 +78,9 @@ For custom designs, add \`elements\` to any slide. Coordinates are px on a canva
 All elements accept rotation (deg) and opacity (0–1).
 
 ## Editing an existing carousel
-If the user shares a Slyd link, call \`read_carousel_link\` to get its spec, change what they asked for, and call \`create_carousel\` again for a new link.
+**Editing.** Every carousel has an \`id\` (returned by \`create_carousel\`). When the user asks for changes, call \`update_carousel\` with the same \`id\` and the full revised spec: opening the new link updates that same carousel in their browser (with Undo) instead of adding a copy. If the user shares a Slyd link, call \`read_carousel_link\` to get its spec and id first.
+
+**Their own look.** Set \`myTheme: true\` to use the colours and fonts the user saved as their theme in Slyd.
 
 ## Example
 \`\`\`json

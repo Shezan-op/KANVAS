@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
 import {
   AlignCenter,
   AlignCenterHorizontal,
@@ -29,8 +28,9 @@ import {
   Smile,
   Wallpaper,
   ExternalLink,
+  Palette,
 } from "lucide-react";
-import { CANVAS_FONTS, FONT_PAIRS, MESHES, PALETTES, TEXTURES } from "@/lib/model/constants";
+import { CANVAS_FONTS, MESHES, TEXTURES } from "@/lib/model/constants";
 import { IMAGE_FILTERS, backgroundCSS, fontFamilyName, isDark, resolveColor, textureCSS } from "@/lib/model/resolve";
 import { safeSrc } from "@/lib/image";
 import type { Background, HighlightStyle, ImageElement, ShapeElement, SlideElement, TextElement, TextureKind, Theme, IconElement } from "@/lib/model/types";
@@ -42,7 +42,6 @@ import { setBackgroundImage } from "./insert";
 
 export function Inspector() {
   const selected = useSelectedElements();
-  const [tab, setTab] = useState<"slide" | "theme">("slide");
   return (
     <aside className="scroll-thin flex h-full w-[296px] shrink-0 flex-col overflow-y-auto border-l border-line bg-panel">
       <AnimatePresence mode="wait" initial={false}>
@@ -52,18 +51,17 @@ export function Inspector() {
           </motion.div>
         ) : (
           <motion.div key="slide" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.18 }}>
-            <div className="sticky top-0 z-10 border-b border-line bg-panel px-4 py-3">
-              <Segmented
-                layoutId="insp-tab"
-                value={tab}
-                onChange={setTab}
-                options={[
-                  { value: "slide", label: "Slide" },
-                  { value: "theme", label: "Theme" },
-                ]}
-              />
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-panel px-4 py-3">
+              <span className="text-[13px] font-semibold tracking-tight">This slide</span>
+              <button
+                onClick={() => useEditor.getState().setLeftTab("style")}
+                className="flex items-center gap-1.5 rounded-lg bg-panel-2 px-2.5 py-1.5 text-[11.5px] font-medium text-ink-2 hover:bg-line hover:text-ink"
+                title="Colours, fonts and textures for every slide"
+              >
+                <Palette size={13} className="text-accent" /> Style all slides
+              </button>
             </div>
-            {tab === "slide" ? <SlideInspector /> : <ThemeInspector />}
+            <SlideInspector />
           </motion.div>
         )}
       </AnimatePresence>
@@ -251,7 +249,7 @@ function TextProps({ el, theme }: { el: TextElement; theme: Theme }) {
   );
 }
 
-function HighlightGlyph({ style }: { style: HighlightStyle }) {
+export function HighlightGlyph({ style }: { style: HighlightStyle }) {
   switch (style) {
     case "color":
       return <span className="text-accent">Aa</span>;
@@ -603,65 +601,5 @@ function Layers() {
         })}
       </div>
     </Section>
-  );
-}
-
-/* ================================================================== theme */
-
-function ThemeInspector() {
-  const theme = useEditor((s) => s.project!.theme);
-  const mutate = useEditor((s) => s.mutate);
-  const setTheme = (patch: Partial<Theme>, key?: string) => mutate((d) => void Object.assign(d.theme, patch), { key });
-  const pair = FONT_PAIRS.find((p) => p.heading === theme.headingFont && p.body === theme.bodyFont);
-  return (
-    <div>
-      <Section title="Palette">
-        <div className="grid grid-cols-4 gap-2">
-          {PALETTES.map((p) => {
-            const active = p.theme.bg === theme.bg && p.theme.accent === theme.accent && p.theme.ink === theme.ink;
-            return (
-              <button key={p.id} onClick={() => setTheme(p.theme)} className="group flex flex-col items-center gap-1" title={p.name}>
-                <span className={cn("relative block aspect-square w-full overflow-hidden rounded-xl ring-offset-2 ring-offset-panel transition-transform group-hover:scale-105", active ? "ring-2 ring-accent" : "ring-1 ring-line")} style={{ background: p.theme.bg }}>
-                  <span className="absolute top-2 left-2 font-serif text-[18px] leading-none italic" style={{ color: p.theme.ink }}>
-                    Aa
-                  </span>
-                  <span className="absolute right-2 bottom-2 h-3.5 w-3.5 rounded-full" style={{ background: p.theme.accent }} />
-                </span>
-                <span className={cn("text-[10.5px]", active ? "text-ink" : "text-muted")}>{p.name}</span>
-              </button>
-            );
-          })}
-        </div>
-      </Section>
-      <Section title="Colours">
-        {(["bg", "surface", "ink", "muted", "accent"] as const).map((k) => (
-          <Row key={k} label={{ bg: "Background", surface: "Surface", ink: "Ink", muted: "Muted", accent: "Accent" }[k]}>
-            <ColorField value={theme[k]} theme={theme} onChange={(v) => setTheme({ [k]: resolveColor(v, theme) })} />
-          </Row>
-        ))}
-      </Section>
-      <Section title="Fonts">
-        <div className="grid grid-cols-2 gap-1.5">
-          {FONT_PAIRS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setTheme({ headingFont: p.heading, bodyFont: p.body })}
-              className={cn("flex flex-col items-start rounded-xl p-2.5 text-left transition", pair?.id === p.id ? "bg-ink text-bg" : "bg-panel-2 hover:bg-line")}
-            >
-              <span style={{ fontFamily: `"${p.heading}"`, fontSize: 19, lineHeight: 1.1 }}>{p.name}</span>
-              <span className="mt-0.5 text-[10.5px] opacity-60" style={{ fontFamily: `"${p.body}"` }}>
-                {p.heading} + {p.body}
-              </span>
-            </button>
-          ))}
-        </div>
-        <Row label="Heading">
-          <Select value={theme.headingFont} onChange={(v) => setTheme({ headingFont: v })} options={CANVAS_FONTS.map((f) => ({ value: f.family, label: f.family }))} renderOption={(o) => <span style={{ fontFamily: `"${o.value}"` }}>{o.label}</span>} />
-        </Row>
-        <Row label="Body">
-          <Select value={theme.bodyFont} onChange={(v) => setTheme({ bodyFont: v })} options={CANVAS_FONTS.map((f) => ({ value: f.family, label: f.family }))} renderOption={(o) => <span style={{ fontFamily: `"${o.value}"` }}>{o.label}</span>} />
-        </Row>
-      </Section>
-    </div>
   );
 }

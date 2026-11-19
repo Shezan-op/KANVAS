@@ -283,6 +283,7 @@ export function AgentsPage() {
             {[
               ["create_carousel", "Designs a carousel from a spec and returns a link that opens it in Slyd."],
               ["get_carousel_guide", "Layouts, options and copywriting rules, so the agent gets it right first time."],
+              ["update_carousel", "Changes a carousel it already made. Opening the new link updates the same carousel in your browser, with Undo."],
               ["read_carousel_link", "Reads a Slyd link back into a spec, so the agent can revise a carousel you shared."],
               ["carousel_from_text", "A prompt: turn any post, thread or notes into a carousel."],
             ].map(([n, d]) => (

@@ -21,6 +21,7 @@ export async function loadProject(id: string): Promise<Project | undefined> {
 export async function deleteProject(id: string) {
   if (!projects) return;
   await del(id, projects);
+  if (prefs) await del(`prev:${id}`, prefs);
 }
 
 export async function listProjects(): Promise<Project[]> {
@@ -46,6 +47,9 @@ export async function setPref<T>(key: string, value: T) {
   if (!prefs) return;
   await set(key, value, prefs);
 }
+
+/** Where the previous version of a carousel is kept when an agent's update replaces it (one level of undo). */
+export const previousVersionKey = (projectId: string) => `prev:${projectId}`;
 
 /** Portable project file: a single JSON you can share, back up or commit to git. */
 export function exportProjectFile(p: Project) {

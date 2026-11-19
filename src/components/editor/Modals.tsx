@@ -342,7 +342,7 @@ const SHORTCUTS: [string, string[][]][] = [
   ["Create", [["Add text", "T"], ["Add rectangle", "R"], ["Add circle", "O"], ["New slide", "Ctrl", "Enter"], ["Duplicate", "Ctrl", "D"], ["Paste image", "Ctrl", "V"]]],
   ["Edit", [["Edit text", "Enter"], ["Finish editing", "Esc"], ["Undo", "Ctrl", "Z"], ["Redo", "Ctrl", "Shift", "Z"], ["Copy / cut", "Ctrl", "C / X"], ["Delete", "Del"]]],
   ["Arrange", [["Nudge", "↑ ↓ ← →"], ["Nudge ×10", "Shift", "Arrows"], ["Bring forward", "Ctrl", "]"], ["Send backward", "Ctrl", "["], ["Select all", "Ctrl", "A"], ["Duplicate while dragging", "Alt", "Drag"]]],
-  ["Navigate", [["Previous / next slide", "← / →"], ["Zoom", "Ctrl", "Scroll"], ["Fit to screen", "Ctrl", "0"], ["Switch panels", "Alt", "1–7"], ["Preview", "P"], ["Export", "Ctrl", "E"]]],
+  ["Navigate", [["Previous / next slide", "← / →"], ["Zoom", "Ctrl", "Scroll"], ["Fit to screen", "Ctrl", "0"], ["Switch panels", "Alt", "1–9"], ["Preview", "P"], ["Export", "Ctrl", "E"]]],
 ];
 
 function ShortcutsModal({ onClose }: { onClose: () => void }) {

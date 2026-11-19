@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Laptop } from "lucide-react";
-import { loadProject, saveProject } from "@/lib/storage";
+import { getPref, loadProject, previousVersionKey, saveProject, setPref } from "@/lib/storage";
+import type { Project } from "@/lib/model/types";
 import { clearDeletedSlides, restoreDeletedSlides, setOnSlideDeleted, useEditor } from "@/store/editor";
 import { Toaster, toast } from "@/components/ui/Toast";
 import { LogoMark } from "@/components/ui/Logo";
@@ -101,6 +102,32 @@ export function Editor() {
     router.replace(`/app/edit?id=${id}`);
     setTimeout(() => useEditor.getState().setModal(openParam), 350);
   }, [loaded, openParam, id, router]);
+  // An agent's update replaced this carousel: say so, and offer to bring back the version before it.
+  const updatedParam = params.get("updated");
+  const announced = useRef(false);
+  useEffect(() => {
+    if (announced.current || !loaded || !updatedParam || !id) return;
+    announced.current = true;
+    if (openParam !== "preview" && openParam !== "export") router.replace(`/app/edit?id=${id}`);
+    toast.info(
+      "Carousel updated by your AI agent",
+      {
+        label: "Undo",
+        run: async () => {
+          const prev = await getPref<Project | undefined>(previousVersionKey(id), undefined);
+          if (!prev) return;
+          // Keep the agent's link recognisable, so opening it again re-applies the update.
+          const restored = { ...prev, sourceHash: undefined, updatedAt: Date.now() };
+          await saveProject(restored);
+          await setPref(previousVersionKey(id), undefined);
+          useEditor.getState().load(restored);
+          toast.ok("Previous version restored");
+        },
+      },
+      { key: "agent-update" },
+    );
+  }, [loaded, updatedParam, openParam, id, router]);
+
   // One toast for a run of deletes ("3 slides deleted"), and Undo restores exactly those slides.
   useEffect(() => {
     setOnSlideDeleted((n) =>

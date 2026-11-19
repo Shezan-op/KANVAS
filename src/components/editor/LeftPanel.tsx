@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BadgeCheck, Image as ImageIcon, LayoutTemplate, PanelsTopLeft, Shapes, Type, Upload, Trash2, UserRound, Check } from "lucide-react";
+import { BadgeCheck, Image as ImageIcon, LayoutTemplate, Palette, PanelsTopLeft, PenLine, Shapes, Type, Upload, Trash2, UserRound, Check } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { ICONS } from "@/components/slide/icons";
 import { ColorField, Row, Segmented, Toggle } from "@/components/ui/controls";
@@ -17,16 +17,20 @@ import { getPref, setPref } from "@/lib/storage";
 import type { ShapeKind, Slide, SlideElement } from "@/lib/model/types";
 import { useEditor, type LeftTab } from "@/store/editor";
 import { PhotosPanel } from "./PhotosPanel";
+import { StylePanel } from "./StylePanel";
+import { WritePanel } from "./WritePanel";
 import { DND_MIME, filesToPayloads, insertImage, setBackgroundImage, type ImagePayload } from "./insert";
 
 const TABS: { id: LeftTab; icon: typeof Type; label: string; key: string }[] = [
   { id: "templates", icon: LayoutTemplate, label: "Templates", key: "1" },
-  { id: "layouts", icon: PanelsTopLeft, label: "Layouts", key: "2" },
-  { id: "text", icon: Type, label: "Text", key: "3" },
-  { id: "photos", icon: ImageIcon, label: "Photos", key: "4" },
-  { id: "elements", icon: Shapes, label: "Elements", key: "5" },
-  { id: "uploads", icon: Upload, label: "Uploads", key: "6" },
-  { id: "brand", icon: BadgeCheck, label: "Brand", key: "7" },
+  { id: "style", icon: Palette, label: "Style", key: "2" },
+  { id: "write", icon: PenLine, label: "Write", key: "3" },
+  { id: "layouts", icon: PanelsTopLeft, label: "Layouts", key: "4" },
+  { id: "text", icon: Type, label: "Text", key: "5" },
+  { id: "photos", icon: ImageIcon, label: "Photos", key: "6" },
+  { id: "elements", icon: Shapes, label: "Elements", key: "7" },
+  { id: "uploads", icon: Upload, label: "Uploads", key: "8" },
+  { id: "brand", icon: BadgeCheck, label: "Brand", key: "9" },
 ];
 
 export function LeftPanel() {
@@ -57,6 +61,8 @@ export function LeftPanel() {
             className="min-h-0 flex-1"
           >
             {tab === "templates" && <TemplatesPanel />}
+            {tab === "style" && <StylePanel />}
+            {tab === "write" && <WritePanel />}
             {tab === "layouts" && <LayoutsPanel />}
             {tab === "text" && <TextPanel />}
             {tab === "photos" && <PhotosPanel />}

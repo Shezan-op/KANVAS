@@ -195,7 +195,13 @@ export const BrandSpec = z
   })
   .describe("Optional. Anything omitted falls back to the user's saved brand kit in Slyd.");
 
+export const CAROUSEL_ID = z
+  .string()
+  .regex(/^[A-Za-z0-9_-]{6,40}$/, "6–40 letters, digits, - or _")
+  .describe("Carousel id. Carousels sharing an id are versions of the same carousel: opening a newer link updates the existing carousel in the user's browser instead of adding a copy.");
+
 export const CarouselSpec = z.object({
+  id: CAROUSEL_ID.optional(),
   title: z.string().max(80).optional().describe("Project name in Slyd. Defaults to the hook."),
   template: z.enum(TEMPLATE_IDS).optional().describe(`Visual style. ${TEMPLATES.map((t) => `${t.id}: ${t.description}`).join(" | ")}. Default: editorial.`),
   format: z.enum(FORMAT_IDS).optional().describe(`Slide size. ${FORMAT_IDS.map((f) => `${f} = ${ASPECTS[f].label} (${ASPECTS[f].hint})`).join("; ")}. Default 4:5.`),
@@ -208,6 +214,7 @@ export const CarouselSpec = z.object({
   fonts: z.enum(FONT_PAIR_IDS).optional().describe(`Font pair: ${FONT_PAIRS.map((f) => `${f.id} (${f.heading} + ${f.body})`).join(", ")}.`),
   headingFont: z.enum(FONT_FAMILIES).optional().describe("Exact heading font, overrides `fonts`."),
   bodyFont: z.enum(FONT_FAMILIES).optional().describe("Exact body font, overrides `fonts`."),
+  myTheme: z.boolean().optional().describe("Use the colours and fonts the user saved as their own theme in Slyd, if they have one (falls back to the template's look). Explicit colors/fonts in this spec still apply on top."),
   highlight: z.enum(HIGHLIGHT_IDS).optional().describe("How *highlighted* words look: color, italic, marker (highlighter), underline, pill."),
   texture: z.enum(TEXTURE_IDS).optional().describe(`Texture on every slide: ${TEXTURE_IDS.join(", ")}.`),
   textureIntensity: unit.optional().describe("0–1. Default from the template."),

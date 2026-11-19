@@ -7,7 +7,7 @@ import { buildLayout, styleFromTemplateId } from "@/lib/model/templates";
 import { useEditor, type LeftTab } from "@/store/editor";
 import { toast } from "@/components/ui/Toast";
 
-const TAB_KEYS: LeftTab[] = ["templates", "layouts", "text", "photos", "elements", "uploads", "brand"];
+const TAB_KEYS: LeftTab[] = ["templates", "style", "write", "layouts", "text", "photos", "elements", "uploads", "brand"];
 
 function isTyping(t: EventTarget | null) {
   const el = t as HTMLElement | null;
@@ -60,7 +60,7 @@ export function useHotkeys() {
       if (mod && k === "0") return done(), st.setZoom("fit");
 
       // Panels
-      if (e.altKey && /^[1-7]$/.test(e.key)) return done(), st.setLeftTab(TAB_KEYS[+e.key - 1]);
+      if (e.altKey && /^[1-9]$/.test(e.key)) return done(), st.setLeftTab(TAB_KEYS[+e.key - 1]);
 
       if (mod || e.altKey) return;
 

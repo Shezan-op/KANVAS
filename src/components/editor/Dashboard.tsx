@@ -52,6 +52,8 @@ export function Dashboard() {
     const t = TEMPLATES.find((x) => x.id === templateId) ?? TEMPLATES[0];
     const p = projectFromTemplate(t, aspect);
     p.brand = await getPref("brand", p.brand);
+    // A blank carousel starts in the user's own starred theme, if they saved one.
+    if (t.id === "blank") p.theme = await getPref("myTheme", p.theme);
     await saveProject(p);
     router.push(`/app/edit?id=${p.id}`);
   };

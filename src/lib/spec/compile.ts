@@ -1,6 +1,6 @@
 import { defaultBrand, defaultTheme, icon, image, newProject, shape, text } from "../model/factory";
 import { TEMPLATES, buildLayout, type Style } from "../model/templates";
-import type { Background, BrandKit, ColorRef, Project, Slide, SlideElement } from "../model/types";
+import type { Background, BrandKit, ColorRef, Project, Slide, SlideElement, Theme } from "../model/types";
 import type { CarouselSpec, ElementSpec, SlideSpec } from "./schema";
 
 /** A photo described by words rather than a URL, resolved in the browser after opening. */
@@ -30,13 +30,18 @@ const font = (f?: string) => (f === "heading" ? "$heading" : f === "body" ? "$bo
 /** Drop undefined keys so factory defaults survive. */
 const clean = <T extends object>(o: T) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)) as Partial<T>;
 
-export function compileSpec(spec: CarouselSpec, brandFallback?: BrandKit): { project: Project; pending: PendingPhoto[] } {
+export function compileSpec(spec: CarouselSpec, brandFallback?: BrandKit, savedTheme?: Theme): { project: Project; pending: PendingPhoto[] } {
   const template = TEMPLATES.find((t) => t.id === (spec.template ?? "editorial")) ?? TEMPLATES[0];
   const aspect = spec.format ?? "4:5";
   const pending: PendingPhoto[] = [];
 
   // Global look: template defaults, then spec overrides.
   const theme = defaultTheme(spec.palette ?? template.style.palette, spec.fonts ?? template.style.pair);
+  // "Use my theme": the user's saved look replaces the template's, but an explicit font pair still wins.
+  if (spec.myTheme && savedTheme) {
+    const fonts = spec.fonts ? { headingFont: theme.headingFont, bodyFont: theme.bodyFont } : {};
+    Object.assign(theme, savedTheme, fonts);
+  }
   Object.assign(theme, clean({ ...spec.colors, ...(spec.accent ? { accent: spec.accent } : {}) }));
   for (const k of ["bg", "surface", "ink", "muted", "accent"] as const) theme[k] = theme[k].toUpperCase();
   if (spec.headingFont) theme.headingFont = spec.headingFont;
@@ -180,5 +185,6 @@ export function compileSpec(spec: CarouselSpec, brandFallback?: BrandKit): { pro
     brand,
     slides,
   });
+  if (spec.id) project.sourceId = spec.id;
   return { project, pending };
 }
