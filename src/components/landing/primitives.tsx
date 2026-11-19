@@ -28,13 +28,12 @@ const wordV: Variants = {
 };
 
 /**
- * Staggered word reveal. `*word*` renders in italic serif accent, matching the
- * slide highlight syntax used in the editor.
+ * Staggered word reveal with Instrument Serif integration.
+ * `*word*` renders in authentic Instrument Serif italic styling.
  */
 export function SplitWords({ text, className, delay = 0, immediate = false }: { text: string; className?: string; delay?: number; immediate?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  // A highlight carries its trailing punctuation ("*teaching*,") so the comma can never wrap alone.
   const tokens = text.split(/(\*[^*]+\*[^\s*]*|\s+|\n)/).filter(Boolean);
   let i = Math.round(delay / 0.055);
   return (
@@ -56,14 +55,15 @@ export function SplitWords({ text, className, delay = 0, immediate = false }: { 
                 initial="hidden"
                 animate={immediate || inView ? "show" : "hidden"}
               >
-                <span className={cn(hl && "font-serif italic text-accent font-normal pr-[0.04em]")}>{w}</span>
+                <span className={cn(hl && "font-serif italic font-normal text-ink pr-[0.06em] tracking-tight")}>
+                  {w}
+                </span>
                 {wi === words.length - 1 && tail}
               </motion.span>
             </span>
             {wi < words.length - 1 ? " " : null}
           </Fragment>
         ));
-        // A highlighted phrase ("*Make it yours.*") never splits across lines.
         return hl ? (
           <span key={k} className="whitespace-nowrap">
             {nodes}
@@ -85,47 +85,62 @@ export function Tilt({ children, className, max = 10, glare = true }: { children
   const sy = useSpring(py, { stiffness: 200, damping: 20 });
   const rx = useTransform(sy, [0, 1], [max, -max]);
   const ry = useTransform(sx, [0, 1], [-max, max]);
-  const gx = useTransform(sx, (v) => `${v * 100}%`);
-  const gy = useTransform(sy, (v) => `${v * 100}%`);
-  const bg = useTransform([gx, gy] as never, ([x, y]: string[]) => `radial-gradient(circle at ${x} ${y}, rgb(255 255 255 / .28), transparent 50%)`);
+
+  const onMove = (e: React.PointerEvent) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    px.set((e.clientX - r.left) / r.width);
+    py.set((e.clientY - r.top) / r.height);
+  };
+  const onLeave = () => {
+    px.set(0.5);
+    py.set(0.5);
+  };
+
   return (
     <motion.div
       ref={ref}
-      className={cn("relative transform-3d", className)}
-      style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
-      onPointerMove={(e) => {
-        const r = ref.current!.getBoundingClientRect();
-        px.set((e.clientX - r.left) / r.width);
-        py.set((e.clientY - r.top) / r.height);
-      }}
-      onPointerLeave={() => {
-        px.set(0.5);
-        py.set(0.5);
-      }}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
+      className={cn("relative transition-transform duration-200 ease-out", className)}
     >
       {children}
-      {glare && <motion.div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] mix-blend-soft-light" style={{ background: bg }} />}
+      {glare && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background: useTransform(
+              [sx, sy],
+              ([x, y]) => `radial-gradient(circle at ${(x as number) * 100}% ${(y as number) * 100}%, rgba(255,255,255,0.18), transparent 65%)`,
+            ),
+          }}
+        />
+      )}
     </motion.div>
   );
 }
 
-/** Counts up when scrolled into view. */
-export function CountUp({ to, suffix = "", duration = 1.6 }: { to: number; suffix?: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
+export function CountUp({ to, duration = 1.6, suffix = "" }: { to: number; duration?: number; suffix?: string }) {
   const [v, setV] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+
   useEffect(() => {
     if (!inView) return;
-    let raf = 0;
     const start = performance.now();
-    const step = (t: number) => {
-      const k = Math.min(1, (t - start) / (duration * 1000));
-      setV(Math.round(to * (1 - Math.pow(1 - k, 4))));
-      if (k < 1) raf = requestAnimationFrame(step);
+    let frame: number;
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / (duration * 1000), 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      setV(Math.round(ease * to));
+      if (p < 1) frame = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
   }, [inView, to, duration]);
+
   return (
     <span ref={ref} className="tabular-nums">
       {v}
@@ -134,18 +149,19 @@ export function CountUp({ to, suffix = "", duration = 1.6 }: { to: number; suffi
   );
 }
 
+/** Clean, pill-free minimalist section label */
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span className={cn("inline-flex w-fit items-center gap-2 rounded-full bg-panel px-3 py-1 font-mono text-[11px] tracking-[.14em] text-ink-2 uppercase shadow-sm", className)}>
-      <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_0_3px_var(--accent-soft)]" />
-      {children}
-    </span>
+    <div className={cn("flex items-center gap-2 font-mono text-[11px] tracking-[.18em] text-muted uppercase", className)}>
+      <span className="h-1.5 w-1.5 rounded-full bg-ink" />
+      <span>{children}</span>
+    </div>
   );
 }
 
 export function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow: string; title: string; sub?: string; center?: boolean }) {
   return (
-    <div className={cn("mb-14 flex flex-col gap-5", center ? "items-center text-center" : "items-start")}>
+    <div className={cn("mb-12 flex flex-col gap-4", center ? "items-center text-center" : "items-start")}>
       <Reveal>
         <Eyebrow>{eyebrow}</Eyebrow>
       </Reveal>
@@ -154,7 +170,7 @@ export function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow: s
       </h2>
       {sub && (
         <Reveal delay={0.15}>
-          <p className="max-w-xl text-[17px] leading-relaxed text-muted text-pretty">{sub}</p>
+          <p className="max-w-xl text-[16px] leading-relaxed text-muted text-pretty">{sub}</p>
         </Reveal>
       )}
     </div>

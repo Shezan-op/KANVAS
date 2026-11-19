@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
-import { ArrowRight, Star, Sparkles, MonitorDown, UserCheck, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, Star, Sparkles, MonitorDown, UserCheck } from "lucide-react";
 import { StarButton } from "@/components/ui/StarButton";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -38,7 +38,6 @@ export function Nav() {
 
   const links = [
     ["Capabilities", "#capabilities"],
-    ["Spatial Engine", "#engine"],
     ["Templates", "#templates"],
     ["Developers", "#developers"],
     ["FAQ", "#faq"],
@@ -61,25 +60,20 @@ export function Nav() {
       >
         <nav
           className={cn(
-            "flex w-full max-w-5xl items-center justify-between rounded-full px-4 py-2.5 transition-all duration-500",
+            "flex w-full max-w-5xl items-center justify-between rounded-full px-5 py-2.5 transition-all duration-500",
             solid
-              ? "border border-white/10 bg-panel/75 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] backdrop-blur-2xl ring-1 ring-white/5"
-              : "border border-transparent bg-panel/20 backdrop-blur-md",
+              ? "border border-white/10 bg-panel/85 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
+              : "border border-transparent bg-panel/30 backdrop-blur-md",
           )}
         >
-          <div className="flex items-center gap-3">
-            <Logo />
-            <span className="hidden rounded-full border border-line bg-panel-2 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted sm:inline-block">
-              LeadLinked &amp; Shezan
-            </span>
-          </div>
+          <Logo />
 
-          <div className="hidden items-center gap-1 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
             {links.map(([l, h]) => (
               <a
                 key={h}
                 href={h}
-                className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-ink-2 transition-all hover:bg-white/10 hover:text-ink"
+                className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-ink-2 transition-all hover:bg-white/10 hover:text-ink whitespace-nowrap"
               >
                 {l}
               </a>
@@ -91,7 +85,7 @@ export function Nav() {
             <StarButton className="hidden sm:inline-flex" />
             <button
               onClick={handleEnterKanvas}
-              className="group inline-flex items-center gap-2 rounded-full bg-ink px-4 py-1.5 text-[13px] font-semibold text-bg shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center gap-2 rounded-full bg-ink px-4 py-1.5 text-[13px] font-semibold text-bg shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
             >
               {session ? (
                 <>
@@ -100,7 +94,7 @@ export function Nav() {
                 </>
               ) : (
                 <>
-                  <span>Enter K.A.N.V.A.S.</span>
+                  <span>Launch Editor</span>
                   <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
@@ -213,23 +207,20 @@ export function Hero() {
       <HeroShader className="absolute inset-0 -z-10 h-[115%]" />
       
       <motion.div style={{ y, opacity: fade }} className="mx-auto flex max-w-4xl flex-col items-center px-6 text-center">
-        {/* Sleek VisionOS floating glass pill */}
+        {/* Subtle, unboxed byline */}
         <motion.div
-          initial={{ opacity: 0, y: 12, filter: "blur(8px)" }}
+          initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="group mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-panel/70 px-4 py-1.5 text-[12.5px] font-medium text-ink shadow-[0_8px_24px_-8px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
+          className="mb-8 flex items-center gap-2 font-mono text-[12px] tracking-[.18em] text-muted uppercase"
         >
-          <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse" />
-          <span className="tracking-wide text-ink-2">Architected by</span>
-          <span className="font-semibold text-ink">LeadLinked &amp; Shezan</span>
-          <span className="text-white/20">&bull;</span>
-          <span className="font-mono text-[11px] text-muted">Offline Engine</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-ink" />
+          <span>Built by LeadLinked &amp; Shezan &bull; Free Forever</span>
         </motion.div>
 
-        {/* Master headline */}
+        {/* Master headline featuring Instrument Serif italic contrast */}
         <h1 className="text-[clamp(3.2rem,8.4vw,7.2rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-balance">
-          <SplitWords text={"Spatial visual studio for\n*commanding* ideas."} immediate delay={0.1} />
+          <SplitWords text={"Carousels that make people *actually read.*"} immediate delay={0.1} />
         </h1>
 
         <motion.p
@@ -238,10 +229,10 @@ export function Hero() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
           className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2 sm:text-[19px]"
         >
-          Created by LeadLinked &amp; Shezan. A pure, offline-first carousel and document architecture designed with Apple Human Interface precision, spatial glass surfaces, and zero telemetry.
+          Stop fighting sluggish cloud editors and messy Canva templates. KANVAS runs right in your browser, saves straight to your device, and exports crisp 4K decks in a couple of clicks.
         </motion.p>
 
-        {/* VisionOS Floating Controls Pill */}
+        {/* Action Controls */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -253,7 +244,7 @@ export function Hero() {
             className="group relative inline-flex items-center gap-2.5 rounded-full bg-ink px-8 py-3.5 text-[15px] font-medium text-bg shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
           >
             <Sparkles size={16} />
-            <span>Enter K.A.N.V.A.S.</span>
+            <span>Start Creating Now</span>
             <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
           </button>
 
@@ -268,29 +259,25 @@ export function Hero() {
           )}
 
           <a
-            href="#capabilities"
+            href="#templates"
             className="inline-flex items-center gap-1.5 rounded-full border border-line bg-panel-2/60 px-5 py-3.5 text-[14px] font-medium text-ink-2 backdrop-blur-md transition-all hover:bg-panel-2 hover:text-ink"
           >
-            Explore System
+            Browse Styles
           </a>
         </motion.div>
 
-        {/* Minimalist Trust Triple */}
+        {/* Clean, pill-free trust indicators */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 1 }}
           className="mt-8 flex items-center gap-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase"
         >
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck size={13} className="text-accent" /> 100% Local Storage
-          </span>
+          <span>No Login Needed</span>
           <span className="h-1 w-1 rounded-full bg-muted/40" />
-          <span className="flex items-center gap-1.5">
-            <Zap size={13} className="text-accent" /> Zero Latency
-          </span>
+          <span>Zero Server Lag</span>
           <span className="h-1 w-1 rounded-full bg-muted/40" />
-          <span>Independent Studio</span>
+          <span>100% Offline Capable</span>
         </motion.div>
       </motion.div>
 

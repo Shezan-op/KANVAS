@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { ArrowRight, Check, Code2, Cpu, Globe, Laptop, Layers, Lock, Shield, Sparkles, Terminal, Wand2, X } from "lucide-react";
+import { ArrowRight, Cpu, Layers, Shield, Terminal } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { Github } from "@/components/ui/BrandIcons";
 import { Logo } from "@/components/ui/Logo";
@@ -11,32 +11,29 @@ import { cn } from "@/components/ui/cn";
 import { HeroShader } from "./HeroShader";
 import { Eyebrow, Reveal, SplitWords } from "./primitives";
 import { demo } from "./demo";
-import { AUTHOR, GITLAB_REPO_URL, ISSUES_URL, LICENSE_URL, REPO_URL, tracked } from "@/lib/site";
+import { ISSUES_URL, REPO_URL } from "@/lib/site";
 
 /* -------------------------------------------------------------
-   1. SYSTEM PHILOSOPHY (MINIMALIST MANIFESTO)
+   1. REAL OPERATOR MANIFESTO (BLADER-HUMANISER + SHEZAN STYLE)
 ---------------------------------------------------------------- */
 export function Philosophy() {
   return (
     <section id="capabilities" className="relative mx-auto max-w-5xl px-6 py-28 border-t border-line">
       <Reveal>
-        <div className="flex items-center gap-2 mb-6">
-          <span className="h-2 w-2 rounded-full bg-accent" />
-          <Eyebrow>Architecture &amp; Philosophy</Eyebrow>
-        </div>
+        <Eyebrow className="mb-6">The Honest Truth</Eyebrow>
       </Reveal>
       
-      <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-start">
-        <p className="text-[clamp(1.9rem,3.8vw,3.2rem)] font-medium leading-[1.12] tracking-tight text-ink text-balance">
-          Software should feel like an extension of your mind—quiet, instant, and completely yours.
-        </p>
+      <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] items-start">
+        <h2 className="text-[clamp(1.9rem,3.8vw,3.2rem)] font-medium leading-[1.12] tracking-tight text-ink text-balance">
+          Most design tools are bloated traps. We built this <em className="font-serif italic font-normal text-ink">coz we needed it ourselves</em>.
+        </h2>
 
-        <div className="space-y-6 text-[15.5px] leading-relaxed text-ink-2">
+        <div className="space-y-5 text-[15.5px] leading-relaxed text-ink-2">
           <p>
-            Developed by <strong className="text-ink font-semibold">LeadLinked &amp; Shezan</strong>, KANVAS abandons bloated subscription paywalls, server queues, and intrusive trackers.
+            You want to drop some thoughts, pick a clean typographic vibe, throw in an image, and ship a carousel to LinkedIn or Instagram before you lose your train of thought.
           </p>
           <p>
-            Every frame renders client-side via hardware-accelerated SVG and canvas pipelines. Your data stays in your browser&apos;s isolated IndexedDB—never transmitted, indexed, or shared.
+            You don&apos;t need a $29 monthly subscription. You don&apos;t need an account. And you certainly don&apos;t need a slow cloud canvas that stutters when you paste text. KANVAS runs entirely in your browser, works offline, and keeps every single pixel on your computer.
           </p>
         </div>
       </div>
@@ -45,42 +42,42 @@ export function Philosophy() {
 }
 
 /* -------------------------------------------------------------
-   2. SPATIAL CAPABILITIES BENTO (VISION-PRO INSPIRED)
+   2. SPATIAL CAPABILITIES (PILL-FREE MINIMALIST GRID)
 ---------------------------------------------------------------- */
 export function Capabilities() {
   const cards = [
     {
       icon: Cpu,
-      title: "Client-Side Rendering Engine",
-      description: "Zero round-trips. Instant 4K export to PNG, SVG, or multi-page PDF right inside your device's memory.",
+      title: "Real-Time Local Rendering",
+      description: "Everything happens in your browser's RAM. Export 4K PNGs or multi-slide PDFs immediately without waiting on a server render queue.",
       tag: "Engine",
     },
     {
       icon: Shield,
-      title: "Private Local Architecture",
-      description: "IndexedDB persistent storage with offline PWA readiness. No telemetry, analytics, or cloud dependencies.",
-      tag: "Security",
+      title: "Zero Account, Zero Tracking",
+      description: "Your slides stay on your device in local IndexedDB. We don't harvest your drafts, track your engagement, or sell your data.",
+      tag: "Privacy",
     },
     {
       icon: Layers,
-      title: "Apple HIG Typography Scales",
-      description: "Modular font scales, optical kerning, and calibrated contrast ratios tuned for effortless readability.",
-      tag: "Craft",
+      title: "Instrument Serif & Modern Sans",
+      description: "Curated typography pairings with calibrated weights and optical kerning that make your carousels easy to skim on small screens.",
+      tag: "Typography",
     },
     {
       icon: Terminal,
-      title: "Autonomous Agent MCP API",
-      description: "Direct Model Context Protocol integration. Connect Cursor, Claude, or ChatGPT to generate entire slide decks programmatically.",
-      tag: "Protocol",
+      title: "Direct AI Agent MCP API",
+      description: "Hook your Cursor, Claude, or ChatGPT to KANVAS via Model Context Protocol and watch it build out structured decks automatically.",
+      tag: "Integration",
     },
   ];
 
   return (
-    <section id="engine" className="mx-auto max-w-6xl px-6 py-24">
-      <Reveal className="mb-14">
-        <Eyebrow className="mb-3">System Capabilities</Eyebrow>
+    <section className="mx-auto max-w-6xl px-6 py-20">
+      <Reveal className="mb-12">
+        <Eyebrow className="mb-3">How it works</Eyebrow>
         <h2 className="text-[clamp(2.2rem,4vw,3.6rem)] font-semibold tracking-tight text-ink">
-          Engineered for creators who value craft over noise.
+          Built for speed. <em className="font-serif italic font-normal text-ink">Nothing extra.</em>
         </h2>
       </Reveal>
 
@@ -92,7 +89,7 @@ export function Capabilities() {
                 <span className="grid h-10 w-10 place-items-center rounded-2xl bg-panel-2 text-ink">
                   <c.icon size={20} />
                 </span>
-                <span className="rounded-full border border-line bg-panel-2 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">
+                <span className="font-mono text-[11px] text-muted uppercase tracking-wider">
                   {c.tag}
                 </span>
               </div>
@@ -111,24 +108,20 @@ export function Capabilities() {
 }
 
 /* -------------------------------------------------------------
-   3. DEVELOPERS & LEADLINKED SPOTLIGHT (VISIONOS GLASS CARD)
+   3. DEVELOPERS & LEADLINKED (HONEST OPERATOR CARD)
 ---------------------------------------------------------------- */
 export function DeveloperSpotlight() {
   return (
     <section id="developers" className="mx-auto max-w-5xl px-6 py-24">
-      <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-panel/70 p-8 shadow-2xl backdrop-blur-2xl sm:p-12">
-        <div className="absolute top-0 right-0 -z-10 h-72 w-72 rounded-full bg-accent/10 blur-[100px]" />
-        
+      <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-panel/75 p-8 shadow-2xl backdrop-blur-2xl sm:p-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-line bg-panel-2 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Creators &amp; Maintainers
-            </span>
-            <h2 className="mt-4 text-[clamp(2.2rem,4.5vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
+            <Eyebrow className="mb-4">The Developers</Eyebrow>
+            <h2 className="text-[clamp(2.2rem,4.5vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
               LeadLinked &amp; Shezan
             </h2>
             <p className="mt-3 text-[15.5px] leading-relaxed text-muted">
-              Dedicated to building fast, private, and beautifully crafted creative utilities. KANVAS is maintained as an open-source gift to developers, marketers, and spatial designers worldwide.
+              Built and maintained by LeadLinked &amp; Shezan. We like shipping clean, punchy tools that solve real problems without the corporate corporate fluff.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -153,7 +146,7 @@ export function DeveloperSpotlight() {
 
           <div className="flex flex-col gap-3 rounded-2xl border border-line bg-panel-2/60 p-6 font-mono text-[12px] sm:min-w-[260px]">
             <div className="flex items-center justify-between text-muted pb-2 border-b border-line">
-              <span>Repository</span>
+              <span>Repo</span>
               <span className="text-ink">Shezan-op/KANVAS</span>
             </div>
             <div className="flex items-center justify-between text-muted py-1">
@@ -161,12 +154,12 @@ export function DeveloperSpotlight() {
               <span className="text-ink">MIT Free Forever</span>
             </div>
             <div className="flex items-center justify-between text-muted py-1">
-              <span>Backend Tracking</span>
+              <span>Backend Tracker</span>
               <span className="text-emerald-500 font-semibold">Zero / None</span>
             </div>
             <div className="flex items-center justify-between text-muted pt-2 border-t border-line">
-              <span>Status</span>
-              <span className="text-accent">Active Release 2.0</span>
+              <span>Architecture</span>
+              <span className="text-accent">Local-First</span>
             </div>
           </div>
         </div>
@@ -180,21 +173,21 @@ export function DeveloperSpotlight() {
 ---------------------------------------------------------------- */
 export function AgentBand() {
   const lines = [
-    { who: "you", text: "Create a 5-slide product launch carousel for KANVAS with spatial aesthetics." },
-    { who: "agent", text: "Generated 5 slides with cover, 3 feature breakdowns, and CTA. Open preview:" },
+    { who: "you", text: "Create a 5-slide deck on why consistency beats intensity." },
+    { who: "agent", text: "Done. Hook, 3 points with data highlights, and a punchy close. Open editor:" },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
       <div className="grid items-center gap-12 overflow-hidden rounded-[36px] bg-ink p-8 text-bg shadow-2xl sm:p-12 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-bg/10 px-3 py-1 font-mono text-[11px] tracking-[.14em] uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Model Context Protocol
+          <span className="font-mono text-[11px] tracking-[.18em] uppercase text-accent">
+            AI Agent Integration
           </span>
-          <h2 className="mt-5 text-[clamp(2rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
-            <SplitWords text="Let your AI agent *design it.*" />
+          <h2 className="mt-4 text-[clamp(2rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
+            <SplitWords text="Or let your AI agent *write the deck.*" />
           </h2>
-          <p className="mt-5 max-w-md text-[16px] leading-relaxed text-bg/70">
-            Connect KANVAS to Claude, ChatGPT, Cursor or VS Code with native MCP. Request a deck and receive a direct link opening right into your local editor.
+          <p className="mt-4 max-w-md text-[16px] leading-relaxed text-bg/70">
+            Link KANVAS with Claude, Cursor, or ChatGPT using the Model Context Protocol. Prompt your thoughts and get a clean, styled carousel ready to publish.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -204,7 +197,6 @@ export function AgentBand() {
               Connect MCP Agent <ArrowRight size={15} />
             </Link>
           </div>
-          <p className="mt-4 font-mono text-[12px] text-bg/50">Zero configuration · Instant URL handoff · Offline safe</p>
         </div>
 
         <Reveal className="flex flex-col gap-3">
@@ -238,7 +230,7 @@ export function AgentBand() {
               })}
             </div>
             <div className="min-w-0 pl-2">
-              <div className="truncate text-[13.5px] font-semibold">Spatial Design Deck</div>
+              <div className="truncate text-[13.5px] font-semibold">Consistency Wins Deck</div>
               <div className="font-mono text-[11.5px] text-muted">localhost:3000/app/edit?id=…</div>
             </div>
           </motion.div>
@@ -249,14 +241,14 @@ export function AgentBand() {
 }
 
 /* -------------------------------------------------------------
-   5. MINIMALIST FAQ
+   5. REAL QUESTIONS (FAQ)
 ---------------------------------------------------------------- */
 const FAQ_ITEMS = [
-  ["Who builds and maintains KANVAS?", "KANVAS is built and maintained by LeadLinked and Shezan as a modern, privacy-first open-source creation suite."],
-  ["Is KANVAS completely free?", "Yes. Released under the permissive MIT license. There are no paid subscriptions, locked features, watermarks, or usage limits."],
-  ["Where are my carousels saved?", "Exclusively on your machine inside your browser's IndexedDB storage. Nothing is ever synced to external servers unless you manually export."],
-  ["Can I upload my own photos?", "Yes. Use the newly redesigned Photos panel to upload high-resolution local images directly from your computer, or choose from curated royalty-free sources."],
-  ["Can I install it as a desktop app?", "Yes. KANVAS is a fully configured Progressive Web App (PWA). Click 'Install PWA' to run it in its own distraction-free window on macOS, Windows, or Linux."],
+  ["Is KANVAS truly free or is there a paywall later?", "It's 100% free under the MIT license. No surprise trials, no feature paywalls, and no watermarks on your exports."],
+  ["Who is behind this?", "LeadLinked & Shezan. We built this as an open-source tool for creators who care about clean craft and straight-to-the-point software."],
+  ["Where do my designs get saved?", "Directly inside your browser's local database (IndexedDB). Your files don't touch our servers, so your drafts stay totally private."],
+  ["Can I upload my own custom pictures?", "Yes, you can upload your own photos directly from your hard drive, or pick from millions of free photos via Openverse and Unsplash."],
+  ["Can I use this on mobile?", "KANVAS works as a PWA, but the canvas editor is specifically tuned for laptop keyboards and trackpads where you can write and lay out slides quickly."],
 ];
 
 export function Faq() {
@@ -264,14 +256,14 @@ export function Faq() {
   return (
     <section id="faq" className="mx-auto grid max-w-5xl gap-12 px-6 py-24 lg:grid-cols-[1fr_1.4fr] border-t border-line">
       <div>
-        <Eyebrow>Inquiries</Eyebrow>
+        <Eyebrow>Common Questions</Eyebrow>
         <h2 className="mt-4 text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
-          Frequently Answered
+          Clear answers. <em className="font-serif italic font-normal text-ink">No corporate speak.</em>
         </h2>
         <p className="mt-4 text-[15px] text-muted leading-relaxed">
-          Need technical support or want to contribute? Connect directly on our{" "}
+          Got feedback or want to ask something directly? Drop an issue on{" "}
           <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4 hover:text-accent">
-            GitHub repository
+            GitHub
           </a>
           .
         </p>
@@ -301,7 +293,7 @@ export function Faq() {
 }
 
 /* -------------------------------------------------------------
-   6. FINAL VISIONOS CTA
+   6. FINAL CTA
 ---------------------------------------------------------------- */
 export function FinalCta() {
   return (
@@ -309,17 +301,17 @@ export function FinalCta() {
       <div className="relative isolate overflow-hidden rounded-[40px] border border-white/10 bg-panel px-6 py-28 text-center shadow-xl">
         <HeroShader className="absolute inset-0 -z-10 opacity-70" />
         <h2 className="mx-auto max-w-3xl text-[clamp(2.6rem,6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-ink">
-          Craft slides that <em className="font-serif italic font-normal">command attention</em>.
+          Stop scrolling. <em className="font-serif italic font-normal text-ink">Start creating.</em>
         </h2>
         <p className="mx-auto mt-5 max-w-md text-[16px] text-ink-2">
-          Open the editor right in your browser. No registration required.
+          Open the canvas and write your hook. Your next carousel can be live in ten minutes.
         </p>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <Link
             href="/app"
             className="inline-flex items-center gap-2 rounded-full bg-ink px-8 py-3.5 text-[15px] font-semibold text-bg shadow-lg transition hover:scale-[1.02] active:scale-[0.98]"
           >
-            Launch Studio <ArrowRight size={16} />
+            Open KANVAS Studio <ArrowRight size={16} />
           </Link>
           <a
             href={REPO_URL}
@@ -345,7 +337,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-3 text-[14px] text-muted max-w-sm">
-            High-contrast visual carousel and document creation engine. Architected by LeadLinked &amp; Shezan.
+            Fast, clean, offline-first carousel studio. Maintained by LeadLinked &amp; Shezan.
           </p>
         </div>
 
@@ -366,7 +358,7 @@ export function Footer() {
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-line/60 text-[12px] text-muted font-mono">
         <span>
-          &copy; {new Date().getFullYear()} LeadLinked &amp; Shezan &bull; MIT Licensed
+          &copy; {new Date().getFullYear()} LeadLinked &amp; Shezan &bull; Free &amp; Open Source
         </span>
         <span>Built with care by LeadLinked &amp; Shezan.</span>
       </div>
