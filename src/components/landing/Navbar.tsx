@@ -59,9 +59,10 @@ export function Nav() {
           className={cn(
             "flex w-full max-w-6xl items-center justify-between rounded-lg px-4 py-2 transition-all duration-300",
             solid
-              ? "border border-white/10 bg-[#0d0d10]/90 shadow-2xl backdrop-blur-2xl"
-              : "border border-white/5 bg-[#0d0d10]/70 backdrop-blur-xl",
+              ? "border border-white/10 bg-[#0d0d10]/95 shadow-2xl backdrop-blur-2xl"
+              : "border border-white/5 bg-[#0d0d10]/85 backdrop-blur-xl",
           )}
+          style={{ borderRadius: "8px" }}
         >
           {/* Left: Logo */}
           <div className="flex items-center">

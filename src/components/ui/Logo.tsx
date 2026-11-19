@@ -4,7 +4,7 @@ import { cn } from "./cn";
 
 export function LogoMark({ className }: { className?: string }) {
   return (
-    <div className={cn("relative overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5 flex items-center justify-center", className)}>
+    <div className={cn("relative overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-black/5 flex items-center justify-center", className)}>
       <Image
         src="/logo.png"
         alt="KANVAS"
