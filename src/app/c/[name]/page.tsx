@@ -1,6 +1,6 @@
 import { OpenSpec } from "@/components/editor/OpenSpec";
 
-export const metadata = { title: "Opening carousel — Slyd", robots: { index: false } };
+export const metadata = { title: "Opening carousel — KANVAS", robots: { index: false } };
 
 /**
  * /c/<name>#s=… — the name is only a readable label; the carousel itself is in

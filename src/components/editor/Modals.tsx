@@ -422,12 +422,12 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
       <div className="mb-2 flex items-center gap-2 text-[13px] font-semibold">
         <FileJson size={14} className="text-accent" /> Project file
       </div>
-      <p className="mb-3 text-[12.5px] text-muted">Download this carousel as a portable .slyd.json file. Import it from the dashboard on any machine.</p>
-      <button onClick={() => download(exportProjectFile(project), `${slug(project.name)}.slyd.json`)} className="h-9 rounded-xl bg-ink px-4 text-[13px] font-medium text-bg">
+      <p className="mb-3 text-[12.5px] text-muted">Download this carousel as a portable .KANVAS.json file. Import it from the dashboard on any machine.</p>
+      <button onClick={() => download(exportProjectFile(project), `${slug(project.name)}.KANVAS.json`)} className="h-9 rounded-xl bg-ink px-4 text-[13px] font-medium text-bg">
         Download project file
       </button>
       <div className="mt-7 flex items-center justify-between border-t border-line pt-4 text-[12px] text-muted">
-        <StarButton label="Star Slyd" />
+        <StarButton label="Star KANVAS" />
         <a href={tracked(AUTHOR.url, "editor-settings")} target="_blank" rel="author noopener" className="hover:text-accent">
           Built by <span className="text-ink-2">{AUTHOR.name}</span>
         </a>

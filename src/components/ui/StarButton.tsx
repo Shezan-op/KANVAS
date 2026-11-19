@@ -37,7 +37,7 @@ export function StarButton({ className, label = "Star" }: { className?: string; 
         "group inline-flex h-8 items-stretch overflow-hidden rounded-lg text-[13px] font-medium text-ink-2 ring-1 ring-line-2 transition-colors hover:text-ink hover:ring-ink/30",
         className,
       )}
-      aria-label={`Star Slyd on GitHub${typeof stars === "number" ? `, ${stars} stars` : ""}`}
+      aria-label={`Star KANVAS on GitHub${typeof stars === "number" ? `, ${stars} stars` : ""}`}
     >
       <span className="flex items-center gap-1.5 px-2.5 transition-colors group-hover:bg-line">
         <Github size={14} />

@@ -10,7 +10,7 @@ export async function GET() {
   const repo = GITHUB_REPO_URL.replace("https://github.com/", "");
   try {
     const r = await fetch(`https://api.github.com/repos/${repo}`, {
-      headers: { Accept: "application/vnd.github+json", "User-Agent": "slyd-site" },
+      headers: { Accept: "application/vnd.github+json", "User-Agent": "KANVAS-site" },
       next: { revalidate: 3600 },
     });
     if (!r.ok) throw new Error(String(r.status));

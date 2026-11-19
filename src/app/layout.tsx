@@ -11,39 +11,38 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Slyd — Carousels that stop the scroll",
+  title: "KANVAS — Pro Carousel Studio & Visual Engine",
   description:
-    "Slyd is a free, open source carousel maker for Instagram, LinkedIn and X. Templates, stock photos, brand kits, textures and pixel-perfect exports — all in your browser.",
+    "KANVAS is a next-generation local-first PWA carousel studio for Instagram, LinkedIn, and X. High-contrast typography, zero-login privacy, rich layouts, and built-in AI MCP integration.",
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
-  verification: { google: "IooyyTv3W9f5d54zXwZwzYskzIoT8cjkhlRhOr9BWUs" },
-  applicationName: "Slyd",
+  applicationName: "KANVAS",
   authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
   creator: AUTHOR.name,
   publisher: AUTHOR.name,
-  keywords: ["carousel maker", "instagram carousel", "linkedin carousel", "open source", "design tool"],
+  keywords: ["kanvas", "carousel maker", "pwa", "instagram carousel", "linkedin carousel", "open source", "design studio", "mcp"],
   openGraph: {
-    title: "Slyd — Carousels that stop the scroll",
-    description: `Free, open source, laptop-first carousel maker by ${AUTHOR.name}.`,
+    title: "KANVAS — Pro Carousel Studio & Visual Engine",
+    description: "Next-generation local-first PWA carousel studio with instant export and AI MCP integration.",
     type: "website",
-    siteName: "Slyd",
+    siteName: "KANVAS",
     url: SITE_URL,
     locale: "en_US",
     images: [{ url: "/og.jpg", secureUrl: `${SITE_URL}/og.jpg`, ...OG_SIZE, type: "image/jpeg", alt: OG_ALT }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Slyd — Carousels that stop the scroll",
-    description: "Free, open source, laptop-first carousel maker.",
+    title: "KANVAS — Pro Carousel Studio & Visual Engine",
+    description: "Next-generation local-first PWA carousel studio with instant export and AI MCP integration.",
     images: [{ url: "/og.jpg", alt: OG_ALT }],
   },
 };
 
-/** Structured data: tells search engines who built Slyd and links every profile to the author. */
+/** Structured data: tells search engines who built KANVAS */
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Slyd",
+  name: "KANVAS",
   applicationCategory: "DesignApplication",
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -67,7 +66,7 @@ export const viewport: Viewport = {
 };
 
 /** Applies the saved theme before paint so there's no flash. */
-const themeScript = `(function(){try{var t=localStorage.getItem('slyd:theme');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='light'}})()`;
+const themeScript = `(function(){try{var t=localStorage.getItem('KANVAS:theme');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='light'}})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

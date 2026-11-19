@@ -5,18 +5,18 @@ import { TEMPLATES } from "../model/templates";
 import type { AspectId, HighlightStyle, ImageFilter, ShapeKind, TextureKind } from "../model/types";
 
 /**
- * The Carousel Spec: everything a person can do in the Slyd editor, expressed
- * as JSON an agent can write. Slyd compiles it onto real templates.
+ * The Carousel Spec: everything a person can do in the KANVAS editor, expressed
+ * as JSON an agent can write. KANVAS compiles it onto real templates.
  *
  *  - Content first: pick a `layout` per slide and fill in the words.
  *  - Everything visual is optional and defaults to the template.
  *  - `*asterisks*` in any text highlight words in the accent style.
- *  - `photo` fields take an https URL *or* a few search words; Slyd finds a free stock photo.
+ *  - `photo` fields take an https URL *or* a few search words; KANVAS finds a free stock photo.
  *  - `elements` add freeform text/images/shapes/icons at exact positions on a 1080px-wide canvas.
  */
 
 const HL = "Words wrapped in *asterisks* are highlighted (1–3 per slide reads best).";
-const PHOTO = "An https image URL, or 2–5 search words describing the photo (e.g. 'minimal desk at sunrise'); Slyd finds a free stock photo.";
+const PHOTO = "An https image URL, or 2–5 search words describing the photo (e.g. 'minimal desk at sunrise'); KANVAS finds a free stock photo.";
 
 const tuple = <T extends string>(xs: readonly T[]) => xs as unknown as [T, ...T[]];
 export const TEMPLATE_IDS = tuple(TEMPLATES.map((t) => t.id));
@@ -193,7 +193,7 @@ export const BrandSpec = z
     arrow: z.boolean().optional().describe("Show the swipe arrow. Default true."),
     color: ColorSpec.optional().describe("Footer text colour."),
   })
-  .describe("Optional. Anything omitted falls back to the user's saved brand kit in Slyd.");
+  .describe("Optional. Anything omitted falls back to the user's saved brand kit in KANVAS.");
 
 export const CAROUSEL_ID = z
   .string()
@@ -202,7 +202,7 @@ export const CAROUSEL_ID = z
 
 export const CarouselSpec = z.object({
   id: CAROUSEL_ID.optional(),
-  title: z.string().max(80).optional().describe("Project name in Slyd. Defaults to the hook."),
+  title: z.string().max(80).optional().describe("Project name in KANVAS. Defaults to the hook."),
   template: z.enum(TEMPLATE_IDS).optional().describe(`Visual style. ${TEMPLATES.map((t) => `${t.id}: ${t.description}`).join(" | ")}. Default: editorial.`),
   format: z.enum(FORMAT_IDS).optional().describe(`Slide size. ${FORMAT_IDS.map((f) => `${f} = ${ASPECTS[f].label} (${ASPECTS[f].hint})`).join("; ")}. Default 4:5.`),
   palette: z.enum(PALETTE_IDS).optional().describe(`Colour palette override: ${PALETTE_IDS.join(", ")}. Defaults to the template's.`),
@@ -214,7 +214,7 @@ export const CarouselSpec = z.object({
   fonts: z.enum(FONT_PAIR_IDS).optional().describe(`Font pair: ${FONT_PAIRS.map((f) => `${f.id} (${f.heading} + ${f.body})`).join(", ")}.`),
   headingFont: z.enum(FONT_FAMILIES).optional().describe("Exact heading font, overrides `fonts`."),
   bodyFont: z.enum(FONT_FAMILIES).optional().describe("Exact body font, overrides `fonts`."),
-  myTheme: z.boolean().optional().describe("Use the colours and fonts the user saved as their own theme in Slyd, if they have one (falls back to the template's look). Explicit colors/fonts in this spec still apply on top."),
+  myTheme: z.boolean().optional().describe("Use the colours and fonts the user saved as their own theme in KANVAS, if they have one (falls back to the template's look). Explicit colors/fonts in this spec still apply on top."),
   highlight: z.enum(HIGHLIGHT_IDS).optional().describe("How *highlighted* words look: color, italic, marker (highlighter), underline, pill."),
   texture: z.enum(TEXTURE_IDS).optional().describe(`Texture on every slide: ${TEXTURE_IDS.join(", ")}.`),
   textureIntensity: unit.optional().describe("0–1. Default from the template."),

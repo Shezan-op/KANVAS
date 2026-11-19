@@ -1,41 +1,35 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.venukumaraitech/slyd",
-  "title": "Slyd",
-  "description": "Create designed, editable Instagram and LinkedIn carousels from a prompt. No API key.",
-  "version": "1.2.0",
-  "websiteUrl": "https://tryslyd.vercel.app/agents",
+  "name": "io.kanvas.studio",
+  "title": "KANVAS",
+  "description": "Next-generation local-first PWA carousel maker & visual engine for Instagram, LinkedIn and X. Zero-login, instant export, and agent orchestration.",
+  "version": "1.0.0",
+  "websiteUrl": "https://trykanvas.app/agents",
   "repository": {
-    "url": "https://github.com/venukumaraitech/slyd",
+    "url": "https://github.com/kanvas-studio/kanvas",
     "source": "github"
   },
   "icons": [
     {
-      "src": "https://tryslyd.vercel.app/icon-512.png",
+      "src": "/icon-512.png",
       "mimeType": "image/png",
-      "sizes": [
-        "512x512"
-      ]
+      "sizes": ["512x512"]
     },
     {
-      "src": "https://tryslyd.vercel.app/icon-192.png",
+      "src": "/icon-192.png",
       "mimeType": "image/png",
-      "sizes": [
-        "192x192"
-      ]
+      "sizes": ["192x192"]
     },
     {
-      "src": "https://tryslyd.vercel.app/icon.svg",
+      "src": "/icon.svg",
       "mimeType": "image/svg+xml",
-      "sizes": [
-        "any"
-      ]
+      "sizes": ["any"]
     }
   ],
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://tryslyd.vercel.app/mcp"
+      "url": "http://localhost:3000/mcp"
     }
   ]
 }

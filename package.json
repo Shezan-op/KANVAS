@@ -1,8 +1,8 @@
 {
-  "name": "slyd",
+  "name": "kanvas",
   "private": true,
-  "version": "0.1.0",
-  "description": "Free, open source carousel maker for Instagram, LinkedIn and X, with a hosted MCP server so AI agents can create carousels.",
+  "version": "1.0.0",
+  "description": "KANVAS — The next-generation local-first PWA carousel maker & visual studio for Instagram, LinkedIn, X and TikTok with built-in MCP server support.",
   "license": "MIT",
   "author": {
     "name": "Venu Kumar Mutyala",

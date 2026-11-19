@@ -171,7 +171,7 @@ export function StylePanel() {
       </Section>
 
       <Section title="From your brand colour">
-        <p className="-mt-1 text-[11.5px] leading-relaxed text-muted">Pick one colour and Slyd builds a matching, readable palette around it.</p>
+        <p className="-mt-1 text-[11.5px] leading-relaxed text-muted">Pick one colour and KANVAS builds a matching, readable palette around it.</p>
         <Row>
           <label className="relative h-9 w-9 shrink-0 cursor-pointer overflow-hidden rounded-lg ring-1 ring-line" style={{ background: seed }} title="Choose a colour">
             <input type="color" value={seed} onChange={(e) => setSeed(e.target.value.toUpperCase())} className="absolute inset-0 cursor-pointer opacity-0" />

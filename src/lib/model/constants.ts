@@ -49,6 +49,8 @@ export interface Palette {
 }
 
 export const PALETTES: Palette[] = [
+  { id: "kanvas-dark", name: "KANVAS Obsidian", theme: { bg: "#0E0E10", surface: "#18181B", ink: "#FFFFFF", muted: "#A1A1AA", accent: "#10B981" } },
+  { id: "cyber-emerald", name: "Cyber Emerald", theme: { bg: "#061412", surface: "#0D2622", ink: "#ECFDF5", muted: "#6EE7B7", accent: "#00F5A0" } },
   { id: "paper", name: "Paper", theme: { bg: "#F2EDE4", surface: "#E8E1D4", ink: "#1A1714", muted: "#6E665B", accent: "#D9481C" } },
   { id: "noir", name: "Noir", theme: { bg: "#0C0C0D", surface: "#18181A", ink: "#F4F2EE", muted: "#8A8780", accent: "#D4FF3A" } },
   { id: "swiss", name: "Swiss", theme: { bg: "#F5F5F2", surface: "#FFFFFF", ink: "#111111", muted: "#777771", accent: "#E8261F" } },

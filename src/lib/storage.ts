@@ -5,8 +5,8 @@ import type { Project, ProjectMeta } from "./model/types";
  * Projects live in IndexedDB (not localStorage) so uploads and long decks
  * don't hit the 5MB ceiling. Everything stays on the user's machine.
  */
-const projects = typeof window !== "undefined" ? createStore("slyd", "projects") : undefined;
-const prefs = typeof window !== "undefined" ? createStore("slyd-prefs", "kv") : undefined;
+const projects = typeof window !== "undefined" ? createStore("KANVAS", "projects") : undefined;
+const prefs = typeof window !== "undefined" ? createStore("KANVAS-prefs", "kv") : undefined;
 
 export async function saveProject(p: Project) {
   if (!projects) return;
@@ -53,13 +53,13 @@ export const previousVersionKey = (projectId: string) => `prev:${projectId}`;
 
 /** Portable project file: a single JSON you can share, back up or commit to git. */
 export function exportProjectFile(p: Project) {
-  const blob = new Blob([JSON.stringify({ $schema: "slyd/project@1", project: p }, null, 2)], { type: "application/json" });
+  const blob = new Blob([JSON.stringify({ $schema: "KANVAS/project@1", project: p }, null, 2)], { type: "application/json" });
   return blob;
 }
 
 export async function importProjectFile(file: File): Promise<Project> {
   const json = JSON.parse(await file.text());
   const p: Project = json.project ?? json;
-  if (!p || !Array.isArray(p.slides) || !p.theme) throw new Error("That file doesn't look like a Slyd project.");
+  if (!p || !Array.isArray(p.slides) || !p.theme) throw new Error("That file doesn't look like a KANVAS project.");
   return p;
 }

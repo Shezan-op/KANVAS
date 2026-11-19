@@ -336,6 +336,36 @@ const standardSeq = (topic: Partial<Record<string, Copy>> = {}): Template["seque
 
 export const TEMPLATES: Template[] = [
   {
+    id: "obsidian",
+    name: "KANVAS Obsidian",
+    description: "Deep OLED black, precision emerald accents, Apple-grade restraint.",
+    tags: ["dark", "minimal", "steve-jobs", "pro"],
+    style: { palette: "kanvas-dark", pair: "modern", texture: "grain", textureOpacity: 0.35, align: "left", headingSize: 104, headingWeight: 800, highlight: "color", ornament: "bar" },
+    sequence: standardSeq({
+      cover: { kicker: "KANVAS Masterclass", title: "Design is not what it looks like. *It's how it works.*", body: "The 5 laws of insanely great product positioning." },
+    }),
+  },
+  {
+    id: "spatial",
+    name: "Spatial Glass",
+    description: "Vision Pro inspired dark titanium, floating depth and luminescence.",
+    tags: ["dark", "vision-pro", "glass", "futuristic"],
+    style: { palette: "cyber-emerald", pair: "tech", texture: "none", textureOpacity: 0.2, align: "left", headingSize: 96, headingWeight: 700, highlight: "pill", ornament: "frame" },
+    sequence: standardSeq({
+      cover: { kicker: "Spatial Interface", title: "Computing beyond the *screen.*", body: "How spatial optics and gaze navigation redefine modern software." },
+    }),
+  },
+  {
+    id: "minimalist",
+    name: "Minimalist Mono",
+    description: "Pure document-grade typographic discipline. High contrast, zero distraction.",
+    tags: ["minimal", "light", "editorial"],
+    style: { palette: "mono", pair: "modern", texture: "none", textureOpacity: 0.1, align: "left", headingSize: 100, headingWeight: 700, highlight: "italic", ornament: "none" },
+    sequence: standardSeq({
+      cover: { kicker: "Essay Nº 01", title: "Subtract until *nothing* is left to remove.", body: "The ruthless art of simplifying complex products." },
+    }),
+  },
+  {
     id: "editorial",
     name: "Editorial",
     description: "Warm paper, serif headlines, quiet confidence.",

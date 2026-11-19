@@ -50,8 +50,8 @@ function CopyBlock({ id, text, label, copy, copied, mono = true }: { id: string;
 
 type Client = { id: string; name: string; badge?: string; body: (c: ReturnType<typeof useCopy>) => ReactNode };
 
-const cursorDeeplink = `cursor://anysphere.cursor-deeplink/mcp/install?name=slyd&config=${typeof btoa !== "undefined" ? btoa(JSON.stringify({ url: MCP_URL })) : ""}`;
-const vscodeDeeplink = `vscode:mcp/install?${encodeURIComponent(JSON.stringify({ name: "slyd", type: "http", url: MCP_URL }))}`;
+const cursorDeeplink = `cursor://anysphere.cursor-deeplink/mcp/install?name=KANVAS&config=${typeof btoa !== "undefined" ? btoa(JSON.stringify({ url: MCP_URL })) : ""}`;
+const vscodeDeeplink = `vscode:mcp/install?${encodeURIComponent(JSON.stringify({ name: "KANVAS", type: "http", url: MCP_URL }))}`;
 
 const Steps = ({ items }: { items: ReactNode[] }) => (
   <ol className="flex flex-col gap-2.5">
@@ -77,9 +77,9 @@ const CLIENTS: Client[] = [
               Open <b className="text-ink">Settings → Connectors</b> and choose <b className="text-ink">Add custom connector</b>.
             </>,
             <>
-              Name it <b className="text-ink">Slyd</b> and paste the URL below. No sign-in needed.
+              Name it <b className="text-ink">KANVAS</b> and paste the URL below. No sign-in needed.
             </>,
-            <>In a chat, ask for a carousel. Claude calls Slyd and hands you the link.</>,
+            <>In a chat, ask for a carousel. Claude calls KANVAS and hands you the link.</>,
           ]}
         />
         <CopyBlock id="claude-url" text={MCP_URL} copy={c.copy} copied={c.copied} />
@@ -92,7 +92,7 @@ const CLIENTS: Client[] = [
     body: (c) => (
       <div className="flex flex-col gap-4">
         <p className="text-[14px] text-ink-2">Run this once in your terminal:</p>
-        <CopyBlock id="cc" text={`claude mcp add --transport http slyd ${MCP_URL}`} copy={c.copy} copied={c.copied} />
+        <CopyBlock id="cc" text={`claude mcp add --transport http KANVAS ${MCP_URL}`} copy={c.copy} copied={c.copied} />
       </div>
     ),
   },
@@ -107,7 +107,7 @@ const CLIENTS: Client[] = [
               Open <b className="text-ink">Settings → Apps & Connectors</b>. Turn on <b className="text-ink">Developer mode</b> under Advanced if you don&apos;t see &ldquo;Create&rdquo;.
             </>,
             <>
-              Choose <b className="text-ink">Create</b>, name it Slyd, paste the URL, and set authentication to <b className="text-ink">None</b>.
+              Choose <b className="text-ink">Create</b>, name it KANVAS, paste the URL, and set authentication to <b className="text-ink">None</b>.
             </>,
             <>Enable it in a chat from the + menu, then ask for a carousel.</>,
           ]}
@@ -124,7 +124,7 @@ const CLIENTS: Client[] = [
         <a href={cursorDeeplink} className={buttonClass("ink", "md", "self-start")}>
           <Zap size={15} /> Add to Cursor
         </a>
-        <CopyBlock id="cursor-json" label="Or add to ~/.cursor/mcp.json" text={JSON.stringify({ mcpServers: { slyd: { url: MCP_URL } } }, null, 2)} copy={c.copy} copied={c.copied} />
+        <CopyBlock id="cursor-json" label="Or add to ~/.cursor/mcp.json" text={JSON.stringify({ mcpServers: { KANVAS: { url: MCP_URL } } }, null, 2)} copy={c.copy} copied={c.copied} />
       </div>
     ),
   },
@@ -137,7 +137,7 @@ const CLIENTS: Client[] = [
         <a href={vscodeDeeplink} className={buttonClass("ink", "md", "self-start")}>
           <Zap size={15} /> Install in VS Code
         </a>
-        <CopyBlock id="vscode-cli" label="Or from a terminal" text={`code --add-mcp '${JSON.stringify({ name: "slyd", type: "http", url: MCP_URL })}'`} copy={c.copy} copied={c.copied} />
+        <CopyBlock id="vscode-cli" label="Or from a terminal" text={`code --add-mcp '${JSON.stringify({ name: "KANVAS", type: "http", url: MCP_URL })}'`} copy={c.copy} copied={c.copied} />
       </div>
     ),
   },
@@ -151,7 +151,7 @@ const CLIENTS: Client[] = [
           Any client that supports remote MCP: add a server with type <b className="text-ink">http</b> (Streamable HTTP) and this URL. No auth.
         </p>
         <CopyBlock id="other-url" text={MCP_URL} copy={c.copy} copied={c.copied} />
-        <CopyBlock id="other-stdio" label="Client only supports local (stdio) servers? Bridge it:" text={JSON.stringify({ mcpServers: { slyd: { command: "npx", args: ["-y", "mcp-remote", MCP_URL] } } }, null, 2)} copy={c.copy} copied={c.copied} />
+        <CopyBlock id="other-stdio" label="Client only supports local (stdio) servers? Bridge it:" text={JSON.stringify({ mcpServers: { KANVAS: { command: "npx", args: ["-y", "mcp-remote", MCP_URL] } } }, null, 2)} copy={c.copy} copied={c.copied} />
       </div>
     ),
   },
@@ -164,7 +164,7 @@ const PROMPTS = [
   "Create a carousel announcing our product launch in our brand colours #0B1D3A and #5CE1E6, with photos of a modern office.",
 ];
 
-const NO_MCP = `Read ${SITE_URL}/llms.txt, then create a Slyd carousel about: <your topic>. Build the link exactly as described there (the #j= format) and give it to me.`;
+const NO_MCP = `Read ${SITE_URL}/llms.txt, then create a KANVAS carousel about: <your topic>. Build the link exactly as described there (the #j= format) and give it to me.`;
 
 export function AgentsPage() {
   const c = useCopy();
@@ -192,7 +192,7 @@ export function AgentsPage() {
             Let your AI agent make the <span className="font-serif font-normal italic text-accent">carousel.</span>
           </h1>
           <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-ink-2">
-            Connect Slyd to Claude, ChatGPT, Cursor or VS Code. Ask for a carousel in plain words, and your agent writes it, designs it with Slyd, and hands you a link that opens in the editor, ready to tweak and export.
+            Connect KANVAS to Claude, ChatGPT, Cursor or VS Code. Ask for a carousel in plain words, and your agent writes it, designs it with KANVAS, and hands you a link that opens in the editor, ready to tweak and export.
           </p>
         </motion.div>
 
@@ -240,8 +240,8 @@ export function AgentsPage() {
         <section className="mt-16 grid gap-4 md:grid-cols-3">
           {[
             { icon: MessageSquareText, t: "You ask", d: "Describe the carousel, or paste a post, thread or notes. Mention a style, format or brand if you like." },
-            { icon: Sparkles, t: "Your agent writes it", d: "It drafts the hook, the slides and the ask, then calls Slyd's create_carousel with the words and the look." },
-            { icon: Link2, t: "You open the link", d: "Slyd lays it out, finds stock photos, applies your saved brand kit, and opens the editor. Tweak, then export." },
+            { icon: Sparkles, t: "Your agent writes it", d: "It drafts the hook, the slides and the ask, then calls KANVAS's create_carousel with the words and the look." },
+            { icon: Link2, t: "You open the link", d: "KANVAS lays it out, finds stock photos, applies your saved brand kit, and opens the editor. Tweak, then export." },
           ].map((s, i) => (
             <div key={s.t} className="rounded-3xl bg-panel p-6 shadow-sm">
               <div className="flex items-center justify-between">
@@ -281,10 +281,10 @@ export function AgentsPage() {
           </div>
           <div className="flex flex-col gap-2">
             {[
-              ["create_carousel", "Designs a carousel from a spec and returns a link that opens it in Slyd."],
+              ["create_carousel", "Designs a carousel from a spec and returns a link that opens it in KANVAS."],
               ["get_carousel_guide", "Layouts, options and copywriting rules, so the agent gets it right first time."],
               ["update_carousel", "Changes a carousel it already made. Opening the new link updates the same carousel in your browser, with Undo."],
-              ["read_carousel_link", "Reads a Slyd link back into a spec, so the agent can revise a carousel you shared."],
+              ["read_carousel_link", "Reads a KANVAS link back into a spec, so the agent can revise a carousel you shared."],
               ["carousel_from_text", "A prompt: turn any post, thread or notes into a carousel."],
             ].map(([n, d]) => (
               <div key={n} className="rounded-2xl bg-panel px-5 py-4 shadow-sm">
@@ -299,7 +299,7 @@ export function AgentsPage() {
         <section className="mt-16 rounded-3xl border border-dashed border-line-2 p-6 sm:p-8">
           <h2 className="text-[20px] font-semibold tracking-tight">No MCP? It still works.</h2>
           <p className="mt-2 max-w-2xl text-[14.5px] leading-relaxed text-muted">
-            Any assistant that can read a web page can build a Slyd link by itself. Paste this into any chat:
+            Any assistant that can read a web page can build a KANVAS link by itself. Paste this into any chat:
           </p>
           <div className="mt-4">
             <CopyBlock id="nomcp" text={NO_MCP} copy={c.copy} copied={c.copied} mono={false} />

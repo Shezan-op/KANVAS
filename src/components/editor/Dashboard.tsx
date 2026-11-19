@@ -295,9 +295,9 @@ export function Dashboard() {
           )}
         </section>
         <footer className="mt-20 flex items-center justify-between border-t border-line pt-6 text-[12.5px] text-muted">
-          <span>Projects are saved in this browser. Export a .slyd.json file to back one up.</span>
+          <span>Projects are saved in this browser. Export a .KANVAS.json file to back one up.</span>
           <a href={tracked(AUTHOR.url, "dashboard")} target="_blank" rel="author noopener" className="hover:text-accent">
-            Slyd by <span className="text-ink-2">{AUTHOR.name}</span>
+            KANVAS by <span className="text-ink-2">{AUTHOR.name}</span>
           </a>
         </footer>
       </main>

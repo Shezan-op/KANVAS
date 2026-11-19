@@ -165,7 +165,7 @@ export function Hero() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
           className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-2 text-pretty"
         >
-          Slyd is a free carousel maker built for laptops. Start from templates, stock photos, brand kits and real textures, then export
+          KANVAS is a free carousel maker built for laptops. Start from templates, stock photos, brand kits and real textures, then export
           pixel-perfect PNG, PDF or ZIP in one click.
         </motion.p>
 

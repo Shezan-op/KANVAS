@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Editor } from "@/components/editor/Editor";
 
-export const metadata = { title: "Editor — Slyd" };
+export const metadata = { title: "Editor — KANVAS" };
 
 export default function EditPage() {
   return (

@@ -24,7 +24,7 @@ gsap.registerPlugin(ScrollTrigger);
 export function Manifesto() {
   const ref = useRef<HTMLParagraphElement>(null);
   const text =
-    "Most carousel tools want a subscription, an account and your attention. Slyd just opens. You write the hook, pick a mood, drop in a photo and export. It's the tool we wanted on our own laptops, so we made it free for everyone.";
+    "Most carousel tools want a subscription, an account and your attention. KANVAS just opens. You write the hook, pick a mood, drop in a photo and export. It's the tool we wanted on our own laptops, so we made it free for everyone.";
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -38,7 +38,7 @@ export function Manifesto() {
   return (
     <section className="mx-auto max-w-5xl px-6 py-36">
       <Reveal>
-        <Eyebrow className="mb-10">Why Slyd</Eyebrow>
+        <Eyebrow className="mb-10">Why KANVAS</Eyebrow>
       </Reveal>
       <p ref={ref} className="text-[clamp(1.8rem,3.6vw,3.2rem)] leading-[1.15] font-medium tracking-tight text-balance">
         {text.split(" ").map((w, i) => (
@@ -191,13 +191,13 @@ export function Pricing() {
   const no = ["$15–$30 every month", "Watermarks on the free plan", "Export limits", "Your drafts on someone else's server"];
   return (
     <section className="mx-auto max-w-5xl px-6 py-28">
-      <SectionHead eyebrow="Pricing" title="Start simple. *Stay* free." sub="No tiers, no trials, no feature walls. Slyd is MIT licensed, and that won't change." />
+      <SectionHead eyebrow="Pricing" title="Start simple. *Stay* free." sub="No tiers, no trials, no feature walls. KANVAS is MIT licensed, and that won't change." />
       <div className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
         <Reveal className="relative overflow-hidden rounded-4xl bg-ink p-9 text-bg shadow-lg">
           <div aria-hidden className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-accent opacity-40 blur-3xl" />
           <div className="relative">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[11px] tracking-[.16em] uppercase opacity-70">Slyd</span>
+              <span className="font-mono text-[11px] tracking-[.16em] uppercase opacity-70">KANVAS</span>
               <span className="rounded-full bg-accent px-3 py-1 text-[11px] font-semibold text-accent-ink">The full box</span>
             </div>
             <div className="mt-8 flex items-end gap-3">
@@ -255,12 +255,12 @@ export function Pricing() {
 /* ----------------------------------------------------------------- faq -- */
 
 const FAQ = [
-  ["Is Slyd really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitHub star is how you can say thanks."],
-  ["Where are my projects stored?", "In your browser's IndexedDB, on your machine. Nothing is uploaded. You can export any project as a .slyd.json file to back it up or move it."],
-  ["Can I use the stock photos commercially?", "Unsplash and Pexels photos are free for commercial use under their licenses. Openverse results are limited to licenses that allow commercial use and modification. Slyd saves the credit with every photo, so attribution is one glance away."],
+  ["Is KANVAS really free?", "Yes. It's MIT-licensed open source. There's no paid tier and no watermark. If it helps you, a GitHub star is how you can say thanks."],
+  ["Where are my projects stored?", "In your browser's IndexedDB, on your machine. Nothing is uploaded. You can export any project as a .KANVAS.json file to back it up or move it."],
+  ["Can I use the stock photos commercially?", "Unsplash and Pexels photos are free for commercial use under their licenses. Openverse results are limited to licenses that allow commercial use and modification. KANVAS saves the credit with every photo, so attribution is one glance away."],
   ["Do I need an API key for photos?", "No. Openverse and Picsum work without one. To search Unsplash or Pexels too, paste your own free key in Settings. It stays in your browser."],
   ["What sizes can I export?", "Square 1:1, portrait 4:5, tall 3:4, story 9:16 and wide 16:9, all 1080px wide, at 1×, 2× or 3×. PDF export is made for LinkedIn document posts."],
-  ["Why laptop-first?", "Carousels are written, not tapped. Slyd is designed around a keyboard, a trackpad and a 13–16\" screen, and every action has a shortcut. Phones get a friendly heads-up."],
+  ["Why laptop-first?", "Carousels are written, not tapped. KANVAS is designed around a keyboard, a trackpad and a 13–16\" screen, and every action has a shortcut. Phones get a friendly heads-up."],
   ["Is there AI?", "Not yet, on purpose. The editor comes first. An optional AI layer for drafting hooks and outlines is on the roadmap."],
 ];
 
@@ -399,7 +399,7 @@ export function Footer() {
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           className="pr-[0.1em] pb-[0.24em] font-serif text-[clamp(6rem,24vw,22rem)] leading-[0.85] tracking-[-0.04em] text-ink italic select-none"
         >
-          slyd<span className="text-accent">.</span>
+          KANVAS<span className="text-accent">.</span>
         </motion.div>
       </div>
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[13px] text-muted">
@@ -408,7 +408,7 @@ export function Footer() {
           <a href={tracked(AUTHOR.url, "copyright")} target="_blank" rel="author noopener" className="text-ink-2 hover:text-accent">
             {AUTHOR.name}
           </a>{" "}
-          &amp; Slyd contributors · MIT License
+          &amp; KANVAS contributors · MIT License
         </span>
         <span>Made with care on a laptop.</span>
       </div>
@@ -434,7 +434,7 @@ export function AgentBand() {
             <SplitWords text="Or let your AI agent *make it.*" />
           </h2>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-bg/70">
-            Connect Slyd to Claude, ChatGPT, Cursor or VS Code with one URL. Ask for a carousel and get a link that opens in the editor, fully designed and ready to export.
+            Connect KANVAS to Claude, ChatGPT, Cursor or VS Code with one URL. Ask for a carousel and get a link that opens in the editor, fully designed and ready to export.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <MagneticLink href="/agents" cursor="Connect">
@@ -475,7 +475,7 @@ export function AgentBand() {
             </div>
             <div className="min-w-0 pl-2">
               <div className="truncate text-[13.5px] font-semibold">Launch notes carousel</div>
-              <div className="font-mono text-[11.5px] text-muted">tryslyd.vercel.app/app/new#…</div>
+              <div className="font-mono text-[11.5px] text-muted">tryKANVAS.vercel.app/app/new#…</div>
             </div>
           </motion.div>
         </Reveal>

@@ -27,9 +27,9 @@ export const EXAMPLE_SPEC = {
 const md = (rows: string[][]) => rows.map((r) => `- ${r.join(" — ")}`).join("\n");
 
 export function carouselGuide(): string {
-  return `# Slyd carousel guide (for agents)
+  return `# KANVAS carousel guide (for agents)
 
-Slyd turns a JSON **Carousel Spec** into a designed, editable carousel. You write the words and choose the look; Slyd handles the layout. Call \`create_carousel\` with the spec and give the user the link it returns. The link opens in their browser, where they can tweak anything and export PNG, PDF or ZIP. Nothing is uploaded or stored on a server.
+KANVAS turns a JSON **Carousel Spec** into a designed, editable carousel. You write the words and choose the look; KANVAS handles the layout. Call \`create_carousel\` with the spec and give the user the link it returns. The link opens in their browser, where they can tweak anything and export PNG, PDF or ZIP. Nothing is uploaded or stored on a server.
 
 ## Writing carousels people finish
 1. **Slide 1 is the hook** (\`cover\`): a promise or tension in under 10 words. It earns the swipe.
@@ -53,7 +53,7 @@ ${md([
 Every slide also accepts: \`background\` {color | gradient {from,to,angle} | mesh | photo, darken?, overlay?, blur?}, \`texture\`, \`align\` (left|center), \`hideBrand\`, and \`elements\` (freeform, see below).
 
 ## Photos
-Any \`photo\` field takes an https URL **or 2–5 search words** ("rainy city street at night"). Slyd finds a free stock photo (Unsplash/Pexels/Openverse) in the user's browser and credits it automatically.
+Any \`photo\` field takes an https URL **or 2–5 search words** ("rainy city street at night"). KANVAS finds a free stock photo (Unsplash/Pexels/Openverse) in the user's browser and credits it automatically.
 
 ## Look and feel (all optional)
 - **template**: ${TEMPLATES.map((t) => `\`${t.id}\` (${t.description})`).join("; ")}. Default \`editorial\`.
@@ -63,7 +63,7 @@ Any \`photo\` field takes an https URL **or 2–5 search words** ("rainy city st
 - **highlight** (how *words* look): \`color\`, \`italic\`, \`marker\`, \`underline\`, \`pill\`.
 - **texture**: ${TEXTURES.map((t) => `\`${t.id}\``).join(", ")}; \`textureIntensity\` 0–1.
 - **mesh** backgrounds: ${Object.keys(MESHES).map((m) => `\`${m}\``).join(", ")}.
-- **brand**: {name, handle, avatar (https URL), show, position top|bottom, counter, arrow, color}. If omitted, the user's saved Slyd brand kit is used.
+- **brand**: {name, handle, avatar (https URL), show, position top|bottom, counter, arrow, color}. If omitted, the user's saved KANVAS brand kit is used.
 - **open**: \`editor\` (default), \`preview\` (phone mockup), or \`export\` (download dialog).
 
 ## Colours
@@ -78,9 +78,9 @@ For custom designs, add \`elements\` to any slide. Coordinates are px on a canva
 All elements accept rotation (deg) and opacity (0–1).
 
 ## Editing an existing carousel
-**Editing.** Every carousel has an \`id\` (returned by \`create_carousel\`). When the user asks for changes, call \`update_carousel\` with the same \`id\` and the full revised spec: opening the new link updates that same carousel in their browser (with Undo) instead of adding a copy. If the user shares a Slyd link, call \`read_carousel_link\` to get its spec and id first.
+**Editing.** Every carousel has an \`id\` (returned by \`create_carousel\`). When the user asks for changes, call \`update_carousel\` with the same \`id\` and the full revised spec: opening the new link updates that same carousel in their browser (with Undo) instead of adding a copy. If the user shares a KANVAS link, call \`read_carousel_link\` to get its spec and id first.
 
-**Their own look.** Set \`myTheme: true\` to use the colours and fonts the user saved as their theme in Slyd.
+**Their own look.** Set \`myTheme: true\` to use the colours and fonts the user saved as their theme in KANVAS.
 
 ## Example
 \`\`\`json

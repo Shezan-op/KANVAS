@@ -262,7 +262,7 @@ export function ContextMenu({ ctx, onClose }: { ctx: CtxState | null; onClose: (
 
 /* ------------------------------------------------------------------- tips */
 
-const TIPS_KEY = "slyd:tips-v1";
+const TIPS_KEY = "KANVAS:tips-v1";
 
 /** A small first-run card. Dismissed once, gone forever. */
 export function Tips() {

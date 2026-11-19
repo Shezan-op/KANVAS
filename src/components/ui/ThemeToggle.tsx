@@ -15,7 +15,7 @@ export function useTheme() {
     const apply = () => {
       document.documentElement.dataset.theme = next;
       try {
-        localStorage.setItem("slyd:theme", next);
+        localStorage.setItem("KANVAS:theme", next);
       } catch {}
       setTheme(next);
     };

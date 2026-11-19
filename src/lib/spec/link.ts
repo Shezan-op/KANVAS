@@ -2,7 +2,7 @@
  * Spec ⇄ link. The spec travels in the URL *fragment* (after #), which browsers
  * never send to a server, so a carousel's content stays private until opened.
  *
- *   /c/<name>#s=<base64url(deflate-raw(json))>   what Slyd's MCP server emits; <name> is just a readable label
+ *   /c/<name>#s=<base64url(deflate-raw(json))>   what KANVAS's MCP server emits; <name> is just a readable label
  *   /app/new#s=…  ·  /app/new#j=<base64url(json)>   also accepted (#j= is easy for any agent to build by hand)
  */
 

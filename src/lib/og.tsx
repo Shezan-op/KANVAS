@@ -10,7 +10,7 @@ import { AUTHOR, SITE_URL } from "@/lib/site";
  */
 
 export const OG_SIZE = { width: 1200, height: 630 };
-export const OG_ALT = "Slyd: carousels that stop the scroll. A free, open source carousel maker.";
+export const OG_ALT = "KANVAS: carousels that stop the scroll. A free, open source carousel maker.";
 
 /** TTF from Google Fonts (an older user agent gets TTF, which Satori needs). Falls back if offline. */
 async function googleFont(family: string, weight: number, italic = false): Promise<ArrayBuffer | null> {
@@ -108,7 +108,7 @@ export async function renderOg(canvas: { width: number; height: number } = OG_SI
               <div style={{ position: "absolute", left: 12, top: 6, width: 18, height: 26, borderRadius: 5, background: C.accent, opacity: 0.75, transform: "rotate(5deg)" }} />
               <div style={{ position: "absolute", left: 7, top: 10, width: 18, height: 26, borderRadius: 5, background: C.ink, transform: "rotate(-7deg)" }} />
             </div>
-            <div style={{ fontFamily: "Instrument Serif", fontStyle: "italic", fontSize: 48, color: C.ink, marginTop: -6 }}>slyd</div>
+            <div style={{ fontFamily: "Instrument Serif", fontStyle: "italic", fontSize: 48, color: C.ink, marginTop: -6 }}>KANVAS</div>
           </div>
           <div style={{ fontSize: 78, fontWeight: 700, color: C.ink, letterSpacing: -3.5, lineHeight: 0.98 }}>Carousels that</div>
           <div style={{ display: "flex", alignItems: "baseline", fontSize: 78, fontWeight: 700, color: C.ink, letterSpacing: -3.5, lineHeight: 1.08 }}>

@@ -159,41 +159,27 @@ export function Editor() {
 
   return (
     <>
-      <div className="hidden h-screen flex-col overflow-hidden lg:flex">
+      {/* Universal Desktop & Tablet Workspace */}
+      <div className="flex h-screen flex-col overflow-hidden">
         <TopBar />
-        <div className="flex min-h-0 flex-1">
-          <LeftPanel />
-          <main className="flex min-w-0 flex-1 flex-col">
-            <div className="min-h-0 flex-1">
+        <div className="flex min-h-0 flex-1 overflow-hidden">
+          {/* Collapsible/Drawer Left Panel on mobile, fixed on desktop */}
+          <div className="hidden lg:flex">
+            <LeftPanel />
+          </div>
+          <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+            <div className="min-h-0 flex-1 overflow-hidden">
               <Canvas />
             </div>
             <Filmstrip />
           </main>
-          <Inspector />
+          <div className="hidden xl:flex">
+            <Inspector />
+          </div>
         </div>
       </div>
-      <SmallScreen />
       <Modals />
       <Toaster />
     </>
-  );
-}
-
-function SmallScreen() {
-  return (
-    <div className="grid h-screen place-items-center p-8 text-center lg:hidden">
-      <div className="max-w-sm">
-        <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-2xl bg-panel shadow-md">
-          <Laptop size={28} className="text-accent" />
-        </div>
-        <h1 className="text-[28px] font-semibold tracking-tight">
-          Best on a <span className="font-serif font-normal italic text-accent">laptop</span>
-        </h1>
-        <p className="mt-3 text-[15px] leading-relaxed text-muted">The Slyd editor is built for a keyboard and a bigger screen. Open this page on a laptop or desktop (1024px or wider) to keep going. Your carousel is saved.</p>
-        <Link href="/" className="mt-6 inline-block rounded-xl bg-ink px-4 py-2 text-[14px] text-bg">
-          Back home
-        </Link>
-      </div>
-    </div>
   );
 }

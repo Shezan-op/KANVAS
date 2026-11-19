@@ -303,7 +303,7 @@ export function Bento() {
       <SectionHead
         eyebrow="Everything in the box"
         title="All the craft. *None* of the busywork."
-        sub="Slyd covers the parts of carousel-making people actually care about, and skips the parts nobody does."
+        sub="KANVAS covers the parts of carousel-making people actually care about, and skips the parts nobody does."
       />
       <div className="grid auto-rows-[minmax(0,auto)] grid-cols-6 gap-4">
         <Card className="col-span-6 lg:col-span-4" title="Restyle everything in one click" body="Palettes and font pairs are live tokens. Swap them and every slide, highlight and button follows.">

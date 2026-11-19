@@ -6,7 +6,7 @@ import { fileToDataUrl, loadImageSize } from "@/lib/image";
 import type { StockCredit } from "@/lib/model/types";
 import { useEditor } from "@/store/editor";
 
-export const DND_MIME = "application/x-slyd-image";
+export const DND_MIME = "application/x-KANVAS-image";
 
 export interface ImagePayload {
   src: string;

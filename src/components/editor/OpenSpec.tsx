@@ -109,7 +109,7 @@ export function OpenSpec() {
       const parsed = CarouselSpec.safeParse(raw);
       if (!parsed.success) {
         setError({
-          title: "Slyd couldn't read this carousel",
+          title: "KANVAS couldn't read this carousel",
           details: parsed.error.issues.slice(0, 6).map((i) => `${i.path.join(".") || "spec"}: ${i.message}`),
         });
         return;

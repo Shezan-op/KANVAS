@@ -37,7 +37,7 @@ export function useHotkeys() {
       if (mod && k === "x") return done(), st.cut();
       if (mod && k === "d") return done(), has ? st.duplicateSelected() : st.duplicateSlide();
       if (mod && k === "a") return done(), st.selectAll();
-      if (mod && k === "s") return done(), toast.ok("Slyd saves automatically");
+      if (mod && k === "s") return done(), toast.ok("KANVAS saves automatically");
       if (mod && k === "e") return done(), st.setModal("export");
 
       // Slides

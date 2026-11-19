@@ -1,8 +1,8 @@
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
-import { createSlydServer } from "@/lib/mcp/server";
+import { createKANVASServer } from "@/lib/mcp/server";
 
 /**
- * Remote MCP endpoint: https://tryslyd.vercel.app/mcp (Streamable HTTP, stateless).
+ * Remote MCP endpoint: https://tryKANVAS.vercel.app/mcp (Streamable HTTP, stateless).
  * No auth, no storage: every tool is a pure function of its input, so each
  * request gets a fresh server and nothing is kept between calls.
  */
@@ -27,7 +27,7 @@ async function handle(req: Request) {
   if (req.method === "GET" && (req.headers.get("accept") ?? "").includes("text/html")) {
     return Response.redirect(new URL("/agents", req.url), 302);
   }
-  const server = createSlydServer();
+  const server = createKANVASServer();
   const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
   await server.connect(transport);
   try {

@@ -36,7 +36,7 @@ export interface Provider {
   search: (q: string, page: number, opts: { orientation?: "portrait" | "landscape" | "squarish"; key?: string }) => Promise<SearchResult>;
 }
 
-const KEY_STORE = "slyd:stock-keys";
+const KEY_STORE = "KANVAS:stock-keys";
 
 export function getKeys(): Partial<Record<ProviderId, string>> {
   const env: Partial<Record<ProviderId, string>> = {
@@ -61,7 +61,7 @@ export function setKey(id: ProviderId, key: string) {
   }
 }
 
-const UTM = "utm_source=slyd&utm_medium=referral";
+const UTM = "utm_source=KANVAS&utm_medium=referral";
 
 const unsplash: Provider = {
   id: "unsplash",

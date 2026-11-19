@@ -126,6 +126,6 @@ export async function packagePdf(images: string[], p: Project, scale: number) {
     if (i > 0) pdf.addPage([W, H], W > H ? "landscape" : "portrait");
     pdf.addImage(d, "JPEG", 0, 0, W, H, undefined, scale > 1 ? "SLOW" : "FAST");
   });
-  pdf.setProperties({ title: p.name, creator: "Slyd" });
+  pdf.setProperties({ title: p.name, creator: "KANVAS" });
   return pdf.output("blob");
 }
