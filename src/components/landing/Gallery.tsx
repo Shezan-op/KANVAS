@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,21 +13,42 @@ import { Eyebrow, SplitWords, Tilt } from "./primitives";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PLATFORMS = ["Instagram", "LinkedIn", "X / Twitter", "Threads", "TikTok", "Pinterest", "Substack", "Bluesky", "Facebook", "Slides"];
-const FONTS = ["font-serif italic", "font-sans font-semibold tracking-tight", "font-mono uppercase text-[0.8em] tracking-widest", "font-sans font-light"];
+const PLATFORMS: { name: string; icon: string }[] = [
+  { name: "LinkedIn", icon: "/linkedin.svg" },
+  { name: "Instagram", icon: "/instagram.svg" },
+  { name: "X", icon: "/x-formerly-twitter.svg" },
+  { name: "Threads", icon: "/threads.svg" },
+  { name: "Pinterest", icon: "/pinterest.svg" },
+];
 
 export function PlatformMarquee() {
-  const row = [...PLATFORMS, ...PLATFORMS];
+  const row = [...PLATFORMS, ...PLATFORMS, ...PLATFORMS];
   return (
-    <section className="relative border-y border-line py-7">
-      <p className="mb-5 text-center font-mono text-[11px] tracking-[.16em] text-muted uppercase">Sized right for every feed</p>
-      <div className="marquee-paused relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
-        <div className="marquee flex w-max items-center gap-16 pr-16 text-[28px] text-ink-2" style={{ ["--marquee-duration" as string]: "45s" }}>
+    <section className="relative border-y border-line py-8 bg-panel/30">
+      <p className="mb-6 text-center font-mono text-[11px] tracking-[.18em] text-muted uppercase">
+        Sized &amp; formatted for every creator feed
+      </p>
+      <div className="marquee-paused relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)]">
+        <div className="marquee flex w-max items-center gap-14 pr-14" style={{ ["--marquee-duration" as string]: "32s" }}>
           {row.map((p, i) => (
-            <span key={i} className={`${FONTS[i % FONTS.length]} flex items-center gap-16 whitespace-nowrap opacity-80 transition-opacity hover:opacity-100`}>
-              {p}
-              <span className="text-accent">✦</span>
-            </span>
+            <div
+              key={i}
+              className="flex items-center gap-3.5 opacity-80 transition-all duration-300 hover:opacity-100 group"
+            >
+              <div className="relative h-6 w-6 shrink-0 overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <Image
+                  src={p.icon}
+                  alt={p.name}
+                  width={24}
+                  height={24}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <span className="text-[17px] font-medium tracking-tight text-ink">
+                {p.name}
+              </span>
+              <span className="ml-10 text-muted/30 text-xs">&bull;</span>
+            </div>
           ))}
         </div>
       </div>
@@ -86,7 +108,7 @@ export function TemplateGallery() {
   return (
     <section ref={section} id="templates" className="relative flex h-screen flex-col justify-center overflow-hidden">
       <div className="mx-auto mb-10 flex w-full max-w-6xl items-end justify-between gap-8 px-6">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <Eyebrow>Templates</Eyebrow>
           <h2 className="max-w-2xl text-[clamp(2.2rem,4.4vw,4rem)] leading-none font-semibold tracking-[-0.035em]">
             <SplitWords text={"Pick a mood.\n*Make it yours.*"} />
@@ -98,31 +120,39 @@ export function TemplateGallery() {
       </div>
       <div ref={track} className="flex w-max items-center gap-10 pl-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))] will-change-transform">
         {SHOWCASE_IDS.map((id) => {
+          const t = TEMPLATES.find((x) => x.id === id);
+          if (!t) return null;
           const p = demo(id);
-          const t = TEMPLATES.find((x) => x.id === id)!;
           return (
-            <Link key={id} href={`/app?template=${id}`} className="gallery-card group block shrink-0">
-              <Tilt className="rounded-[22px]" max={8}>
-                <div className="overflow-hidden rounded-[22px] shadow-[0_50px_90px_-40px_rgb(0_0_0/.5),0_0_0_1px_var(--line)] transition-transform duration-700 ease-out-expo group-hover:scale-[1.02]">
-                  <ScaledSlide width={300} slide={p.slides[0]} doc={p} index={0} total={p.slides.length} />
-                </div>
+            <div key={id} className="gallery-card group flex flex-col will-change-transform" style={{ width: 340 }}>
+              <Tilt max={6} className="relative aspect-4/5 overflow-hidden rounded-lg bg-panel shadow-lg ring-1 ring-line">
+                <ScaledSlide width={340} slide={p.slides[0]} doc={p} index={0} total={p.slides.length} />
+                <Link
+                  href={`/app?template=${id}`}
+                  className="absolute inset-0 flex items-end p-5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-label={`Use ${t.name} template`}
+                >
+                  <div className="flex w-full items-center justify-between rounded-lg bg-panel/95 px-4 py-3 text-[14px] font-medium text-ink shadow-lg backdrop-blur">
+                    <span>Use this template</span>
+                    <span className="grid h-7 w-7 place-items-center rounded-md bg-ink text-bg">
+                      <ArrowUpRight size={15} />
+                    </span>
+                  </div>
+                </Link>
               </Tilt>
-              <div className="mt-5 flex items-start justify-between gap-4 px-1">
+              <div className="mt-4 flex items-center justify-between">
                 <div>
-                  <div className="text-[17px] font-semibold tracking-tight">{t.name}</div>
-                  <div className="mt-0.5 max-w-[240px] text-[13px] text-muted">{t.description}</div>
+                  <h3 className="text-[17px] font-semibold text-ink">{t.name}</h3>
+                  <p className="text-[13px] text-muted">{t.description}</p>
                 </div>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-panel shadow-sm transition-all duration-500 group-hover:rotate-45 group-hover:bg-accent group-hover:text-accent-ink">
-                  <ArrowUpRight size={16} />
-                </span>
+                <span className="font-mono text-[11px] text-muted uppercase">{t.style.pair}</span>
               </div>
-            </Link>
+            </div>
           );
         })}
-        <div className="w-[20vw] shrink-0" />
       </div>
       <div className="mx-auto mt-12 h-[2px] w-full max-w-6xl overflow-hidden rounded-full bg-line px-6">
-        <div className="gallery-progress h-full origin-left scale-x-0 rounded-full bg-accent" />
+        <div className="gallery-progress h-full origin-left scale-x-0 rounded-full bg-ink" />
       </div>
     </section>
   );
