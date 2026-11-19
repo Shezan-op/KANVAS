@@ -2,8 +2,8 @@
  * KANVAS site-wide constants and repository configuration.
  */
 
-export const GITHUB_REPO_URL = process.env.NEXT_PUBLIC_REPO_URL || "https://github.com/kanvas-studio/kanvas";
-export const GITLAB_REPO_URL = "https://gitlab.com/kanvas-studio/kanvas";
+export const GITHUB_REPO_URL = process.env.NEXT_PUBLIC_REPO_URL || "https://github.com/Shezan-op/KANVAS";
+export const GITLAB_REPO_URL = "https://github.com/Shezan-op/KANVAS";
 export const REPO_URL = GITHUB_REPO_URL;
 export const ISSUES_URL = `${REPO_URL}/issues`;
 export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE`;

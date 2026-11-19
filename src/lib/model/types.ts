@@ -149,6 +149,7 @@ export interface Project {
   sourceHash?: string;
   createdAt: number;
   updatedAt: number;
+  archived?: boolean;
 }
 
 export interface ProjectMeta {
@@ -157,4 +158,5 @@ export interface ProjectMeta {
   aspect: AspectId;
   slideCount: number;
   updatedAt: number;
+  archived?: boolean;
 }

@@ -1,29 +1,10 @@
-import { SmoothScroll } from "@/components/landing/SmoothScroll";
-import { Hero, Nav } from "@/components/landing/Hero";
-import { PlatformMarquee, TemplateGallery } from "@/components/landing/Gallery";
-import { Bento } from "@/components/landing/Bento";
-import { AgentBand, Faq, FinalCta, Footer, HowItWorks, Manifesto, Pricing, Stats, UseCases } from "@/components/landing/Sections";
+import { Suspense } from "react";
+import { Dashboard } from "@/components/editor/Dashboard";
 
-export default function Landing() {
+export default function Home() {
   return (
-    <>
-      <SmoothScroll />
-      <Nav />
-      <main className="overflow-x-clip">
-        <Hero />
-        <PlatformMarquee />
-        <Manifesto />
-        <TemplateGallery />
-        <Bento />
-        <HowItWorks />
-        <AgentBand />
-        <Stats />
-        <UseCases />
-        <Pricing />
-        <Faq />
-        <FinalCta />
-      </main>
-      <Footer />
-    </>
+    <Suspense>
+      <Dashboard />
+    </Suspense>
   );
 }

@@ -30,12 +30,23 @@ export async function listProjects(): Promise<Project[]> {
   return all.sort((a, b) => b.updatedAt - a.updatedAt);
 }
 
+export async function toggleArchiveProject(id: string): Promise<boolean> {
+  if (!projects) return false;
+  const p = await get<Project>(id, projects);
+  if (!p) return false;
+  p.archived = !p.archived;
+  p.updatedAt = Date.now();
+  await set(p.id, p, projects);
+  return !!p.archived;
+}
+
 export const toMeta = (p: Project): ProjectMeta => ({
   id: p.id,
   name: p.name,
   aspect: p.aspect,
   slideCount: p.slides.length,
   updatedAt: p.updatedAt,
+  archived: !!p.archived,
 });
 
 export async function getPref<T>(key: string, fallback: T): Promise<T> {
