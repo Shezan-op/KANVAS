@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import { useEffect, useState } from "react";
-import { ArrowRight, Sparkles, MonitorDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Sparkles, MonitorDown, X, Download, ShieldCheck } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { HeroShader } from "./HeroShader";
 import { SplitWords } from "./primitives";
@@ -90,17 +90,64 @@ export function Hero() {
   const fade = useTransform(scrollY, [0, 600], [1, 0.2]);
   const [authOpen, setAuthOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [chooseModalOpen, setChooseModalOpen] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(4);
   const { state: installState, install } = useInstall();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setSession(getLocalSession());
   }, []);
 
-  const handleEnterClick = () => {
+  const proceedToDirectEntry = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setChooseModalOpen(false);
     if (session) {
       router.push("/app");
     } else {
       setAuthOpen(true);
+    }
+  };
+
+  const openChooseModal = () => {
+    setSecondsLeft(4);
+    setChooseModalOpen(true);
+  };
+
+  const closeChooseModal = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setChooseModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (!chooseModalOpen) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    setSecondsLeft(4);
+    const interval = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          proceedToDirectEntry();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    timerRef.current = interval;
+    return () => clearInterval(interval);
+  }, [chooseModalOpen]);
+
+  const handleInstallClick = async () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setChooseModalOpen(false);
+    if (installState === "prompt") {
+      await install();
+    } else {
+      alert("To install KANVAS PWA, tap the install/share icon in your browser URL bar or Add to Home Screen.");
     }
   };
 
@@ -144,7 +191,7 @@ export function Hero() {
           Stop fighting sluggish cloud editors and messy Canva templates. KANVAS runs right in your browser, saves straight to your device, and exports crisp 4K decks in a couple of clicks.
         </motion.p>
 
-        {/* Action Controls - max 8px radius */}
+        {/* Action Controls - exactly two buttons */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -152,23 +199,13 @@ export function Hero() {
           className="mt-9 flex flex-wrap items-center justify-center gap-3.5"
         >
           <button
-            onClick={handleEnterClick}
+            onClick={openChooseModal}
             className="group relative inline-flex items-center gap-2.5 rounded-lg bg-ink px-7 py-3 text-[14.5px] font-medium text-bg shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
           >
             <Sparkles size={16} />
             <span>Start Creating Now</span>
             <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
           </button>
-
-          {installState === "prompt" && (
-            <button
-              onClick={install}
-              className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel/80 px-6 py-3 text-[14px] font-medium text-ink shadow-md backdrop-blur-xl transition-all hover:bg-panel hover:border-ink"
-            >
-              <MonitorDown size={16} />
-              <span>Install PWA</span>
-            </button>
-          )}
 
           <a
             href="#templates"
@@ -188,6 +225,84 @@ export function Hero() {
       >
         <DeckFan />
       </motion.div>
+
+      {/* Choose Entry / Install PWA Modal with 4s auto-redirect */}
+      {chooseModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            onClick={closeChooseModal}
+            className="fixed inset-0 bg-black/60 backdrop-blur-md"
+          />
+          <div
+            className="relative w-full max-w-md rounded-lg border border-line bg-panel p-6 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-[#0b0f14]"
+            style={{ borderRadius: "8px" }}
+          >
+            <button
+              onClick={closeChooseModal}
+              className="absolute top-4 right-4 rounded-md p-1.5 text-muted transition hover:bg-line hover:text-ink"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-bg">
+                <Sparkles size={18} />
+              </span>
+              <div>
+                <h3 className="text-[18px] font-semibold text-ink tracking-tight">How would you like to enter?</h3>
+                <p className="text-[13px] text-muted">Choose your preferred experience</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 my-5">
+              <button
+                onClick={handleInstallClick}
+                className="group flex w-full items-center justify-between rounded-lg border border-line bg-panel-2/50 p-4 text-left transition hover:border-ink hover:bg-panel-2"
+                style={{ borderRadius: "8px" }}
+              >
+                <div className="flex items-center gap-3.5">
+                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-panel border border-line text-ink">
+                    <Download size={18} />
+                  </span>
+                  <div>
+                    <h4 className="text-[14.5px] font-medium text-ink">Install PWA Desktop App</h4>
+                    <p className="text-[12px] text-muted">Offline-ready native app experience</p>
+                  </div>
+                </div>
+                <ArrowRight size={16} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-ink" />
+              </button>
+
+              <button
+                onClick={proceedToDirectEntry}
+                className="group flex w-full items-center justify-between rounded-lg border border-line bg-panel-2/50 p-4 text-left transition hover:border-ink hover:bg-panel-2"
+                style={{ borderRadius: "8px" }}
+              >
+                <div className="flex items-center gap-3.5">
+                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-bg">
+                    <ShieldCheck size={18} />
+                  </span>
+                  <div>
+                    <h4 className="text-[14.5px] font-medium text-ink">Direct Web Access</h4>
+                    <p className="text-[12px] text-muted">Sign in or create account to proceed</p>
+                  </div>
+                </div>
+                <ArrowRight size={16} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-ink" />
+              </button>
+            </div>
+
+            {/* 4s auto-redirect countdown bar */}
+            <div className="mt-4 pt-4 border-t border-line/60 flex items-center justify-between text-[12px] text-muted">
+              <span>Auto-entering web app in <strong className="text-ink font-semibold">{secondsLeft}s</strong>...</span>
+              <button
+                onClick={proceedToDirectEntry}
+                className="font-medium text-ink hover:underline"
+              >
+                Enter now &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <AuthModal
         isOpen={authOpen}
