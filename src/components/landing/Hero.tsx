@@ -12,6 +12,7 @@ import { demo } from "./demo";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { getLocalSession, type Session } from "@/lib/auth";
 import { useInstall } from "@/components/ui/InstallApp";
+import { REPO_URL } from "@/lib/site";
 
 export { Nav } from "./Navbar";
 
@@ -71,7 +72,7 @@ function DeckFan() {
               style={{ width: 280 }}
             >
               {/* Corner radius max 8px */}
-              <div className="group relative overflow-hidden rounded-lg border border-white/10 bg-panel shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-ink">
+              <div className="group relative overflow-hidden rounded-lg border border-line bg-panel shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-ink dark:border-white/10">
                 <ScaledSlide width={280} slide={s} doc={p} index={i} total={slides.length} />
               </div>
             </motion.div>
@@ -108,16 +109,26 @@ export function Hero() {
       <HeroShader className="absolute inset-0 -z-10 h-[115%]" />
       
       <motion.div style={{ y, opacity: fade }} className="mx-auto flex max-w-4xl flex-col items-center px-6 text-center">
-        {/* Unboxed subtle byline */}
-        <motion.div
+        {/* Exact Slyd-style highlighted pill */}
+        <motion.a
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer"
           initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8 flex items-center gap-2 font-mono text-[12px] tracking-[.18em] text-muted uppercase"
+          className="group mb-8 inline-flex items-center gap-2.5 rounded-full border border-line bg-panel/80 py-1 pr-3.5 pl-1.5 text-[13px] text-ink-2 shadow-sm backdrop-blur transition-colors hover:border-ink hover:text-ink dark:border-white/10 dark:bg-panel/70"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-ink" />
-          <span>Built by LeadLinked &amp; Shezan &bull; Free Forever</span>
-        </motion.div>
+          <span className="rounded-full bg-ink px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-bg uppercase">
+            NEW
+          </span>
+          <span className="text-[13px] font-medium text-ink">
+            Open source, MIT licensed, free forever
+          </span>
+          <span className="text-accent transition-transform duration-500 group-hover:rotate-[72deg] text-base leading-none">
+            ★
+          </span>
+        </motion.a>
 
         {/* Master headline with Instrument Serif italic contrast */}
         <h1 className="text-[clamp(3.2rem,8.4vw,7.2rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-balance">
