@@ -301,7 +301,6 @@ export function Bento() {
   return (
     <section id="features" className="mx-auto max-w-6xl px-6 py-32">
       <SectionHead
-        eyebrow="Everything in the box"
         title="All the craft. *None* of the busywork."
         sub="KANVAS covers the parts of carousel-making people actually care about, and skips the parts nobody does."
       />

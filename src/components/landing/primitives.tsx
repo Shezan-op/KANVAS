@@ -159,12 +159,14 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
   );
 }
 
-export function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow: string; title: string; sub?: string; center?: boolean }) {
+export function SectionHead({ eyebrow, title, sub, center = true }: { eyebrow?: string; title: string; sub?: string; center?: boolean }) {
   return (
     <div className={cn("mb-12 flex flex-col gap-4", center ? "items-center text-center" : "items-start")}>
-      <Reveal>
-        <Eyebrow>{eyebrow}</Eyebrow>
-      </Reveal>
+      {eyebrow && (
+        <Reveal>
+          <Eyebrow>{eyebrow}</Eyebrow>
+        </Reveal>
+      )}
       <h2 className="max-w-3xl text-[clamp(2.2rem,4.4vw,4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
         <SplitWords text={title} />
       </h2>

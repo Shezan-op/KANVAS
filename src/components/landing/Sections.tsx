@@ -19,10 +19,6 @@ import { ISSUES_URL, REPO_URL } from "@/lib/site";
 export function Philosophy() {
   return (
     <section id="capabilities" className="relative mx-auto max-w-5xl px-6 py-28 border-t border-line">
-      <Reveal>
-        <Eyebrow className="mb-6">The Honest Truth</Eyebrow>
-      </Reveal>
-      
       <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] items-start">
         <h2 className="text-[clamp(1.9rem,3.8vw,3.2rem)] font-medium leading-[1.12] tracking-tight text-ink text-balance">
           Most design tools are bloated traps. We built this <em className="font-serif italic font-normal text-ink">coz we needed it ourselves</em>.
@@ -75,7 +71,6 @@ export function Capabilities() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
       <Reveal className="mb-12">
-        <Eyebrow className="mb-3">How it works</Eyebrow>
         <h2 className="text-[clamp(2.2rem,4vw,3.6rem)] font-semibold tracking-tight text-ink">
           Built for speed. <em className="font-serif italic font-normal text-ink">Nothing extra.</em>
         </h2>
@@ -118,7 +113,6 @@ export function DeveloperSpotlight() {
       <div className="relative overflow-hidden rounded-lg border border-white/10 bg-panel/75 p-8 shadow-2xl backdrop-blur-2xl sm:p-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
-            <Eyebrow className="mb-4">The Developers</Eyebrow>
             <h2 className="text-[clamp(2.2rem,4.5vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
               LeadLinked &amp; Shezan
             </h2>
@@ -182,10 +176,7 @@ export function AgentBand() {
     <section className="mx-auto max-w-6xl px-6 py-20">
       <div className="grid items-center gap-12 overflow-hidden rounded-lg bg-ink p-8 text-bg shadow-2xl sm:p-12 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <span className="font-mono text-[11px] tracking-[.18em] uppercase text-accent">
-            AI Agent Integration
-          </span>
-          <h2 className="mt-4 text-[clamp(2rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
+          <h2 className="text-[clamp(2rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.035em] text-balance">
             <SplitWords text="Or let your AI agent *write the deck.*" />
           </h2>
           <p className="mt-4 max-w-md text-[16px] leading-relaxed text-bg/70">
@@ -258,8 +249,7 @@ export function Faq() {
   return (
     <section id="faq" className="mx-auto grid max-w-5xl gap-12 px-6 py-24 lg:grid-cols-[1fr_1.4fr] border-t border-line">
       <div>
-        <Eyebrow>Common Questions</Eyebrow>
-        <h2 className="mt-4 text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
+        <h2 className="text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-tight tracking-tight text-ink">
           Clear answers. <em className="font-serif italic font-normal text-ink">No corporate speak.</em>
         </h2>
         <p className="mt-4 text-[15px] text-muted leading-relaxed">

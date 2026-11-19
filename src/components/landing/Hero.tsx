@@ -177,20 +177,6 @@ export function Hero() {
             Browse Styles
           </a>
         </motion.div>
-
-        {/* Clean, pill-free trust indicators */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 1 }}
-          className="mt-8 flex items-center gap-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase"
-        >
-          <span>No Login Needed</span>
-          <span className="h-1 w-1 rounded-full bg-muted/40" />
-          <span>Zero Server Lag</span>
-          <span className="h-1 w-1 rounded-full bg-muted/40" />
-          <span>100% Offline Capable</span>
-        </motion.div>
       </motion.div>
 
       {/* Floating 3D Carousel Fan */}

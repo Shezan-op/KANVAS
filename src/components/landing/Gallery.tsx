@@ -9,7 +9,7 @@ import { ArrowUpRight } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { TEMPLATES } from "@/lib/model/templates";
 import { demo, SHOWCASE_IDS } from "./demo";
-import { Eyebrow, SplitWords, Tilt } from "./primitives";
+import { SplitWords, Tilt } from "./primitives";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,9 +25,6 @@ export function PlatformMarquee() {
   const row = [...PLATFORMS, ...PLATFORMS, ...PLATFORMS];
   return (
     <section className="relative border-y border-line py-8 bg-panel/30">
-      <p className="mb-6 text-center font-mono text-[11px] tracking-[.18em] text-muted uppercase">
-        Sized &amp; formatted for every creator feed
-      </p>
       <div className="marquee-paused relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)]">
         <div className="marquee flex w-max items-center gap-14 pr-14" style={{ ["--marquee-duration" as string]: "32s" }}>
           {row.map((p, i) => (
@@ -109,7 +106,6 @@ export function TemplateGallery() {
     <section ref={section} id="templates" className="relative flex h-screen flex-col justify-center overflow-hidden">
       <div className="mx-auto mb-10 flex w-full max-w-6xl items-end justify-between gap-8 px-6">
         <div className="flex flex-col gap-4">
-          <Eyebrow>Templates</Eyebrow>
           <h2 className="max-w-2xl text-[clamp(2.2rem,4.4vw,4rem)] leading-none font-semibold tracking-[-0.035em]">
             <SplitWords text={"Pick a mood.\n*Make it yours.*"} />
           </h2>
