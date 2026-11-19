@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <!-- Crisp Apple-style White Background -->
-  <rect width="512" height="512" rx="128" fill="#FFFFFF" />
-  <rect x="2" y="2" width="508" height="508" rx="126" stroke="#E4E4E7" stroke-width="4" />
-  <!-- Minimalist Black Architectural Symbol -->
-  <path d="M160 128V384M160 256L320 128M218 208L360 384" stroke="#09090B" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" />
-</svg>
