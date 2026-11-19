@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#141311"/><rect x="25" y="13" width="22" height="30" rx="5" fill="#ff5a1f" transform="rotate(12 36 28)" opacity=".55"/><rect x="21" y="16" width="22" height="30" rx="5" fill="#ff5a1f" transform="rotate(4 32 31)" opacity=".8"/><rect x="17" y="19" width="22" height="30" rx="5" fill="#f3f0e9" transform="rotate(-6 28 34)"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Crisp Apple-style White Background -->
+  <rect width="512" height="512" rx="128" fill="#FFFFFF" />
+  <rect x="2" y="2" width="508" height="508" rx="126" stroke="#E4E4E7" stroke-width="4" />
+  <!-- Minimalist Black Architectural Symbol -->
+  <path d="M160 128V384M160 256L320 128M218 208L360 384" stroke="#09090B" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
