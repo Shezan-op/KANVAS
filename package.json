@@ -2,19 +2,20 @@
   "name": "kanvas",
   "private": true,
   "version": "1.0.0",
-  "description": "KANVAS — The next-generation local-first PWA carousel maker & visual studio for Instagram, LinkedIn, X and TikTok with built-in MCP server support.",
+  "description": "KANVAS — The next-generation local-first PWA carousel maker & visual studio for Instagram, LinkedIn, and X with built-in MCP server support.",
   "license": "MIT",
   "author": {
-    "name": "Venu Kumar Mutyala",
-    "url": "https://venukumar.vercel.app"
+    "name": "Shezan",
+    "email": "techtone546@gmail.com",
+    "url": "https://github.com/Shezan-op"
   },
-  "homepage": "https://tryslyd.vercel.app",
+  "homepage": "https://github.com/Shezan-op/KANVAS",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/venukumaraitech/slyd.git"
+    "url": "git+https://github.com/Shezan-op/KANVAS.git"
   },
   "bugs": {
-    "url": "https://github.com/venukumaraitech/slyd/issues"
+    "url": "https://github.com/Shezan-op/KANVAS/issues"
   },
   "keywords": [
     "carousel",

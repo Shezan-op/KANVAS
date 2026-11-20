@@ -13,6 +13,8 @@ import {
   Edit3,
   FileUp,
   FolderKanban,
+  Home,
+  LayoutGrid,
   Layers,
   MoreHorizontal,
   Plus,
@@ -23,7 +25,9 @@ import {
   Tv2,
   Smartphone,
   Download,
-  Share2
+  Share2,
+  Palette,
+  BadgeCheck
 } from "lucide-react";
 import { ScaledSlide } from "@/components/slide/SlideRenderer";
 import { Logo } from "@/components/ui/Logo";
@@ -172,54 +176,87 @@ export function Dashboard() {
       {/* ------------------------------------------------------------- 
           1. APPLE VISION PRO / HIG FLOATING TOP ORNAMENT NAVIGATION 
       ----------------------------------------------------------------- */}
-      <header className="sticky top-0 z-40 w-full border-b border-line bg-bg/80 backdrop-blur-2xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <div className="flex items-center gap-6">
+      <header className="sticky top-0 z-40 w-full border-b border-line bg-bg/85 backdrop-blur-2xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+          {/* Left: Brand + Studio Tag + Navigation Links */}
+          <div className="flex items-center gap-4 lg:gap-6">
             <Logo size="md" />
-            <div className="hidden h-5 w-px bg-line sm:block" />
-            <span className="hidden font-mono text-[11px] uppercase tracking-wider text-muted sm:inline-block">
+            <div className="hidden h-5 w-px bg-line md:block" />
+            <span className="hidden font-mono text-[11px] uppercase tracking-wider text-muted lg:inline-block">
               Visual Creation Studio
             </span>
-          </div>
 
-          {/* Center search bar */}
-          <div className="relative w-48 sm:w-72 md:w-96">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-            <input
-              suppressHydrationWarning
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Filter your decks & slides..."
-              className="h-9 w-full rounded-full bg-panel-2 pl-9 pr-3 text-[13px] text-ink placeholder:text-muted outline-none border border-line focus:border-ink focus:bg-panel transition-all"
-            />
+            {/* Nav Pill Links matching second reference */}
+            <nav className="hidden md:flex items-center gap-1.5 ml-2">
+              <Link
+                href="/app"
+                className="flex items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1.5 text-[12.5px] font-medium text-ink shadow-sm"
+              >
+                <Home size={14} />
+                <span>Home</span>
+              </Link>
+              <a
+                href="#projects"
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium text-muted hover:text-ink hover:bg-panel transition-colors"
+              >
+                <FolderKanban size={14} />
+                <span>Projects</span>
+              </a>
+              <a
+                href="#templates"
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium text-muted hover:text-ink hover:bg-panel transition-colors"
+              >
+                <LayoutGrid size={14} />
+                <span>Templates</span>
+              </a>
+              <button
+                onClick={() => create("blank")}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium text-muted hover:text-ink hover:bg-panel transition-colors"
+              >
+                <BadgeCheck size={14} />
+                <span>Brand</span>
+              </button>
+            </nav>
           </div>
 
           {/* Right Action Cluster */}
-          <div className="flex items-center gap-2">
-            <InstallButton />
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Search icon trigger */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  const input = document.getElementById("dashboard-search-input");
+                  input?.focus();
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-panel-2 hover:text-ink transition-colors"
+                title="Search decks"
+              >
+                <Search size={16} />
+              </button>
+            </div>
+
+            <ThemeToggle />
 
             <Link
               href="/agents"
-              className="hidden items-center gap-1.5 rounded-full border border-line bg-panel px-3 py-1.5 text-[12.5px] font-medium text-ink hover:bg-panel-2 transition-colors sm:inline-flex"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-panel px-3 py-1.5 text-[12px] font-medium text-ink hover:bg-panel-2 transition-colors"
             >
-              <Bot size={14} /> Agent MCP
+              <Bot size={13} /> <span className="hidden sm:inline">Agent MCP</span>
             </Link>
 
             <button
               onClick={() => fileRef.current?.click()}
-              className="hidden items-center gap-1.5 rounded-full border border-line bg-panel px-3 py-1.5 text-[12.5px] font-medium text-ink hover:bg-panel-2 transition-colors md:inline-flex"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-panel px-3 py-1.5 text-[12px] font-medium text-ink hover:bg-panel-2 transition-colors"
             >
-              <FileUp size={14} /> Import
+              <FileUp size={13} /> <span className="hidden sm:inline">Import</span>
             </button>
             <input ref={fileRef} type="file" accept=".json,application/json" hidden onChange={(e) => e.target.files?.[0] && onImport(e.target.files[0])} />
 
-            <ThemeToggle />
-
             <button
               onClick={() => create("blank")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-1.5 text-[13px] font-semibold text-bg shadow-sm hover:opacity-90 active:scale-95 transition-all"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-1.5 text-[13px] font-semibold text-bg shadow-sm hover:opacity-90 active:scale-95 transition-all"
             >
-              <Plus size={15} /> <span className="hidden sm:inline">New Deck</span>
+              <Plus size={15} /> <span>New Deck</span>
             </button>
           </div>
         </div>
@@ -228,39 +265,81 @@ export function Dashboard() {
       {/* ------------------------------------------------------------- 
           2. HERO LAUNCHPAD: EDITORIAL STATEMENT & INSTANT ACTION
       ----------------------------------------------------------------- */}
-      <section className="relative overflow-hidden border-b border-line bg-bg-2 py-12 px-6">
+      <section className="relative overflow-hidden border-b border-line bg-bg-2 py-10 sm:py-16 px-4 sm:px-6">
+        {/* Subtle Spatial Green Glow Mesh Backdrop matching second reference screenshot */}
+        <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden opacity-30 dark:opacity-45">
+          <div className="h-[380px] w-[620px] rounded-full bg-gradient-to-tr from-emerald-500/20 via-teal-500/25 to-transparent blur-[110px] -translate-y-8 translate-x-32" />
+        </div>
+
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-muted">
                 <Sparkles size={12} className="text-ink" /> Local-First &bull; Offline PWA &bull; Native MCP
               </div>
-              <h1 className="mt-4 font-serif text-[42px] sm:text-[54px] font-normal leading-[1.05] tracking-tight text-ink">
+              <h1 className="mt-4 font-serif text-[38px] sm:text-[48px] md:text-[56px] font-normal leading-[1.02] tracking-tight text-ink">
                 Create carousels that <em className="italic font-normal">command attention</em>.
               </h1>
-              <p className="mt-3 text-[15px] sm:text-[16px] text-muted leading-relaxed max-w-xl">
+              <p className="mt-3.5 text-[15px] sm:text-[16px] text-muted leading-relaxed max-w-xl">
                 High-contrast typography, precision layouts, and client-side instant rendering for LinkedIn, Instagram, and X.
               </p>
+
+              {/* Action Buttons matching screenshot */}
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => create("blank")}
+                  className="inline-flex items-center gap-2 rounded-xl bg-ink px-6 py-3 text-[14px] font-semibold text-bg shadow-lg transition-all hover:opacity-90 active:scale-[0.98]"
+                >
+                  <Plus size={16} />
+                  <span>Start a Carousel</span>
+                </button>
+                <a
+                  href="#templates"
+                  className="inline-flex items-center gap-2 rounded-xl border border-line bg-panel/80 backdrop-blur-md px-5 py-3 text-[14px] font-medium text-ink transition-all hover:bg-panel hover:border-ink"
+                >
+                  <Tv2 size={16} className="text-muted" />
+                  <span>See How It Works</span>
+                </a>
+              </div>
             </div>
 
-            {/* Quick Format Picker (Aspect Switcher) */}
-            <div className="flex flex-col gap-2 rounded-2xl border border-line bg-panel p-3 shadow-sm">
-              <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted">Canvas Aspect Ratio</span>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {(Object.keys(ASPECTS) as AspectId[]).map((a) => (
-                  <button
-                    key={a}
-                    onClick={() => setAspect(a)}
-                    className={cn(
-                      "rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all",
-                      aspect === a
-                        ? "bg-ink text-bg shadow-sm"
-                        : "text-muted hover:text-ink hover:bg-panel-2"
-                    )}
-                  >
-                    {ASPECTS[a].label} <span className="font-mono opacity-60">· {a}</span>
-                  </button>
-                ))}
+            {/* Visual Canvas Aspect Ratio Card */}
+            <div className="flex flex-col gap-3 rounded-2xl border border-line bg-panel/90 backdrop-blur-xl p-5 shadow-xl w-full lg:w-[480px]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 font-semibold text-[14px] text-ink">
+                  <SlidersHorizontal size={15} className="text-muted" />
+                  <span>Canvas Aspect Ratio</span>
+                </div>
+                <span className="text-[12px] text-muted hidden sm:inline">Choose the right size for your content.</span>
+              </div>
+
+              {/* Visual aspect boxes with smooth spatial cards */}
+              <div className="grid grid-cols-5 gap-2.5 mt-2">
+                {[
+                  { id: "1:1" as AspectId, name: "Square", sub: "1:1", iconClass: "w-5 h-5 rounded-[4px]" },
+                  { id: "4:5" as AspectId, name: "Portrait", sub: "4:5", iconClass: "w-4 h-5.5 rounded-[4px]" },
+                  { id: "3:4" as AspectId, name: "Tall", sub: "3:4", iconClass: "w-4 h-6 rounded-[4px]" },
+                  { id: "9:16" as AspectId, name: "Story", sub: "9:16", iconClass: "w-3 h-6.5 rounded-[3px]" },
+                  { id: "16:9" as AspectId, name: "Wide", sub: "16:9", iconClass: "w-6 h-3.5 rounded-[3px]" },
+                ].map((item) => {
+                  const isSelected = aspect === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setAspect(item.id)}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 py-3.5 px-1 rounded-xl border text-center transition-all",
+                        isSelected
+                          ? "bg-ink text-bg border-ink shadow-md scale-[1.02]"
+                          : "border-line bg-panel-2/40 text-muted hover:border-ink hover:text-ink hover:bg-panel-2"
+                      )}
+                    >
+                      <div className={cn("border-2 flex items-center justify-center transition-colors", item.iconClass, isSelected ? "border-bg" : "border-muted/60")} />
+                      <span className="text-[12px] font-medium leading-none">{item.name}</span>
+                      <span className={cn("text-[10px] font-mono leading-none", isSelected ? "opacity-80" : "opacity-60")}>{item.sub}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -332,48 +411,54 @@ export function Dashboard() {
       {/* ------------------------------------------------------------- 
           4. WORKSPACE PROJECTS SHELF (ACTIVE / ARCHIVED / MANAGEMENT)
       ----------------------------------------------------------------- */}
-      <section className="flex-1 py-12 px-6">
+      <section className="flex-1 py-8 sm:py-12 px-4 sm:px-6">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
-            <div className="flex items-center gap-4">
-              <h2 className="text-[20px] font-semibold tracking-tight text-ink flex items-center gap-2">
-                <FolderKanban size={19} className="text-muted" /> Your Projects
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-line pb-4">
+            <div>
+              <h2 className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-ink flex items-center gap-2">
+                <FolderKanban size={20} className="text-muted" /> Your Projects
               </h2>
+              <p className="text-[13px] text-muted mt-0.5">Manage and continue your carousel projects.</p>
+            </div>
 
+            <div className="flex flex-wrap items-center justify-between gap-3">
               {/* Status Segmented Tabs */}
               <div className="flex items-center gap-1 rounded-full border border-line bg-panel p-1">
                 <button
                   onClick={() => setActiveTab("active")}
                   className={cn(
-                    "rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
+                    "flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
                     activeTab === "active" ? "bg-ink text-bg" : "text-muted hover:text-ink"
                   )}
                 >
-                  Active ({counts.active})
+                  <Layers size={13} />
+                  <span>Active ({counts.active})</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("archived")}
                   className={cn(
-                    "rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
+                    "flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
                     activeTab === "archived" ? "bg-ink text-bg" : "text-muted hover:text-ink"
                   )}
                 >
-                  Archived ({counts.archived})
+                  <Archive size={13} />
+                  <span>Archived ({counts.archived})</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("all")}
                   className={cn(
-                    "rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
+                    "flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
                     activeTab === "all" ? "bg-ink text-bg" : "text-muted hover:text-ink"
                   )}
                 >
-                  All ({counts.all})
+                  <span>All ({counts.all})</span>
                 </button>
               </div>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <button onClick={() => create("blank")} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-bg hover:opacity-90 transition-opacity">
+              <button
+                onClick={() => create("blank")}
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-bg hover:opacity-90 transition-opacity"
+              >
                 <Plus size={14} /> Blank Project
               </button>
             </div>
@@ -386,16 +471,26 @@ export function Dashboard() {
               ))}
             </div>
           ) : filteredProjects.length === 0 ? (
-            <div className="grid place-items-center rounded-3xl border border-dashed border-line-2 py-24 text-center bg-panel-2/50">
-              <div className="font-serif text-[36px] italic text-ink">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-line bg-panel/50 py-14 px-6 text-center shadow-sm">
+              {/* Stacked 3D Card Graphic matching screenshot */}
+              <div className="relative mb-6 h-24 w-28 flex items-center justify-center">
+                <div className="absolute h-18 w-16 -rotate-12 -translate-x-3 rounded-lg border border-white/10 bg-gradient-to-br from-white/10 to-white/5 shadow-lg backdrop-blur-md dark:border-white/15" />
+                <div className="absolute h-18 w-16 rotate-0 translate-y-0 rounded-lg border border-white/15 bg-gradient-to-br from-white/15 to-white/10 shadow-xl backdrop-blur-md dark:border-white/20" />
+                <div className="absolute h-18 w-16 rotate-12 translate-x-3 rounded-lg border border-white/20 bg-gradient-to-br from-white/20 to-white/10 shadow-2xl backdrop-blur-md dark:border-white/25" />
+              </div>
+
+              <div className="font-serif text-[32px] sm:text-[38px] font-normal italic text-ink">
                 {q ? "No matching decks found" : activeTab === "archived" ? "Archive is empty" : "No carousels yet"}
               </div>
-              <p className="mt-2 max-w-sm text-[14px] text-muted">
-                {q ? "Try clearing your search keyword." : "Select any curated template above or click New Project to get started."}
+              <p className="mt-2.5 max-w-sm text-[13.5px] sm:text-[14.5px] text-muted leading-relaxed">
+                {q ? "Try clearing your search keyword." : "Select a curated template or start with a blank canvas to create your first project."}
               </p>
               {!q && (
-                <button onClick={() => create("blank")} className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2 text-[13px] font-semibold text-bg">
-                  <Plus size={14} /> Start with Blank Canvas
+                <button
+                  onClick={() => create("blank")}
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-ink px-6 py-3 text-[14px] font-semibold text-bg shadow-md transition-all hover:opacity-90 active:scale-[0.98]"
+                >
+                  <Plus size={16} /> <span>Start with Blank Canvas</span>
                 </button>
               )}
             </div>
@@ -507,6 +602,53 @@ export function Dashboard() {
               </AnimatePresence>
             </div>
           )}
+        </div>
+
+        {/* Get Started Quick Action Grid (matching reference image) */}
+        <div className="mx-auto max-w-7xl mt-12 pt-8 border-t border-line">
+          <div className="mb-4">
+            <h3 className="text-[17px] font-semibold text-ink flex items-center gap-2">
+              <Sparkles size={16} className="text-muted" /> Get Started
+            </h3>
+            <p className="text-[13px] text-muted">Choose a quick action to create, explore, or learn.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a
+              href="#templates"
+              className="group flex items-center justify-between p-4 rounded-xl border border-line bg-panel hover:bg-panel-2 hover:border-ink transition-all"
+            >
+              <div className="flex items-center gap-3.5">
+                <span className="grid h-10 w-10 place-items-center rounded-lg bg-panel-2 border border-line text-ink">
+                  <Layers size={18} />
+                </span>
+                <div>
+                  <h4 className="text-[14.5px] font-medium text-ink">Browse Templates</h4>
+                  <p className="text-[12px] text-muted">Pick from curated slide archetypes</p>
+                </div>
+              </div>
+              <ArrowRight size={16} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-ink" />
+            </a>
+
+            <button
+              onClick={() => {
+                const el = document.getElementById("templates");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="group flex items-center justify-between p-4 rounded-xl border border-line bg-panel hover:bg-panel-2 hover:border-ink transition-all text-left"
+            >
+              <div className="flex items-center gap-3.5">
+                <span className="grid h-10 w-10 place-items-center rounded-lg bg-panel-2 border border-line text-ink">
+                  <Tv2 size={18} />
+                </span>
+                <div>
+                  <h4 className="text-[14.5px] font-medium text-ink">See How It Works</h4>
+                  <p className="text-[12px] text-muted">Watch the speed and instant workflow</p>
+                </div>
+              </div>
+              <ArrowRight size={16} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-ink" />
+            </button>
+          </div>
         </div>
       </section>
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { Laptop } from "lucide-react";
+import { Laptop, PanelLeft, Sliders, X } from "lucide-react";
 import { getPref, loadProject, previousVersionKey, saveProject, setPref } from "@/lib/storage";
 import type { Project } from "@/lib/model/types";
 import { clearDeletedSlides, restoreDeletedSlides, setOnSlideDeleted, useEditor } from "@/store/editor";
@@ -25,6 +25,7 @@ export function Editor() {
   const id = params.get("id");
   const loaded = useEditor((s) => s.project?.id === id && !!id);
   const [missing, setMissing] = useState(false);
+  const [mobileDrawer, setMobileDrawer] = useState(false);
 
   // Load
   useEffect(() => {
@@ -162,7 +163,43 @@ export function Editor() {
       {/* Universal Desktop & Tablet Workspace */}
       <div className="flex h-screen flex-col overflow-hidden">
         <TopBar />
-        <div className="flex min-h-0 flex-1 overflow-hidden">
+
+        {/* Mobile quick-tool utility bar when on small screens */}
+        <div className="flex lg:hidden items-center justify-between border-b border-line bg-panel px-3 py-1.5 text-[12px]">
+          <button
+            onClick={() => setMobileDrawer(!mobileDrawer)}
+            className="flex items-center gap-1.5 rounded-lg border border-line bg-panel-2 px-2.5 py-1 text-ink font-medium hover:bg-line"
+          >
+            <PanelLeft size={14} />
+            <span>Design Tools</span>
+          </button>
+          <button
+            onClick={() => useEditor.getState().setModal("preview")}
+            className="flex items-center gap-1.5 rounded-lg border border-line bg-panel-2 px-2.5 py-1 text-ink font-medium hover:bg-line"
+          >
+            <span>Preview Mode</span>
+          </button>
+        </div>
+
+        <div className="flex min-h-0 flex-1 overflow-hidden relative">
+          {/* Mobile Tool Drawer */}
+          {mobileDrawer && (
+            <div className="absolute inset-0 z-40 flex lg:hidden bg-black/60 backdrop-blur-sm">
+              <div className="h-full w-full max-w-sm bg-panel shadow-2xl flex flex-col">
+                <div className="flex items-center justify-between border-b border-line px-4 py-3">
+                  <span className="font-semibold text-ink text-[14px]">Studio Tools</span>
+                  <button onClick={() => setMobileDrawer(false)} className="rounded-lg p-1 text-muted hover:bg-line hover:text-ink">
+                    <X size={18} />
+                  </button>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <LeftPanel mobileDrawer onCloseMobile={() => setMobileDrawer(false)} />
+                </div>
+              </div>
+              <div className="flex-1" onClick={() => setMobileDrawer(false)} />
+            </div>
+          )}
+
           {/* Collapsible/Drawer Left Panel on mobile, fixed on desktop */}
           <div className="hidden lg:flex">
             <LeftPanel />

@@ -33,23 +33,33 @@ const TABS: { id: LeftTab; icon: typeof Type; label: string; key: string }[] = [
   { id: "brand", icon: BadgeCheck, label: "Brand", key: "9" },
 ];
 
-export function LeftPanel() {
+export function LeftPanel({ mobileDrawer = false, onCloseMobile }: { mobileDrawer?: boolean; onCloseMobile?: () => void }) {
   const tab = useEditor((s) => s.leftTab);
   const setTab = useEditor((s) => s.setLeftTab);
   return (
-    <div className="flex h-full shrink-0">
-      <nav className="flex w-[72px] flex-col items-center gap-1 border-r border-line bg-panel py-3">
+    <div className={cn("flex h-full shrink-0", mobileDrawer ? "w-full bg-panel" : "")}>
+      <nav className="flex w-[68px] sm:w-[72px] flex-col items-center gap-1 border-r border-line bg-panel py-3">
         {TABS.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} className="group relative flex w-[60px] flex-col items-center gap-1 rounded-xl py-2" title={`${t.label} (Alt+${t.key})`}>
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className="group relative flex w-[56px] sm:w-[60px] flex-col items-center gap-1 rounded-xl py-2"
+            title={`${t.label} (Alt+${t.key})`}
+          >
             {tab === t.id && <motion.span layoutId="rail" className="absolute inset-0 rounded-xl bg-accent-soft" transition={{ type: "spring", stiffness: 500, damping: 38 }} />}
             <t.icon size={19} strokeWidth={1.75} className={cn("relative transition-colors", tab === t.id ? "text-accent" : "text-ink-2 group-hover:text-ink")} />
             <span className={cn("relative text-[10.5px] transition-colors", tab === t.id ? "font-medium text-ink" : "text-muted group-hover:text-ink-2")}>{t.label}</span>
           </button>
         ))}
       </nav>
-      <div className="flex w-[300px] flex-col border-r border-line bg-panel">
-        <div className="px-4 pt-4 pb-2">
+      <div className="flex flex-1 sm:w-[300px] flex-col border-r border-line bg-panel min-w-0">
+        <div className="flex items-center justify-between px-4 pt-4 pb-2">
           <h2 className="text-[15px] font-semibold tracking-tight">{TABS.find((t) => t.id === tab)?.label}</h2>
+          {mobileDrawer && onCloseMobile && (
+            <button onClick={onCloseMobile} className="rounded-lg p-1 text-muted hover:bg-line hover:text-ink">
+              <Check size={16} />
+            </button>
+          )}
         </div>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div

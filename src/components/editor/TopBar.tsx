@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LogoMark } from "@/components/ui/Logo";
 import { IconButton, Select } from "@/components/ui/controls";
 import { buttonClass } from "@/components/ui/Button";
+import { cn } from "@/components/ui/cn";
 import { useEditor } from "@/store/editor";
 
 export function TopBar() {
@@ -32,69 +33,108 @@ export function TopBar() {
   };
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-2 border-b border-line bg-panel px-3">
-      <Link href="/app" className="group flex items-center gap-1.5 rounded-lg py-1.5 pr-2 pl-1.5 text-ink-2 hover:bg-line hover:text-ink" title="All carousels">
-        <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-        <LogoMark className="h-8 w-8" />
-      </Link>
-      <div className="mx-1 h-5 w-px bg-line" />
-      <input
-        ref={input}
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => draft.trim() && draft !== name && st().mutate((d) => void (d.name = draft.trim()))}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-          if (e.key === "Enter" || e.key === "Escape") input.current?.blur();
-        }}
-        className="h-8 w-56 truncate rounded-lg bg-transparent px-2 text-[14px] font-medium outline-none hover:bg-line focus:bg-panel-2 focus:ring-2 focus:ring-accent/40"
-        spellCheck={false}
-      />
-      <SaveBadge state={save} />
-
-      <div className="flex-1" />
-
-      <div className="flex items-center gap-0.5">
-        <IconButton title="Undo (Ctrl+Z)" onClick={() => st().undo()} disabled={!canUndo}>
-          <Undo2 size={16} />
-        </IconButton>
-        <IconButton title="Redo (Ctrl+Shift+Z)" onClick={() => st().redo()} disabled={!canRedo}>
-          <Redo2 size={16} />
-        </IconButton>
+    <header className="flex h-14 shrink-0 items-center justify-between gap-1 border-b border-line bg-panel px-2 sm:px-3">
+      {/* Left: Brand + Document Title */}
+      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+        <Link href="/app" className="group flex items-center gap-1.5 rounded-lg py-1.5 pr-2 pl-1.5 text-ink-2 hover:bg-line hover:text-ink shrink-0" title="All carousels">
+          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
+          <LogoMark className="h-7 w-7 sm:h-8 sm:w-8" />
+        </Link>
+        <div className="hidden sm:block h-5 w-px bg-line shrink-0" />
+        <div className="relative flex items-center min-w-0">
+          <input
+            ref={input}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={() => draft.trim() && draft !== name && st().mutate((d) => void (d.name = draft.trim()))}
+            onKeyDown={(e) => {
+              e.stopPropagation();
+              if (e.key === "Enter" || e.key === "Escape") input.current?.blur();
+            }}
+            className="h-8 w-28 sm:w-48 md:w-56 truncate rounded-lg bg-transparent px-1.5 sm:px-2 text-[13px] sm:text-[14px] font-medium outline-none hover:bg-line focus:bg-panel-2 focus:ring-2 focus:ring-accent/40"
+            spellCheck={false}
+          />
+        </div>
+        <div className="hidden md:flex">
+          <SaveBadge state={save} />
+        </div>
       </div>
-      <div className="mx-1 h-5 w-px bg-line" />
-      <div className="w-[150px]">
-        <Select
-          value={aspect}
-          onChange={(v) => st().setAspect(v as AspectId)}
-          options={(Object.keys(ASPECTS) as AspectId[]).map((a) => ({ value: a, label: `${ASPECTS[a].label} · ${a}` }))}
-        />
+
+      {/* Center: Undo / Redo + Aspect Ratio + Zoom Controls */}
+      <div className="flex items-center gap-1 sm:gap-1.5">
+        {/* Prominent Undo & Redo Controls */}
+        <div className="flex items-center rounded-lg bg-panel-2/60 border border-line p-0.5">
+          <button
+            title="Undo (Ctrl+Z)"
+            onClick={() => st().undo()}
+            disabled={!canUndo}
+            className={cn(
+              "flex h-7 w-7 items-center justify-center rounded-md text-ink-2 transition-colors",
+              canUndo ? "hover:bg-line hover:text-ink active:scale-95" : "opacity-35 cursor-not-allowed"
+            )}
+          >
+            <Undo2 size={15} />
+          </button>
+          <button
+            title="Redo (Ctrl+Shift+Z)"
+            onClick={() => st().redo()}
+            disabled={!canRedo}
+            className={cn(
+              "flex h-7 w-7 items-center justify-center rounded-md text-ink-2 transition-colors",
+              canRedo ? "hover:bg-line hover:text-ink active:scale-95" : "opacity-35 cursor-not-allowed"
+            )}
+          >
+            <Redo2 size={15} />
+          </button>
+        </div>
+
+        <div className="w-[110px] sm:w-[145px]">
+          <Select
+            value={aspect}
+            onChange={(v) => st().setAspect(v as AspectId)}
+            options={(Object.keys(ASPECTS) as AspectId[]).map((a) => ({ value: a, label: `${ASPECTS[a].label} · ${a}` }))}
+          />
+        </div>
+
+        <div className="hidden sm:flex items-center rounded-lg bg-panel-2 border border-line/60">
+          <IconButton title="Zoom out (Ctrl+-)" onClick={() => step(-1)}>
+            <Minus size={14} />
+          </IconButton>
+          <button onClick={() => st().setZoom("fit")} className="w-11 text-center text-[12px] text-ink-2 tabular-nums hover:text-ink" title="Fit to screen (Ctrl+0)">
+            {zoomPct}
+          </button>
+          <IconButton title="Zoom in (Ctrl+=)" onClick={() => step(1)}>
+            <Plus size={14} />
+          </IconButton>
+        </div>
       </div>
-      <div className="flex items-center rounded-lg bg-panel-2">
-        <IconButton title="Zoom out (Ctrl+-)" onClick={() => step(-1)}>
-          <Minus size={14} />
-        </IconButton>
-        <button onClick={() => st().setZoom("fit")} className="w-12 text-center text-[12px] text-ink-2 tabular-nums hover:text-ink" title="Fit to screen (Ctrl+0)">
-          {zoomPct}
+
+      {/* Right: Actions & Export */}
+      <div className="flex items-center gap-1 sm:gap-1.5">
+        <div className="hidden lg:flex items-center gap-0.5">
+          <IconButton title="Keyboard shortcuts (?)" onClick={() => st().setModal("shortcuts")}>
+            <Keyboard size={15} />
+          </IconButton>
+          <IconButton title="Settings" onClick={() => st().setModal("settings")}>
+            <Settings size={15} />
+          </IconButton>
+        </div>
+        <ThemeToggle />
+        <button
+          onClick={() => st().setModal("preview")}
+          className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-line bg-panel-2 px-2.5 py-1.5 text-[12.5px] font-medium text-ink hover:bg-line transition"
+          title="Preview (P)"
+        >
+          <Play size={13} /> Preview
         </button>
-        <IconButton title="Zoom in (Ctrl+=)" onClick={() => step(1)}>
-          <Plus size={14} />
-        </IconButton>
+        <button
+          onClick={() => st().setModal("export")}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-3 sm:px-3.5 py-1.5 text-[12.5px] sm:text-[13px] font-semibold text-bg shadow-sm transition hover:opacity-90 active:scale-95"
+          title="Export (Ctrl+E)"
+        >
+          <Download size={14} /> <span>Export</span>
+        </button>
       </div>
-      <div className="mx-1 h-5 w-px bg-line" />
-      <IconButton title="Keyboard shortcuts (?)" onClick={() => st().setModal("shortcuts")}>
-        <Keyboard size={16} />
-      </IconButton>
-      <IconButton title="Settings" onClick={() => st().setModal("settings")}>
-        <Settings size={16} />
-      </IconButton>
-      <ThemeToggle />
-      <button onClick={() => st().setModal("preview")} className={buttonClass("soft", "sm", "ml-1")} title="Preview (P)">
-        <Play size={13} /> Preview
-      </button>
-      <button onClick={() => st().setModal("export")} className={buttonClass("primary", "sm")} title="Export (Ctrl+E)">
-        <Download size={14} /> Export
-      </button>
     </header>
   );
 }
